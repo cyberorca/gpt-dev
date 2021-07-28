@@ -20,7 +20,7 @@ lazzyLoadingAdunit : function() {
             rootMargin: "0px",
             threshold: 0.25
         };
-        let _observer = nul;
+        let _observer = null;
         if(_noIntersectionMethod){
             window.addEventListener("scroll",renderAdunit);
         }else{
@@ -85,6 +85,5 @@ lazzyLoadingAdunit : function() {
                     rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
                 )
         }
-
     });
 }
