@@ -1,5 +1,5 @@
 lazzyLoadingAdunit : function() {
-
+    const _noIntersectionMethod = !window.IntersectionObserver;
     var __lazzYSetting__ = {
         "div-gpt-ad-merdeka-mobile-contextual-oop" :{
             "type" : "oop",
@@ -13,9 +13,45 @@ lazzyLoadingAdunit : function() {
             "generated" : 0,
         }
     }
-
+   
     document.addEventListener('DOMContentLoaded', function () {
-        function renderContextual(){
+        let _options = {
+            root: null,
+            rootMargin: "0px",
+            threshold: 0.25
+        };
+        let _observer = null;
+        if(_noIntersectionMethod){
+            window.addEventListener("scroll",renderAdunit);
+        }else{
+            _observer = new IntersectionObserver(_entries => {
+                _entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    value = __lazzYSetting__[entry.target.id];
+                    if (!value.generated) {
+                        if (value.type == "oop") {
+                            _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, entry.target.id).addService(googletag.pubads());
+                        }else{
+                            _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
+                        }
+                        googletag.display(_defineSlot_);
+                        googletag.pubads().refresh([_defineSlot_]);
+                        value.generated = 1;
+                    }
+                } 
+                });
+            },_options);
+            for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                let _adunitElement = document.querySelector(`#${key}`);
+
+                // Tweak for Homepage if tag from var __lazzYSetting__ is not found
+                if(_adunitElement) {
+                    _observer.observe(_adunitElement);
+                }
+            };
+        }
+
+        function renderAdunit(){
             var _generatedCount_ = 0;
             var _itemCount_ = 0;
 
@@ -23,25 +59,29 @@ lazzyLoadingAdunit : function() {
                 console.log(`${key}: ${value}`);
                 _itemCount_ ++;
                 var _defineSlot_ = null;
+                let _adunitElement = document.querySelector(`#${key}`);
 
-                console.log("viewport --",elementInViewport(document.getElementById(key)), null);
+                // Tweak for Homepage if tag from var __lazzYSetting__ is not found
+                if(_adunitElement) {
+                    console.log("viewport --",elementInViewport(document.getElementById(key)), null);
 
-                if (!value.generated && elementInViewport(document.getElementById(key))) {
+                    if (!value.generated && elementInViewport(document.getElementById(key))) {
 
-                    if (value.type == "oop") {
-                        _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
-                    }else{
-                        _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                        if (value.type == "oop") {
+                            _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
+                        }else{
+                            _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                        }
+
+                        googletag.display(_defineSlot_);
+                        googletag.pubads().refresh([_defineSlot_]);
+                        value.generated = 1;
+
                     }
-
-                    googletag.display(_defineSlot_);
-                    googletag.pubads().refresh([_defineSlot_]);
-                    value.generated = 1;
-
                 }
 
                 if (_generatedCount_ == _itemCount_) {
-                    window.removeEventListener('scroll',lazzyLoadScroll);
+                    window.removeEventListener('scroll',renderAdunit);
                 }
             }
 
@@ -52,34 +92,6 @@ lazzyLoadingAdunit : function() {
                 return (
                     rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
                 )
-        }
-        
-        function lazzyLoadScroll(){
-            renderContextual();
-        }
-
-        function addEventListener (evt, fn){
-            window.addEventListener
-            ? window.addEventListener(evt, fn, false)
-            : (window.attachEvent)
-            ? window.attachEvent('on' + evt, fn)
-            : window['on' + evt] = fn;
-        }
-
-        try{
-                var intersectionObserver = new IntersectionObserver(function(entries) {
-                    // If intersectionRatio is 0, the target is out of view
-                    // and we do not need to do anything.
-                    if (entries[0].intersectionRatio <= 0) return;
-                        console.log('RENDERING LAZZY LOAD!');
-                        renderContextual();
-                        intersectionObserver.unobserve(containerEl);
-                        intersectionObserver.disconnect();
-                });
-                // start observing
-                intersectionObserver.observe(containerEl);
-        }catch(err) {
-                addEventListener("scroll",lazzyLoadScroll);
         }
     });
 }
