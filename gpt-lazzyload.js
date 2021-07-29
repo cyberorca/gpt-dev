@@ -43,7 +43,11 @@ lazzyLoadingAdunit : function() {
             },_options);
             for (const [key, value] of Object.entries(__lazzYSetting__)) {
                 let _adunitElement = document.querySelector(`#${key}`);
-                _observer.observe(_adunitElement);
+
+                // Tweak for Homepage if tag from var __lazzYSetting__ is not found
+                if(_adunitElement) {
+                    _observer.observe(_adunitElement);
+                }
             };
         }
 
@@ -55,21 +59,25 @@ lazzyLoadingAdunit : function() {
                 console.log(`${key}: ${value}`);
                 _itemCount_ ++;
                 var _defineSlot_ = null;
+                let _adunitElement = document.querySelector(`#${key}`);
 
-                console.log("viewport --",elementInViewport(document.getElementById(key)), null);
+                // Tweak for Homepage if tag from var __lazzYSetting__ is not found
+                if(_adunitElement) {
+                    console.log("viewport --",elementInViewport(document.getElementById(key)), null);
 
-                if (!value.generated && elementInViewport(document.getElementById(key))) {
+                    if (!value.generated && elementInViewport(document.getElementById(key))) {
 
-                    if (value.type == "oop") {
-                        _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
-                    }else{
-                        _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                        if (value.type == "oop") {
+                            _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
+                        }else{
+                            _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                        }
+
+                        googletag.display(_defineSlot_);
+                        googletag.pubads().refresh([_defineSlot_]);
+                        value.generated = 1;
+
                     }
-
-                    googletag.display(_defineSlot_);
-                    googletag.pubads().refresh([_defineSlot_]);
-                    value.generated = 1;
-
                 }
 
                 if (_generatedCount_ == _itemCount_) {
