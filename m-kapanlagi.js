@@ -500,16 +500,16 @@ setTimeout(function () {
                                                     (typeof unfreezePages === 'function') ? unfreezePages() : '';
                                                 },
                                                 set: function() {
-                                                let that = this;
-                                                let lockTime = new Date().getTime();
-                                                let startLoad = kly && kly.startLoad ? kly.startLoad : 0;
-                                                let diff = lockTime - startLoad;
-                                                let lockTimeStamp = Math.floor(diff / 1000 % 60);
-                                                this.eventTrackingLock(lockTimeStamp);
-                                                console.log('Scroll Freeze duration : '+lockTimeStamp);
-                                                setTimeout(function() {
-                                                    that.unset();
-                                                }, that.timeout);
+                                                    let that = this;
+                                                    let lockTime = new Date().getTime();
+                                                    let startLoad = kly && kly.startLoad ? kly.startLoad : 0;
+                                                    let diff = lockTime - startLoad;
+                                                    let lockTimeStamp = Math.floor(diff / 1000 % 60);
+                                                    this.eventTrackingLock(lockTimeStamp);
+                                                    console.log('Scroll Freeze duration : '+lockTimeStamp);
+                                                    setTimeout(function() {
+                                                        that.unset();
+                                                    }, that.timeout);
                                                 },
                                                 eventTrackingLock		: 	function(lockDuration){
                                                     window.dataLayer.push({
@@ -806,7 +806,10 @@ window.createCDPTracker = function(cat, macro) {
                                 if (!deviceOrientation.matches) {
                                     GAMLibrary.lockScroll.unset();
                                 }else{
-                                    GAMLibrary.lockScroll.set();
+                                    // check jika terdapat freeze dari publishing 
+                                    if (typeof freezePages == 'function') {
+                                        GAMLibrary.lockScroll.set();
+                                    }
                                 }
                                 window.addEventListener("resize", function() {
                                     if (!deviceOrientation.matches) {
