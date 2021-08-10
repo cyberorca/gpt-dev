@@ -1,0 +1,512 @@
+<style>
+  
+#topframe{
+      position: fixed;
+      overflow: hidden;
+      width: 100%;
+      z-index:0;
+      top : 0;
+    }
+    #topframe-ox{
+      position:relative;
+      text-align:center;
+      width: 100%;
+      height:100%;
+      overflow: hidden;
+      transition: padding .5s .25s;
+      -webkit-transition:padding .5s .25s;
+      -moz-transition: padding .5s .25s;
+      -o-transition: padding .5s .25s;
+      z-index: -1;
+    }
+    #topframe.expand #topframe-ox{
+      transition: padding .5s;
+      -webkit-transition:padding .5s;
+      -moz-transition: padding .5s;
+      -o-transition: padding .5s;
+    }
+    #topframe-img-container-absolute{
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      z-index:-99;
+    }
+    #topframe-img-container{
+      position:fixed;
+      left:0;
+      z-index:-99;
+      width: 100%;
+      overflow: hidden;
+      transform: translate3d(0,0,0);
+      -webkit-transform: translate3d(0,0,0);
+      -moz-transform: translate3d(0,0,0);
+      -o-transform: translate3d(0,0,0);
+      -webkit-transition: top .5s .25s;
+      -moz-transition: top .5s .25s;
+      -o-transition: top .5s .25s;
+      transition: top .5s .25s;
+    }
+    #topframe.expand #topframe-img-container{
+      -webkit-transition: top .5s;
+      -moz-transition: top .5s;
+      -o-transition: top .5s;
+      transition: top .5s;
+    }
+    .topframe-img{
+      position:relative;
+      max-width:100%;
+      margin: 0 auto;
+      display:block;
+    }
+    #topframe-close-btn {
+      background-color: #F44336;
+      color:#fff;
+      height: 42px;
+      padding: 0;
+      margin: 0;
+      font-size: 0;
+      width: 42px;
+      box-sizing: border-box;
+      position: absolute;
+      bottom: -150px;
+      right:0;
+      white-space: nowrap;
+      font-family:arial,sans-serif;
+      z-index: 2;
+      text-align: center;
+      transition: bottom .5s;
+      -webkit-transition:bottom .5s;
+      -moz-transition: bottom .5s;
+      -o-transition: bottom .5s;
+    }
+    #topframe-close-btn:after{
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+    #topframe-close-btn img{
+      width: 18px;
+      display:inline-block;
+      vertical-align:middle;
+    }
+    #topframe.expand #topframe-close-btn{
+      bottom: 0;
+      transition: bottom .5s .25s;
+      -webkit-transition:bottom .5s .25s;
+      -moz-transition: bottom .5s .25s;
+      -o-transition: bottom .5s .25s;
+    }
+    #topframe-desturl{
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      z-index:1;
+    }
+    .container.header-menu.text-center {
+        position: relative;
+        background: #fff;
+        width: 100%;
+    }
+    ul.menu-second.list-inline {
+        margin: 0;
+        background: #fff;
+        padding: 0 14px 0 12px;
+    }
+    div#mdk-body {
+        position: relative;
+        background: #fff !important;
+    }
+    .container.add-topframe {
+        position: relative;
+    }
+    div#mdk-body {
+        position: relative;
+        background: #fff !important;
+    }
+    
+    div#mdk-footers {
+        position: relative;
+    }
+    div.container.add-topframe:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: -100px;
+        height: 100vh;
+        background: #fff;
+        z-index: -1;
+        width: 100%;
+    }
+    div#topframe-img-wrapper-big-pulse {
+        position: absolute;
+        bottom: 0;
+        left: calc((100% - 150px)/ 2);
+        width: 150px;
+        height: 30px;
+        opacity : .95;
+    }
+    
+    img#topframe-img-big-pulse {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+    }
+    div#topframe-img-wrapper-big-pulse-fake-lp {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        top: 0px;
+        opacity: .3;
+        border-radius: 10px 10px 0 0;
+    }
+    .oto-menu-v2.text-center ,
+    div#mdk-content ,
+    div#main_top ,
+    .a2 {
+        position: relative;
+        background: #fff;
+    }
+    .mdk-container .navbar {
+        background: #fff;
+    }
+    .wrapper .container{
+        position : relative;
+    }
+    div#topframe img {
+        max-height: unset !important;
+    }
+    .widget-email-app {
+        position: relative;
+        background: #fff;
+        padding: 20px;
+    }
+    
+    div#mdk-to-top {
+        position: relative;
+        background: #fff;
+        padding: 10px;
+        margin-top: -5px;
+    }
+    .showbiz.clearfix {
+        margin-top: 0px !important;
+        padding-top: 15px;
+    }
+    .tags--cover {
+        z-index: 9999;
+        position: relative;
+    }
+</style>
+
+<div id="topframe">
+    <div id="topframe-ox">
+        <div id="topframe-img-container-absolute">
+            <div id="topframe-img-container">
+                <div id="topframe-img-wrapper-small">
+                    <img src="[%dfp_samllImage%]" id="topframe-img-small" class="topframe-img" border="0" alt="">
+                </div>
+                <div id="topframe-img-wrapper-big">
+                    <img src="[%dfp_expandImage%]" id="topframe-img-big" class="topframe-img" border="0" alt="">
+                    <div id="topframe-img-wrapper-big-pulse">
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+    </div>
+</div>
+
+<div id="beacon_topframe" style="position: absolute; left: 0px; top: 0px; visibility: hidden;">
+    <img id="mobileBillboardImpression" src="" style="display:none; visibility:hidden;" width="0" height="0">
+</div>
+
+<script>
+      var dfp_useTracker = [%dfp_useTracker%] ;
+      var dfp_useLP = [%dfp_useLP%] ;
+      var dfP_topframeUseCollapse = [%dfP_topframeUseCollapse%] ;
+
+      var dfp_topframeLandingPage = (dfp_useTracker) ? "%%CLICK_URL_UNESC%%[%dfp_landingPage%]" : "[%dfp_landingPage%]" ;
+      var dfP_topframeImpression = (dfp_useTracker) ? "%%VIEW_URL_UNESC%%[%dfp_imressionTracker%]" : "[%dfp_imressionTracker%]" ;
+      var dfp_imageBig = "[%dfp_expandImage%]";
+      var dfp_imageSmall = "[%dfp_samllImage%]";
+      var dfp_topframeDMPCat  = '[%DMPCategory%]'.trim().split(/\s*,\s*/);
+  		var dfp_macro = '{"lineitemId":"%eaid!", "advertiserId":"%eadv!", "orderId":"%ebuy!", "creativeId":"%ecid!", "adunitId":"%epid!"}';
+      var dfp_topframeCloseTracker = "[%dfp_expandTracker%]";
+
+      var dfp_big_iframe_ratio = '[%dfp_big_iframe_ratio%]';
+
+      var close_btn_src = "https://cdns.klimg.com/d.kapanlaginetwork.com/banner/asset/img/close.png";
+
+      /*CONST*/
+      var topFrameMaxWidth = 480;
+      var topFrameClosedMaxHeight = 150;
+      var topFrameExpandedMaxHeight = 600;
+      var defaultCookieDuration = 10;
+
+      /*REFERENCES*/
+      var topFrame = document.getElementById("topframe");
+      var topFrameOX = document.getElementById("topframe-ox");
+      var topFrameImageContainer = document.getElementById("topframe-img-container");
+      var topFrameImageContainerAbsolute = document.getElementById("topframe-img-container-absolute");
+      var topFrameImageBig = document.getElementById("topframe-img-big");
+      var topFrameImageSmall = document.getElementById("topframe-img-small");
+      var mobileBillboardImpression = document.getElementById("mobileBillboardImpression");
+
+      /*STATE*/
+      var dfp_isTopframeClosed = false;
+      var topframeState = "expand";
+      var klmain = parent.document.querySelector(".main-kl");
+      var klcontainer = parent.document.querySelectorAll(".container");
+      var isIos = parent.navigator.platform.match(/iPhone|iPod|iPad/);
+
+      /*CODE*/
+      topFrameImageBig.src = dfp_imageBig;
+      topFrameImageSmall.src = dfp_imageSmall;
+    
+      isDiscoveryPage();
+
+      if (klmain) {
+          klmain.parentElement.classList.add("add-topframe");
+      }
+
+      if (!isIos) {
+        topframe.style.zIndex = "-9999";         
+      }else{
+        klcontainer && klcontainer.forEach(function(v){
+                (v.classList.length === 1) ? v.classList.add("add-topframe") : "";
+        })
+      }
+
+      // topframeVisualCallback();
+
+      // initParent();
+
+      mobileBillboardImpression.setAttribute("src", dfP_topframeImpression);
+
+      var topFrameImageBigFakelp = document.createElement("img");
+      topFrameImageBigFakelp.src = "https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2019/08/16/lip6_collect_data/minimize.png";
+      topFrameImageBigFakelp.style = "position: absolute;bottom: 0px;left: 30%;width: 40%; z-index: 0; /*z-index: 10;*/";
+      if (dfP_topframeUseCollapse) {
+        window.frameElement.parentElement.appendChild(topFrameImageBigFakelp);
+      }
+
+      var topframeClick = document.createElement("div");
+      topframeClick.style = "position: absolute;bottom: 0px;left: 0 ;width: 100%; height : 100%; z-index: -1; /*z-index: 5;*/";
+      window.frameElement.parentElement.appendChild(topframeClick);
+
+
+      function initParent(height) {
+
+          var thisparent = window.frameElement;
+          thisparent.style = "width: "+parent.window.screen.width+"px ;height: "+height+"px;position: fixed;top: 0;left: 0;";
+          thisparent.parentElement.style = "transition: all ,.5s ease;position: absolute;width: 100%;height: "+height+"px;clip: rect(0px "+parent.window.screen.width+"px "+height+"px 0px);top: 0;";
+          thisparent.parentElement.parentElement.style = "height: "+height+"px;position: relative;width :100%;display : block;";
+
+      }
+
+      function topframeGenerateDMPLP(){
+      	if (dfp_useLP) {
+	        if(typeof parent.window.createDMPTracker === 'function'){
+	          parent.window.createDMPTracker(dfp_topframeDMPCat,dfp_topframeLandingPage,dfp_macro);
+	        }else{
+	          parent.window.open(dfp_topframeLandingPage, '_blank');
+	        }  
+      	}
+      }
+
+      function getDomainName() {
+          hostName = parent.window.location.hostname;
+          rHN = hostName.substring(hostName.lastIndexOf(".", hostName.lastIndexOf(".") - 1) + 1);
+          return (rHN == "kapanlaginetwork.com") ? "kapanlagi.com" : rHN;
+      }
+
+      function topframeVisualCallback() {
+          var orientation = (isIos) ? parent.window.orientation : parent.screen.orientation.angle;
+
+          if (topframeState == "closed") {
+              if (orientation == 0) {
+                  
+                  topFrameOX.style.height = topFrameImageSmall.clientHeight + "px";
+                  initParent(topFrameImageSmall.clientHeight);
+              } else {
+                  initParent(0);
+                  topFrameOX.style.height ="0px";
+              }
+          } else if (topframeState == "expand") {
+              var heightW = parent.window.screen.width;
+              if (dfp_big_iframe_ratio == "480x530") {
+                var ratioH = 530 / 480;
+                heightW = ratioH * heightW;
+              }
+
+              if (orientation == 0) {
+                  topFrameImageBig.style.width = parent.window.screen.width + "px";
+                  topFrameImageBig.style.height = heightW + "px";
+                  topFrameImageSmall.style.width = parent.window.screen.width + "px";
+                  initParent(topFrameImageBig.clientHeight);
+                  topFrameOX.style.height = topFrameImageBig.clientHeight + "px";
+              } else {
+                  topFrameImageBig.style.width = parent.window.screen.width + "px";
+                  topFrameImageBig.style.height = heightW + "px";
+                  topFrameImageSmall.style.width = parent.window.screen.width + "px";
+                  initParent(0);
+                  topFrameOX.style.height ="0px";
+              }
+          }
+          var scrollTop = parent.document.documentElement.scrollTop || parent.document.body.scrollTop;
+
+          var topFrameImageContainerTop;
+          if (scrollTop > -1) {
+              topFrameImageContainer.style.transition = "";
+              if (topframeState == "closed") {
+                  topFrameImageContainerTop = 0;
+              } else if (topframeState == "expand") {
+                  if (parent.window.innerWidth < topFrameMaxWidth) {
+                      topFrameImageContainerTop = -Math.round((topFrameClosedMaxHeight / topFrameMaxWidth * parent.window.innerWidth));
+                  } else {
+                      topFrameImageContainerTop = -topFrameClosedMaxHeight;
+                  }
+              }
+          } else {
+
+              topFrameImageContainer.style.transition = "none";
+              if (topframeState == "closed") {
+                  topFrameImageContainerTop = -scrollTop;
+              } else if (topframeState == "expand") {
+                  if (parent.window.innerWidth < topFrameMaxWidth) {
+                      topFrameImageContainerTop = -scrollTop - Math.round((topFrameClosedMaxHeight / topFrameMaxWidth * parent.window.innerWidth));
+                  } else {
+                      topFrameImageContainerTop = -scrollTop - topFrameClosedMaxHeight;
+                  }
+              }
+          }
+
+          if (dfP_topframeUseCollapse) {
+            topFrameImageContainer.style.top = topFrameImageContainerTop + "px";
+          }
+
+      }
+
+      function closeTopFrame(e) {
+          e ? e.preventDefault() : "";
+          topFrame.className = "";
+          topframeState = "closed";
+
+          topframeVisualCallback();
+
+          var smallTracker = parent.document.createElement("img");
+          smallTracker.style.display = "none";
+          smallTracker.src = dfp_topframeCloseTracker;
+          parent.document.body.appendChild(smallTracker);
+
+          topFrameImageBigFakelp.style.display = "none";
+          initParent(topFrameImageSmall.clientHeight);
+
+
+      }
+
+      function expandTopFrame(e) {
+          e ? e.preventDefault() : "";
+          topFrame.className = "expand";
+          topframeState = "expand";
+          topframeVisualCallback();
+      }
+
+      function showTopFrame() {
+        var shareMain = parent.document.querySelector(".share-main");
+          if (typeof dfp_IsSledLive != "undefined" && dfp_IsSledLive == false) {
+              topframeState = dfp_isTopframeClosed ? "closed" : "expand";
+          }
+          topFrameImageBig.src = dfp_imageBig;
+          topFrameImageSmall.src = dfp_imageSmall;
+          console.log(topframeState + " " + dfp_isTopframeClosed);
+          if (topframeState == "expand") {
+              expandTopFrame();
+          } else {
+              closeTopFrame();
+          }
+
+          topframeClick.addEventListener("click", function() {
+              topframeGenerateDMPLP();
+          });
+
+          topFrameImageSmall.addEventListener("click", function() {
+              topframeGenerateDMPLP();
+          });
+          shareMain ? shareMain.classList.add("gam-mobile-billboard_share-main") : '';
+      }
+
+      parent.window.addEventListener("orientationchange", function() {
+          topframeVisualCallback();
+          setTimeout(function() {
+              topframeVisualCallback();
+          }, 1000);
+          topFrameOrientation();
+
+      });
+
+      parent.window.addEventListener("resize", function() {
+          topframeVisualCallback();
+          setTimeout(function() {
+              topframeVisualCallback();
+          }, 1000);
+      });
+
+      parent.document.addEventListener("scroll", function(e) {
+          topframeVisualCallback();
+      });
+
+      topFrameImageBig.addEventListener("click", function() {
+          topframeGenerateDMPLP();
+      });
+
+      topFrameImageBigFakelp.addEventListener("click", closeTopFrame);
+
+      function topFrameOrientation() {
+          var ios = navigator.platform.match(/iPhone|iPod|iPad/);
+          var orientation = (ios) ? parent.window.orientation : parent.screen.orientation.angle;
+          if (orientation == 0) {
+              topFrame.style.display = "block";          
+          } else {
+              topFrame.style.display = "none";
+          }
+
+      }
+
+      topFrameOrientation();
+      showTopFrame();
+
+      setTimeout(function () {
+        topframeVisualCallback();
+        parent.document.documentElement.scrollTop = 0;
+        parent.document.body.scrollTop = 0;
+      }, 1500);
+
+
+    function isDiscoveryPage(){
+        var urlParams = new URLSearchParams(parent.window.location.search);
+        var myParam = urlParams.get('discovery');
+        if(myParam == "on"){
+            window.frameElement.style = "border: none; background: white; overflow-x: hidden; margin-top: 57px; height : calc(100vh - 57px)";
+        }
+    }
+
+    if (parent.document.querySelector(".topics--tab")) {
+        parent.document.querySelector(".topics--tab").setAttribute("class", "topics--tab");
+    }
+
+</script>
+
+[%dfp_thirdpartyTracker%]
+
+
+<noscript class="MOAT-emtekgamdisplay559304416853?moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatAU=%%ADUNIT%%&zMoatChannel=%%PATTERN:channel%%&zMoatPS=%%PATTERN:pos%%"></noscript>
+
+<script src="https://z.moatads.com/emtekgamdisplay559304416853/moatad.js#moatClientLevel1=%eadv!&moatClientLevel2=%ebuy!&moatClientLevel3=%eaid!&moatClientLevel4=%ecid!&moatClientSlicer1=%esid!&moatClientSlicer2=%epid!&zMoatAU=%%ADUNIT%%&zMoatChannel=%%PATTERN:channel%%&zMoatPS=%%PATTERN:pos%%" type="text/javascript"></script>
