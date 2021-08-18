@@ -514,11 +514,8 @@ window.createCDPTracker = function(cat, macro) {
     /*Bottom Frame Scrolling*/
     GAMLibrary.scrollBottomFrame();
     /*Bottom Frame Scrolling*/
-    var _countAdUnit = 0,
-    _slots = kmklabs.pageType !== "ReadPage" ? [6] : [6],
-    _send = false;
+
     googletag.pubads().addEventListener('slotResponseReceived', function(event) {
-        _countAdUnit++;
         var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
         var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
         var dfp_slotAdUnitID = event.slot.getSlotId().getId(); /* get adunit container id*/

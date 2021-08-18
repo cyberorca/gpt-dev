@@ -374,6 +374,7 @@
         dfpHeadline         :   '/36504930/m.fimela.com/dfp-hl',
         timedBottomFrm      :   null,
         infiniteSCId        :   1,
+        topFrameFixedSize   :   1,
         setGamBFInterval    :   function (active = true) {
                                     if (!active) {
                                         clearInterval(window.GAMLibrary.gamBFInterval);
@@ -437,22 +438,6 @@
                                     return arr.map(function(v,i){
                                         return v.toLowerCase();
                                     });
-                                },
-        lockScroll          :   {
-                                    status: false,
-                                    timeout: 3000,
-                                    unset: function() {
-                                        document.body.style.overflow = "initial";
-                                        document.body.style.position = "unset";
-                                        document.body.style.width = "unset";
-                                        this.status = false;
-                                    },
-                                    set: function() {
-                                        document.body.style.overflow = "hidden";
-                                        document.body.style.position = "fixed";
-                                        document.body.style.width = window.screen.width + "px";
-                                        this.status = true;
-                                    }
                                 },
         scrollBottomFrame   : function() {
                                     this.scroll = function(){
@@ -542,13 +527,7 @@
     }
 
 /* DMP CATEGORY LIST */
-window.widgetBLV02 = true;
 window.createDMPTracker = function(adsCatList, dfpTracker, macro) {
-/*
-    var catList = ["fashion-events", "movie-event", "beauty-events", "comedy-events", "fan-conventions", "lifestyle-events", "musical-events", "sporting-events", "auto-shows", "parenting-events", "political-event", "parenting-children-aged-4-11", "special-needs-kids", "apartments", "life-insurance", "motor-insurance", "health-insurance", "education-insurance", "travel-insurance", "home-insurance", "automotive", "auto-racing", "parenting-babies-and-toddlers", "beauty", "disasters", "local-news", "law", "international-news", "crime", "national-news", "elections", "politics", "government-business", "business-and-finance", "cloud-computing", "content-channel", "education", "outdoor-decorating", "consumer-electronics", "esports", "events", "family-and-relationships", "kids-fashion", "mens-fashion", "womens-fashion", "fitness-and-exercise", "fmcg-food-and-drink", "fmcg-personal-care", "fmcg-tobacco", "console-games", "pc-games-and-mobile", "gaming", "computer-peripherals", "hatchback", "health", "healthy-and-wellness", "hobbies-interest", "home-and-garden", "homeschooling", "hotels-and-motels", "pharmaceutical-industry", "financial-industry", "entertainment-industry", "healthcare-industry", "construction-industry", "legal-services-industry", "power-and-energy-industry", "logistics-and-transportation-industry", "food-industry", "manufacturing-industry", "media-industry", "mechanical-and-industrial-engineering-industry", "automotive-industry", "education-industry", "aviation-industry", "hospitality-industry", "advertising-industry", "agriculture", "real-estate-industry", "retail-industry", "technology-industry", "telecommunications-industry", "interior-decorating", "internet", "internet-safety", "residentials-buy-sell-and-rentals", "auto-buying-and-selling", "credit-cards", "household-supplies", "injuries", "pregnancy", "childrens-health", "adults-health", "mental-health", "reproductive-health", "computing", "bollywood-content", "dangdut-content", "movie-content", "entertainment-content", "hijab-content", "hollywood-content", "korean-content", "quiz-content", "music-content", "coffee", "course-education", "green-vehicles", "frozen-foods", "fast-foods", "desserts-and-baking", "snacks", "healthy-cooking-and-eating", "make-up", "marketing-and-advertising", "soft-drinks", "smart-cars", "luxury-cars", "budget-cars", "performance-cars", "mobile-apps", "movies", "mpv", "news-and-politics", "nutrition", "non-profit-organizations", "business-expos-and-conferences", "parenting", "marketplace/ecommerce", "daycare-and-pre-school", "weight-loss", "early-childhood-education", "alternative-medicine", "chronic-disease", "ailment", "sports-equipment", "skin-care", "hair-care", "body-care", "facecare", "home-appliances", "personal-finance", "houses", "loans", "fmcg-oral-care", "fmcg-hair-care", "fmcg-body-care", "fmcg-face-care", "milk-products", "tickets-promo-and-vouchers", "property", "relationship", "parenting-teens", "auto-rentals", "sales-and-promotions", "primary-education", "online-education", "private-school", "soccer", "motorcycles", "auto-repair", "shopping-and-ecommerce", "smartphones", "social-networking", "computer-software-and-applications", "auto-parts", "sports", "startups", "style-and-fashion", "suv", "water-services", "gas-and-electric", "internet-service-providers", "phone-services", "technology-and-computing", "television", "physical-therapy", "train-tickets", "flight-tickets", "online-transportation", "travel", "budget-travel", "special-interest-tv", "childrens-tv", "animation-tv", "news-tv", "drama-tv", "comedy-tv", "music-tv", "sports-tv", "reality-tv", "college-education", "vaccines", "wearable-technology", "web-hosting", "family-travel", "culinary-travel", "religious-tourism"],
-        filteredCat = Object.values(catList).filter((val, key) => adsCatList.find(alVal => alVal == val));
-    window.createCDPTracker(filteredCat, macro);
-*/
     window.createCDPTracker(adsCatList, macro);
     parent.window.open(dfpTracker, '_blank');
 };
@@ -606,34 +585,23 @@ window.createCDPTracker = function(cat, macro) {
                     return keyword.match(regWord) ? true : false;
                 })
             });
-            
-            /*search from keyword, desc & tag meta data*/
-            // blackListWords = GAMLibrary.arrToLowerCase(blackListWords);
-            // dfp_keywords.forEach(function(sKeyword) {
-            //     sKeyword = sKeyword.toLowerCase();
-            //     tagForAds.push(sKeyword);
-            //     if (GAMLibrary.inArray(sKeyword, blackListWords)) {
-            //         isMatcont = true;
-            //     }
-            // });
 
         /*DEFINE ALL SLOT*/
+        if( GAMLibrary.topFrameFixedSize ){
+            googletag.defineSlot(GAMLibrary.dfpTopFrame, [1, 1], 'div-gpt-ad-fimela-topfrm').addService(googletag.pubads());
+        }else{
+            googletag.defineOutOfPageSlot(GAMLibrary.dfpTopFrame, 'div-gpt-ad-fimela-topfrm').addService(googletag.pubads());
+        }
+
         googletag.defineSlot(GAMLibrary.dfpHeadline, [
             [320, 50],
             [320, 100]
         ], 'div-gpt-ad-fimela-hl-1').addService(googletag.pubads());
         googletag.defineSlot('/36504930/m.fimela.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-fimela-sc-1').addService(googletag.pubads());
         googletag.defineSlot(GAMLibrary.dfpExposer1, [[300,250],[300,600],[320,480],[160,600],[250,250]], 'div-gpt-ad-fimela-dfp-exposer-slot1-oop').addService(googletag.pubads());
-
-        // googletag.defineSlot(GAMLibrary.dfpTopFrame, [1, 1], 'div-gpt-ad-fimela-topfrm').addService(googletag.pubads());
-        googletag.defineOutOfPageSlot(GAMLibrary.dfpTopFrame, 'div-gpt-ad-fimela-topfrm').addService(googletag.pubads());
         googletag.defineOutOfPageSlot(GAMLibrary.dfpExposer2, 'div-gpt-ad-fimela-dfp-exposer-slot2-oop').addService(googletag.pubads());
-
         googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-newsTag1', 'div-gpt-ad-fimela-newstag1').addService(googletag.pubads());
         googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-newsTag2', 'div-gpt-ad-fimela-newstag2').addService(googletag.pubads());
-        googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-visual-story-1', 'div-gpt-ad-fimela-visual-story-1-oop').addService(googletag.pubads());
-        googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-visual-story-2', 'div-gpt-ad-fimela-visual-story-2-oop').addService(googletag.pubads());
-        googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-visual-story-3', 'div-gpt-ad-fimela-visual-story-3-oop').addService(googletag.pubads());
         googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-highlight-1', 'div-gpt-ad-fimela-dfp-highlight-1').addService(googletag.pubads());
         googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-highlight-2', 'div-gpt-ad-fimela-dfp-highlight-2').addService(googletag.pubads());
         googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-dfp-overlay-oop').addService(googletag.pubads());
@@ -671,29 +639,6 @@ window.createCDPTracker = function(cat, macro) {
                     var myParam = JSON.parse(urlParams.get('interval'));
                     headlineSticky(myParam);
                 }
-
-                if ( dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame ){
-                    let deviceOrientation = (window.innerHeight < window.innerWidth ? 1 : 0);
-                    var that = GAMLibrary.lockScroll;
-                    GAMLibrary.lockScroll.set();
-
-                    if (GAMLibrary.lockScroll.status) {
-                        setTimeout(function() {
-                            that.unset();
-                        }, that.timeout);
-                    } else {
-                        GAMLibrary.lockScroll.unset();
-                    }
-                    if (deviceOrientation) {
-                        GAMLibrary.lockScroll.unset();
-                    }
-                    window.addEventListener("resize", function() {
-                        let deviceOrientation = (window.innerHeight < window.innerWidth ? 1 : 0);
-                        if (deviceOrientation) {
-                            that.unset();
-                        }
-                    });
-                }
             }
 
             scWidth = 0;
@@ -715,26 +660,6 @@ window.createCDPTracker = function(cat, macro) {
             if (dfp_slotElementId.match(/-oop/)) { 
                 if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && (document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1)) {
                     document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
-                }
-            }
-
-            if (_slots.indexOf(_countAdUnit) != -1) {
-                var _timeEnd = _getDateTimeNow().date;
-                _globalVar.timeEnd = _getDateTimeNow().milisecond;
-                var _totalResponse = _globalVar.timeEnd - _globalVar.timeStart;
-                if(!_send){
-                    var  _timeEndParse= _totalResponse / 1000;
-                    _timeEndResult = +_timeEndParse.toFixed(2);
-                    _callConsoleTime("GPT LOADTIME END WITH "+_countAdUnit +" AD RESPONSE AT", _timeEnd);
-                    _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( milisecond )", _totalResponse + " milisecond");
-                    _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( second )", _timeEndResult + " second");
-
-                    window.dataLayer.push({
-                        event: "load-time",
-                        feature_name: "ads-latency",
-                        feature_value: _timeEndResult
-                    });
-                    _send = true;
                 }
             }
         });
