@@ -424,6 +424,92 @@ scrollBottomFrame   :   function() {
                             this.scrollHandler = this.scroll.bind(this);
                             window.addEventListener("scroll", this.scrollHandler);
                         },
+lazzyLoadingAdunit : function() {
+                                const _noIntersectionMethod = !window.IntersectionObserver;
+                                var __lazzYSetting__ = {
+                                    "div-gpt-ad-bolacom-mobile-contextual-oop" :{
+                                        "type" : "oop",
+                                        "adunit" : "/36504930/m.bola.com/dfp-contextual",
+                                        "generated" : 0,
+                                    }
+                                }
+                            
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    let _options = {
+                                        root: null,
+                                        rootMargin: "750px",
+                                        threshold: 0
+                                    };
+                                    let _observer = null;
+                                    if(_noIntersectionMethod){
+                                        window.addEventListener("scroll",renderAdunit);
+                                    }else{
+                                        _observer = new IntersectionObserver(_entries => {
+                                            _entries.forEach(entry => {
+                                                if (entry.isIntersecting) {
+                                                    value = __lazzYSetting__[entry.target.id];
+                                                    if (!value.generated) {
+                                                        if (value.type == "oop") {
+                                                            _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, entry.target.id).addService(googletag.pubads());
+                                                        }else{
+                                                            _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
+                                                        }
+                                                        googletag.display(_defineSlot_);
+                                                        googletag.pubads().refresh([_defineSlot_]);
+                                                        value.generated = 1;
+                                                    }
+                                                }
+                                            });
+                                        },_options);
+                                        for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                                            let _adunitElement = document.querySelector(`#${key}`);
+
+                                            if(_adunitElement) {
+                                                _observer.observe(_adunitElement);
+                                            }
+                                        };
+                                    }
+
+                                    function renderAdunit(){
+                                        var _generatedCount_ = 0;
+                                        var _itemCount_ = 0;
+
+                                        for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                                            console.log(`${key}: ${value}`);
+                                            _itemCount_ ++;
+                                            var _defineSlot_ = null;
+
+                                            console.log("viewport --",elementInViewport(document.getElementById(key)), null);
+
+                                            if (!value.generated && elementInViewport(document.getElementById(key))) {
+
+                                                if (value.type == "oop") {
+                                                    _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
+                                                }else{
+                                                    _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                                                }
+
+                                                googletag.display(_defineSlot_);
+                                                googletag.pubads().refresh([_defineSlot_]);
+                                                value.generated = 1;
+
+                                            }
+
+                                            if (_generatedCount_ == _itemCount_) {
+                                                window.removeEventListener('scroll',renderAdunit);
+                                            }
+                                        }
+
+                                    }
+                                    
+                                    function elementInViewport(el) {
+                                            let rect = el.getBoundingClientRect()
+                                            return (
+                                                rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+                                            )
+                                    }
+                                });
+                            },
 infiniteSCArticle :     function() {
                             var parentElement = document.querySelector(".article"),
                             pagingElement = parentElement.querySelectorAll(".article-content-body__item");
@@ -506,6 +592,9 @@ window.createCDPTracker = function(cat, macro) {
     partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
 };
 
+/*LOAD CONTEXTUAL ON DOM READY*/
+GAMLibrary.lazzyLoadingAdunit();
+
 googletag.cmd.push(function() {
     /*INIT MATCONT*/
     var urlPath = document.URL, /*GET FULL URL PATH*/
@@ -550,7 +639,7 @@ var oop_dfpHeadline = '/36504930/m.bola.com/dfp-headline';
 googletag.defineSlot(GAMLibrary.dfpHeadline, [[320, 50],[320, 100]], 'div-gpt-ad-bolacom-hl').addService(googletag.pubads());
 googletag.defineSlot('/36504930/m.bola.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-bolacom-sc').addService(googletag.pubads());
 googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-bolacom-dfp-exposer-oop').addService(googletag.pubads());
-googletag.defineOutOfPageSlot('/36504930/m.bola.com/dfp-contextual', 'div-gpt-ad-bolacom-contextual-oop').addService(googletag.pubads());
+// googletag.defineOutOfPageSlot('/36504930/m.bola.com/dfp-contextual', 'div-gpt-ad-bolacom-contextual-oop').addService(googletag.pubads());
 googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-bolacom-overlay-oop').addService(googletag.pubads());
 googletag.defineOutOfPageSlot('/36504930/m.bola.com/dfp-crm-1', 'div-gpt-ad-bolacom-crm1-oop').addService(googletag.pubads());
 googletag.defineOutOfPageSlot('/36504930/m.bola.com/dfp-crm-2', 'div-gpt-ad-bolacom-crm2-oop').addService(googletag.pubads());
