@@ -751,33 +751,6 @@ window.GAMLibrary = {
             feature_position: auPath
         });
     },
-    /* START - TOPFRAME FREEZE - 30 june 2020 */
-    lockScroll: {
-        timeout: 3000,
-        unset: function() {
-            (typeof unfreezePages === 'function') ? unfreezePages(): '';
-        },
-        set: function() {
-            let that = this;
-            let lockTime = new Date().getTime();
-            let startLoad = window.kly && window.kly.startLoad ? window.kly.startLoad : 0;
-            let diff = lockTime - startLoad;
-            let lockTimeStamp = Math.floor(diff / 1000 % 60);
-            this.eventTrackingLock(lockTimeStamp);
-            setTimeout(function() {
-                that.unset();
-            }, that.timeout);
-        },
-        eventTrackingLock: function(lockDuration) {
-            window.dataLayer.push({
-                event: "impression",
-                feature_name: "load-scroll",
-                feature_location: lockDuration,
-                feature_position: ""
-            });
-        }
-    },
-    /* END - TOPFRAME FREEZE - 30 june 2020 */
     lazzyLoadingAdunit : function(){
 				document.addEventListener('DOMContentLoaded', function () {
 					var generateContextual = 0,
@@ -970,32 +943,10 @@ googletag.cmd.push(function() {
                 var myParam = JSON.parse(urlParams.get('interval'));
                 headlineSticky(myParam);
             }
-            /* START - TOPFRAME FREEZE - 30 june 2020 */
-            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopframe) {
-                let deviceOrientation = window.matchMedia("(orientation: portrait)");
-                let that = GAMLibrary.lockScroll;
-                if (!deviceOrientation.matches) {
-                    GAMLibrary.lockScroll.unset();
-                } else {
-                    GAMLibrary.lockScroll.set();
-                }
-                window.addEventListener("resize", function() {
-                    if (!deviceOrientation.matches) {
-                        that.unset();
-                    }
-                });
-            }
-            /* END - TOPFRAME FREEZE - 30 june 2020 */
             if (dfp_slotAdUnitPath == GAMLibrary.dfpBottomFrame) {
                 document.getElementById("dfp-bframe-cont-transparent") && document.getElementById("dfp-bframe-cont-transparent").setAttribute("style", "position: fixed; bottom: 0; min-height: 50px; background-color: #ECECEC70; width: 100%; text-align: center;display:block; z-index: 999999");
             }
         } else {
-            /* START - TOPFRAME FREEZE - 30 june 2020 */
-            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopframe) {
-                GAMLibrary.lockScroll.unset();
-            }
-            /* END - TOPFRAME FREEZE - 30 june 2020 */
-
             var dfp_slotElementId = event.slot.getSlotId().getDomId();
             if (dfp_slotElementId.match(/newsTag|recommend/)) {
                 if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1) {

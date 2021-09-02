@@ -492,32 +492,6 @@ setTimeout(function () {
                                                     return v.toLowerCase();
                                                 });
                                             },
-                    lockScroll          :   {
-                                                timeout: 3000,
-                                                unset: function() {
-                                                    (typeof unfreezePages === 'function') ? unfreezePages() : '';
-                                                },
-                                                set: function() {
-                                                let that = this;
-                                                let lockTime = new Date().getTime();
-                                                let startLoad = kly && kly.startLoad ? kly.startLoad : 0;
-                                                let diff = lockTime - startLoad;
-                                                let lockTimeStamp = Math.floor(diff / 1000 % 60);
-                                                this.eventTrackingLock(lockTimeStamp);
-                                                console.log('Scroll Freeze duration : '+lockTimeStamp);
-                                                setTimeout(function() {
-                                                    that.unset();
-                                                }, that.timeout);
-                                                },
-                                                eventTrackingLock		: 	function(lockDuration){
-                                                    window.dataLayer.push({
-                                                    event: "impression",
-                                                    feature_name: "load-scroll",
-                                                    feature_location: lockDuration,
-                                                    feature_position: "" 
-                                                    });
-                                                }
-                                            },
                     scrollBottomFrame   : 	function() {
                                                 this.scroll = function(){
                                                                     var scrollNode = document.scrollingElement || document.documentElement;
@@ -792,22 +766,6 @@ window.createCDPTracker = function(cat, macro) {
                                 var myParam = JSON.parse(urlParams.get('interval'));
                                 headlineSticky(myParam);
                             }
-                            
-                            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                                let deviceOrientation = window.matchMedia("(orientation: portrait)");
-                                console.log('Scroll Freeze start at :'+(new Date(kly.startLoad)));
-                                let that = GAMLibrary.lockScroll;
-                                if (!deviceOrientation.matches) {
-                                    GAMLibrary.lockScroll.unset();
-                                }else{
-                                    GAMLibrary.lockScroll.set();
-                                }
-                                window.addEventListener("resize", function() {
-                                    if (!deviceOrientation.matches) {
-                                    that.unset();
-                                    }
-                                });
-                            }
                         } else {
                             var dfp_slotElementId = event.slot.getSlotId().getDomId();
                             if (dfp_slotElementId.match(/newsTag|recommend/)) {
@@ -819,10 +777,6 @@ window.createCDPTracker = function(cat, macro) {
                               
                             if (dfp_slotElementId.match(/crm\d/)) {
                               (crmEl = document.querySelector("#"+dfp_slotElementId)) ? (crmEl.parentElement.style.display = "none") : '';
-                            }
-                          
-                            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                              GAMLibrary.lockScroll.unset();
                             }
                         }
                     });
