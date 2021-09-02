@@ -97,7 +97,7 @@ var adUnits = [
         bids: [
             { bidder: "appnexus", params: { placementId: 14771940, member: "10375" } },
             { bidder: "gamma", params: { siteId: 1526627763, zoneId: 1529648577 } },
-            { bidder: "teads", params: { pageId: 111236, placementId: 120941 } },
+            { bidder: "teads", params: { pageId: 120640, placementId: 130846 } },
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
@@ -186,7 +186,6 @@ var adUnits = [
         bids: [
             { bidder: "appnexus", params: { placementId: 14771937, member: "10375" } },
             { bidder: "gamma", params: { siteId: 1526627763, zoneId: 1529648607 } },
-            { bidder: "teads", params: { pageId: 111236, placementId: 120941 } },
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
@@ -268,7 +267,6 @@ var adUnits = [
         bids: [
             { bidder: "appnexus", params: { placementId: 14771937, member: "10375" } },
             { bidder: "gamma", params: { siteId: 1526627763, zoneId: 1526629015 } },
-            { bidder: "teads", params: { pageId: 111236, placementId: 120941 } },
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
@@ -353,7 +351,7 @@ var adUnits = [
         bids: [
             { bidder: "appnexus", params: { placementId: 14771938, member: "10375" } },
             { bidder: "gamma", params: { siteId: 1526627763, zoneId: 1529648373 } },
-            { bidder: "teads", params: { pageId: 111236, placementId: 120941 } },
+            { bidder: "teads", params: { pageId: 120941, placementId: 111236 } },
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
@@ -493,32 +491,6 @@ setTimeout(function () {
                                                 return arr.map(function(v,i){
                                                     return v.toLowerCase();
                                                 });
-                                            },
-                    lockScroll          :   {
-                                                timeout: 3000,
-                                                unset: function() {
-                                                    (typeof unfreezePages === 'function') ? unfreezePages() : '';
-                                                },
-                                                set: function() {
-                                                    let that = this;
-                                                    let lockTime = new Date().getTime();
-                                                    let startLoad = kly && kly.startLoad ? kly.startLoad : 0;
-                                                    let diff = lockTime - startLoad;
-                                                    let lockTimeStamp = Math.floor(diff / 1000 % 60);
-                                                    this.eventTrackingLock(lockTimeStamp);
-                                                    console.log('Scroll Freeze duration : '+lockTimeStamp);
-                                                    setTimeout(function() {
-                                                        that.unset();
-                                                    }, that.timeout);
-                                                },
-                                                eventTrackingLock		: 	function(lockDuration){
-                                                    window.dataLayer.push({
-                                                    event: "impression",
-                                                    feature_name: "load-scroll",
-                                                    feature_location: lockDuration,
-                                                    feature_position: "" 
-                                                    });
-                                                }
                                             },
                     scrollBottomFrame   : 	function() {
                                                 this.scroll = function(){
@@ -779,11 +751,7 @@ window.createCDPTracker = function(cat, macro) {
                     /*Bottom Frame Scrolling*/
                     GAMLibrary.scrollBottomFrame();
                     /*Bottom Frame Scrolling*/
-                    var _countAdUnit = 0,
-                    _slots = !kly.channel.id ? [14, 15] : [16],
-                    _send = false;
                     googletag.pubads().addEventListener('slotResponseReceived', function(event) {
-                        _countAdUnit++;
                         var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
                         var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
             
@@ -798,25 +766,6 @@ window.createCDPTracker = function(cat, macro) {
                                 var myParam = JSON.parse(urlParams.get('interval'));
                                 headlineSticky(myParam);
                             }
-                            
-                            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                                let deviceOrientation = window.matchMedia("(orientation: portrait)");
-                                console.log('Scroll Freeze start at :'+(new Date(kly.startLoad)));
-                                let that = GAMLibrary.lockScroll;
-                                if (!deviceOrientation.matches) {
-                                    GAMLibrary.lockScroll.unset();
-                                }else{
-                                    // check jika terdapat freeze dari publishing 
-                                    if (typeof freezePages == 'function') {
-                                        GAMLibrary.lockScroll.set();
-                                    }
-                                }
-                                window.addEventListener("resize", function() {
-                                    if (!deviceOrientation.matches) {
-                                    that.unset();
-                                    }
-                                });
-                            }
                         } else {
                             var dfp_slotElementId = event.slot.getSlotId().getDomId();
                             if (dfp_slotElementId.match(/newsTag|recommend/)) {
@@ -829,32 +778,7 @@ window.createCDPTracker = function(cat, macro) {
                             if (dfp_slotElementId.match(/crm\d/)) {
                               (crmEl = document.querySelector("#"+dfp_slotElementId)) ? (crmEl.parentElement.style.display = "none") : '';
                             }
-                          
-                            if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                              GAMLibrary.lockScroll.unset();
-                            }
                         }
-
-                        if (_slots.indexOf(_countAdUnit) != -1) {
-                            var _timeEnd = _getDateTimeNow().date;
-                            _globalVar.timeEnd = _getDateTimeNow().milisecond;
-                            var _totalResponse = _globalVar.timeEnd - _globalVar.timeStart;
-                            if(!_send){
-                                var  _timeEndParse= _totalResponse / 1000;
-                                _timeEndResult = +_timeEndParse.toFixed(2);
-                                _callConsoleTime("GPT LOADTIME END WITH "+_countAdUnit +" AD RESPONSE AT", _timeEnd);
-                                _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( milisecond )", _totalResponse + " milisecond");
-                                _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( second )", _timeEndResult + " second");
-
-                                window.dataLayer.push({
-                                    event: "load-time",
-                                    feature_name: "ads-latency",
-                                    feature_value: _timeEndResult
-                                });
-                                console.log("PUSH DATA LAYER : ",window.dataLayer);
-                                _send = true;
-                            }
-                    }
                     });
             
                     /*INITIATE ADS ON CONTINOUS PAGE */
