@@ -1,0 +1,328 @@
+<!-- CHANNEL -->
+<!-- BEGIN PUBMATIC HB WRAPPER CODE -->
+<script type="text/javascript">
+    /*Update 20200626-1330-LN*/
+    var gpt_gam_ver = 'v04-DK';
+    gpt_gam_site = window.location.hostname.toUpperCase();
+    gpt_gam_ver = (typeof gpt_gam_site !== 'undefined') ? gpt_gam_ver.toUpperCase() : 'V.0.1';
+    console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
+    
+    /* START  - LOAD PUBMATIC, GOOGLE ADS & REVIVE */
+    var PWT={}; //Initialize Namespace
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    var gptRan = false;
+    PWT.jsLoaded = function(){ //PubMatic pwt.js on load callback is used to load GPT
+        loadGPT();
+    };
+    var loadGPT = function() {
+        // Check the gptRan flag
+        if (!gptRan) {
+            gptRan = true;
+            var gads = document.createElement('script');
+            var rads = document.createElement('script'); // #1
+            var useSSL = 'https:' == document.location.protocol;
+            gads.src = (useSSL ? 'https:' : 'http:') + '//securepubads.g.doubleclick.net/tag/js/gpt.js';
+            rads.src = (useSSL ? 'https:' : 'http:') + '//adserver.kl-youniverse.com/asyncjs.php'; // #2
+            gads.async = true; 
+            rads.async = true; // #3
+            var node = document.getElementsByTagName('script')[0];
+            node.parentNode.insertBefore(gads, node);
+            node.parentNode.insertBefore(rads, node); // #4
+        }
+    };
+    // Failsafe to call gpt
+    setTimeout(loadGPT, 500);
+
+    (function() {
+        var purl = window.location.href;
+        var url = '//ads.pubmatic.com/AdServer/js/pwt/156536/763';
+        var profileVersionId = '';
+        if(purl.indexOf('pwtv=')>0){
+            var regexp = /pwtv=(.*?)(&|$)/g;
+            var matches = regexp.exec(purl);
+            if(matches.length >= 2 && matches[1].length > 0){
+                profileVersionId = '/'+matches[1];
+            }
+        }
+        var wtads = document.createElement('script');
+        wtads.async = true;
+        wtads.type = 'text/javascript';
+        wtads.src = url+profileVersionId+'/pwt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(wtads, node);
+
+
+        PWT.HookForPrebidRequestBids = function (adUnits) {
+            //console.log('HookForPrebidRequestBids: Original adUnits array :', adUnits);
+            adUnits.forEach(function (au) {
+                //console.log('HookForPrebidRequestBids: adding kadfloor to pubmatic');
+                au.bids.forEach(function (bid) {
+                    //if(bid.bidder == 'pubmatic') {
+                    //bid.params.wiid='hooksimpression';}
+                    if (bid.bidder == 'spotx') {
+                        var s_page_url = window.top!=window.parent?document.referrer:window.location.href
+                            bid.params["custom"] = {"page_url": s_page_url};
+                            bid.params["outstream_function"] = function (bid) {
+                            //console.dir(bid);
+                            //const videoDiv = bid.adUnitCode;
+                            const videoDiv = bid.adUnitCode.split('@')[0];
+                            const playerWidth = 300;
+                            const playerHeight = 250;
+                            //window.console.log("[SPOTX][renderer] Handle SpotX custom outstream renderer");
+                            let script = window.document.createElement("script");
+                            script.type = "text/javascript";
+                            script.src = "//cdn.spotxcdn.com/website/integration_test/media/asia/EASIv2.js";
+                            script.setAttribute("data-spotx_channel_id","" + bid.channel_id);
+                            script.setAttribute("data-spotx_vast_url", "" + bid.vastUrl);
+                            script.setAttribute("data-spotx_content_width", playerWidth);
+                            script.setAttribute("data-spotx_content_height",playerHeight);
+                            script.setAttribute("data-spotx_content_page_url",bid.renderer.config.content_page_url);
+                            script.setAttribute("data-spotx_ad_unit", "incontent");
+                            script.setAttribute("data-spotx_autoplay", "1");
+                            script.setAttribute("data-spotx_continue_out_of_view", "1");
+                            script.setAttribute("data-spotx_content_container_id",videoDiv);
+                            var vid_contain = window.document.getElementById(videoDiv);
+                            vid_contain.style.cssText = "display: none; margin-bottom: 20px";
+                            vid_contain.appendChild(script);
+                        }
+                    }
+                })
+            })
+        };
+    })();
+    /* END  - LOAD PUBMATIC, GOOGLE ADS & REVIVE */
+
+    /*PROTOTYPE CUSTOM FILTERING*/
+    String.prototype.klyFiltering = function (delimiter) {
+        return this.trim().split(delimiter).map(function(t){return t.trim().toLowerCase()}).filter(x => x != "");
+    };
+
+    window.GAMLibrary = {};
+    window.GAMLibrary = {
+        dfpBillboard        :   '/36504930/www.bola.com/dfp-billboard',
+        gamImmersive        :   '/36504930/www.bola.com/dfp-immersive',
+        userAgent           :   navigator.userAgent.toLowerCase(),
+        GAMisTablet         :   /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(this.userAgent),
+        documentMeta        :   function (metaName) {
+                                    var metaResult = '';
+                                    var metas = document.getElementsByTagName('meta');
+                                    if (metas) {
+                                        for (var x = 0, y = metas.length; x < y; x++) {
+                                            if (metas[x].name.toLowerCase() == metaName) {
+                                                metaResult += metas[x].content;
+                                            }
+                                        }
+                                    }
+                                    return metaResult != '' ? metaResult : '';
+                                },
+        inArray             :   function (needle, haystack) {
+                                    var length = haystack.length;
+                                    for (var i = 0; i < length; i++) {
+                                        if (haystack[i] == needle) return true;
+                                    }
+                                    return false;
+                                },                                
+        arrToLowerCase      :   function (arr){
+                                    return arr.map(function(v,i){
+                                        return v.toLowerCase();
+                                    });
+                                }
+    }
+
+/* DMP CATEGORY LIST */
+window.widgetBLV02 = true;
+window.createDMPTracker = function(adsCatList, dfpTracker, macro) {
+    /*
+    var catList = ["fashion-events", "movie-event", "beauty-events", "comedy-events", "fan-conventions", "lifestyle-events", "musical-events", "sporting-events", "auto-shows", "parenting-events", "political-event", "parenting-children-aged-4-11", "special-needs-kids", "apartments", "life-insurance", "motor-insurance", "health-insurance", "education-insurance", "travel-insurance", "home-insurance", "automotive", "auto-racing", "parenting-babies-and-toddlers", "beauty", "disasters", "local-news", "law", "international-news", "crime", "national-news", "elections", "politics", "government-business", "business-and-finance", "cloud-computing", "content-channel", "education", "outdoor-decorating", "consumer-electronics", "esports", "events", "family-and-relationships", "kids-fashion", "mens-fashion", "womens-fashion", "fitness-and-exercise", "fmcg-food-and-drink", "fmcg-personal-care", "fmcg-tobacco", "console-games", "pc-games-and-mobile", "gaming", "computer-peripherals", "hatchback", "health", "healthy-and-wellness", "hobbies-interest", "home-and-garden", "homeschooling", "hotels-and-motels", "pharmaceutical-industry", "financial-industry", "entertainment-industry", "healthcare-industry", "construction-industry", "legal-services-industry", "power-and-energy-industry", "logistics-and-transportation-industry", "food-industry", "manufacturing-industry", "media-industry", "mechanical-and-industrial-engineering-industry", "automotive-industry", "education-industry", "aviation-industry", "hospitality-industry", "advertising-industry", "agriculture", "real-estate-industry", "retail-industry", "technology-industry", "telecommunications-industry", "interior-decorating", "internet", "internet-safety", "residentials-buy-sell-and-rentals", "auto-buying-and-selling", "credit-cards", "household-supplies", "injuries", "pregnancy", "childrens-health", "adults-health", "mental-health", "reproductive-health", "computing", "bollywood-content", "dangdut-content", "movie-content", "entertainment-content", "hijab-content", "hollywood-content", "korean-content", "quiz-content", "music-content", "coffee", "course-education", "green-vehicles", "frozen-foods", "fast-foods", "desserts-and-baking", "snacks", "healthy-cooking-and-eating", "make-up", "marketing-and-advertising", "soft-drinks", "smart-cars", "luxury-cars", "budget-cars", "performance-cars", "mobile-apps", "movies", "mpv", "news-and-politics", "nutrition", "non-profit-organizations", "business-expos-and-conferences", "parenting", "marketplace/ecommerce", "daycare-and-pre-school", "weight-loss", "early-childhood-education", "alternative-medicine", "chronic-disease", "ailment", "sports-equipment", "skin-care", "hair-care", "body-care", "facecare", "home-appliances", "personal-finance", "houses", "loans", "fmcg-oral-care", "fmcg-hair-care", "fmcg-body-care", "fmcg-face-care", "milk-products", "tickets-promo-and-vouchers", "property", "relationship", "parenting-teens", "auto-rentals", "sales-and-promotions", "primary-education", "online-education", "private-school", "soccer", "motorcycles", "auto-repair", "shopping-and-ecommerce", "smartphones", "social-networking", "computer-software-and-applications", "auto-parts", "sports", "startups", "style-and-fashion", "suv", "water-services", "gas-and-electric", "internet-service-providers", "phone-services", "technology-and-computing", "television", "physical-therapy", "train-tickets", "flight-tickets", "online-transportation", "travel", "budget-travel", "special-interest-tv", "childrens-tv", "animation-tv", "news-tv", "drama-tv", "comedy-tv", "music-tv", "sports-tv", "reality-tv", "college-education", "vaccines", "wearable-technology", "web-hosting", "family-travel", "culinary-travel", "religious-tourism"],
+        filteredCat = Object.values(catList).filter((val, key) => adsCatList.find(alVal => alVal == val));
+    window.createCDPTracker(filteredCat, macro);
+*/
+    window.createCDPTracker(adsCatList, macro);
+    parent.window.open(dfpTracker, '_blank');
+};
+
+window.createCDPTracker = function(cat, macro) {
+    var cName = 'liputan6_id_visitor_id=',
+        cVisitorId = document.cookie.split(';').find(v => { return v.match(cName);}),
+        partnerUID = cVisitorId ? decodeURIComponent(cVisitorId).trim().replace(cName, '') : 0,
+        gamMacro = typeof macro === "string" ? JSON.parse(macro) : macro,
+        defaultKey = {
+            adunitId: "ads_adunit_id",
+            advertiserId: "ads_advertiser_id",
+            creativeId: "ads_creative_id",
+            lineitemId: "ads_lineitem_id",
+            orderId: "ads_order_id",
+        };
+
+    	actionDetails = Object.keys(gamMacro).reduce((obj, k) => Object.assign(obj, defaultKey[k] ? { [defaultKey[k]]: gamMacro[k] } : { [k]: gamMacro[k] }), {}),
+        cdpData = {
+            action: actionDetails.action ? actionDetails.action : 'ads_click',
+            action_category: cat,
+            action_details: actionDetails.action ? (delete actionDetails.action,actionDetails=actionDetails) : actionDetails,
+            visitor_id: partnerUID
+        };
+
+    console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
+    console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
+
+    partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
+};
+  
+    googletag.cmd.push(function() {
+        var urlPath = document.URL,
+            isMatcont = false,
+            _klyObject = typeof window.kly !== 'undefined' ? window.kly : window.kmklabs,
+            _articlePages = _klyObject && _klyObject.article,
+            _isAdultContent = _articlePages && _articlePages.isAdultContent,
+            /*INIT CONTENT FILTERING SCRIPT*/
+            blackListWords = new Array('matcont', 'aduhai', 'kelamin', 'vital', 'anal', 'belahan', 'bercinta', 'bergairah', 'gairah', 'intim', 'bikini', 'bokong', 'boob', 'bra', 'bugil', 'celana', 'ciuman', 'cleavage', 'dada', 'dewasa', 'diremas', 'doggie', 'ejakulasi', 'ereksi', 'erotis', 'foreplay', 'kiss', 'seks', 'gangbang', 'horny', 'hot', 'kamasutra', 'keperawanan', 'perawan', 'kondom', 'kontrasepsi', 'libido', 'lingerie', 'masturbasi', 'mature', 'menggairahkan', 'menggoda', 'mesra', 'miss-v', 'mr-p', 'nakal', 'naughty', 'nipple', 'nipples', 'onani', 'oral', 'oral seks', 'organ', 'orgasme', 'paha', 'pantat', 'panties', 'payudara', 'pelecehan', 'telanjang', 'penetrasi', 'penis', 'perkosa', 'perkosaan', 'pole', 'porno', 'pornoaksi', 'pornografi', 'telentang', 'provokatif', 'putting', 'ranjang', 'sex', 'penetratif', 'seksi', 'seksual', 'sensual', 'seronok', 'doll', 'toys', 'skandal', 'sperma', 'striptease', 'striptis', 'syur', 'terangsang', 'tiduri', 'topless', 'vagina', 'vibrator', 'lendir', 'prostitusi', 'homoseks', 'meraba-raba', 'mesum', 'memerkosa', 'rudapaksa', 'kemaluan', 'menewaskan', 'menewaskan orang', 'mengancam nyawa', 'meninggal', 'meninggal dunia', 'orang mati', 'orang tewas', 'pemakaman', 'petugas penyelamat', 'telah meninggal', 'terbunuh', 'tewas', 'tewaskan', 'tim penyelamat', 'wanita meninggal', 'autopsi', 'belasungkawa', 'bencana', 'bencana besar', 'bunuh orang', 'bunuh diri', 'darurat bencana', 'dilaporkan tewas', 'dimakamkan', 'dipastikan tewas', 'ditemukan mati', 'ditemukan tewas', 'hilangnya nyawa', 'identitas korban', 'inalillahi', 'jasad korban', 'jasadnya', 'jenasah wanita', 'jenazah', 'jenazah pria', 'jenazah teridentifikasi', 'jasad', 'kehilangan hidupnya', 'kehilangan nyawa', 'kehilangan nyawanya', 'kematian', 'korban', 'korban jiwa', 'korban meninggal', 'korban tewas', 'mati', 'mayat', 'mayat korban', 'membunuh', 'membunuh istrinya', 'membunuh mereka', 'membunuh suaminya', 'menemui ajal', 'mengalami koma', 'menghembuskan nafas terakhir', 'menimbulkan korban', 'meninggal akibat sakit', 'menyebabkan kematian', 'meregang nyawa', 'meregggut nyawa', 'modar', 'nyawa hilang', 'nyawa melayang', 'penyebab kematian', 'tak bernyawa', 'tak sadarkan diri', 'terkapar', 'tidak bernyawa', 'tutup usia', 'wafat', 'kematian virus', 'kematian wabah', 'korban terinfeksi', 'virus menyerang', 'merenggut nyawa', 'pelayat', 'hilangkan nyawa', 'renggut nyawa', 'wabah', 'keadaan kritis', 'kehilangan darah', 'merenggut jiwa', 'telan nyawa', 'menelan nyawa', 'memakan nyawa', 'dinyatakan meninggal', 'nyawa tak tertolong', 'penyakit', 'sakit pernapasan', 'sesak', 'korona', 'corona', 'odp', 'pdp', 'virus', 'rumah sakit', 'Covid-19', 'virus korona', 'positif korona', 'COVID-19', 'virus corona', 'terjangkit COVID-19', 'terinfeksi virus corona'),
+            /* POPULATE META DATA KEYWORDS */
+            dfp_pageTitle = _articlePages && _articlePages.title.klyFiltering(' '),
+            dfp_titles = (typeof dfp_pageTitle !== 'undefined') ? dfp_pageTitle : '',
+            dfp_pageKeywords = GAMLibrary.documentMeta("keywords"),
+            dfp_keyword = dfp_pageKeywords.klyFiltering(","),
+            /* POPULATE META DATA DESC */
+            dfp_pageDesc = GAMLibrary.documentMeta("description"),
+            dfp_desc = dfp_pageDesc.klyFiltering(","),
+            tagForAds = _klyObject.gtm.tag.replace(/[^A-Za-z0-9|\- ]/ig,"").klyFiltering("|"),
+            dfp_keywords = dfp_keyword.concat(dfp_titles, dfp_desc, tagForAds).filter(item=>item!==undefined);
+            /*MATURE CONTENT DEFINED VAR & SET TARGETTING*/
+            if (!blackListWords) {
+                var blackListWords = new Array('matcont');
+            }
+
+            // /*search from keyword, desc & tag meta data*/
+            // blackListWords = GAMLibrary.arrToLowerCase(blackListWords);
+            // dfp_keywords.forEach(function(sKeyword) {
+            //     sKeyword = sKeyword.toLowerCase();
+            //     tagForAds.push(sKeyword);
+            //     if (GAMLibrary.inArray(sKeyword, blackListWords)) {
+            //         isMatcont = true;
+            //     }
+            // });
+            if (_isAdultContent) {
+				isMatcont = true;
+                console.log("window object isAdultContent , matcont = ",isMatcont);
+            } else {
+                isMatcont = blackListWords.some((word)=>{
+                    let regWord = new RegExp("(" + word + ")","ig");
+                    return dfp_keywords.some((keyword)=>{
+						return keyword.match(regWord) ? true : false;
+                    })
+                });
+                console.log("non window object, matcont = ",isMatcont);
+            }
+
+        /* DEFINE IMMERSIVE TAG - DO NOT CHANGE THE SLOT ORDER, IMMERSIVE ALWAYS ON THE 1st POSITION - */
+        var gam_immersive = googletag.defineOutOfPageSlot(GAMLibrary.gamImmersive, 'div-gpt-ad-bolacom-immersive-oop').addService(googletag.pubads());
+
+        googletag.defineSlot('/36504930/www.bola.com/dfp-sc', [[300, 250], [250, 250]], 'div-gpt-ad-bolacom-sc').addService(googletag.pubads());
+        googletag.defineSlot('/36504930/www.bola.com/dfp-halfpage1', [[300, 250], [300, 600], [160, 600]], 'div-gpt-ad-bolacom-halfpage1').addService(googletag.pubads());
+        googletag.defineSlot('/36504930/www.bola.com/dfp-halfpage2', [[300, 250], [300, 600], [160, 600]], 'div-gpt-ad-bolacom-halfpage2').addService(googletag.pubads());
+        googletag.defineSlot('/36504930/www.bola.com/dfp-lb', [[970, 250],[970, 90],[728, 90]], 'div-gpt-ad-bolacom-lb').addService(googletag.pubads()).setTargeting("leaderboard_type", ['direct']);
+  
+        /*OUT OF PAGE SLOT*/
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-balloon', 'div-gpt-ad-bolacom-balloon-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-contextual', 'div-gpt-ad-bolacom-contextual-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-headline1', 'div-gpt-ad-bolacom-dfp-headline1-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-headline2', 'div-gpt-ad-bolacom-dfp-headline2-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-headline3', 'div-gpt-ad-bolacom-dfp-headline3-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-middle', 'div-gpt-ad-bolacom-middle').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-nativeOut1', 'div-gpt-ad-bolacom-dfp-nativeOut1-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-nativeOut4', 'div-gpt-ad-bolacom-dfp-nativeOut4-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-nativeOut8', 'div-gpt-ad-bolacom-dfp-nativeOut8-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-nativeOut12', 'div-gpt-ad-bolacom-dfp-nativeOut12-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-popup', 'div-gpt-ad-bolacom-popup-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-newsTag1', 'div-gpt-ad-bolacom-newsTag1-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-crm-headline', 'div-gpt-ad-bolacom-crm-headline-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-crm-1', 'div-gpt-ad-bolacom-crm1-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-crm-2', 'div-gpt-ad-bolacom-crm2-oop').addService(googletag.pubads());
+        googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-crm-3', 'div-gpt-ad-bolacom-crm3-oop').addService(googletag.pubads());
+  
+        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+            var dfp_slotElementId = event.slot.getSlotId().getDomId();
+
+            if (event.slot == gam_immersive) {
+                if (event.isEmpty) {
+                    gam_billboard = googletag.defineOutOfPageSlot(GAMLibrary.dfpBillboard, 'div-gpt-ad-bolacom-billboard-oop').addService(googletag.pubads());
+                    gam_topfrm    = googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-topfrm', 'div-gpt-ad-bolacom-topfrm-oop').addService(googletag.pubads());
+                  	gam_bottomfrm = googletag.defineSlot('/36504930/www.bola.com/dfp-bottomfrm', [468, 60], 'div-gpt-ad-bolacom-bottomfrm-oop').addService(googletag.pubads());
+                    
+                    googletag.display('div-gpt-ad-bolacom-billboard-oop');
+                    googletag.display('div-gpt-ad-bolacom-topfrm-oop');
+                    googletag.display('div-gpt-ad-bolacom-bottomfrm-oop');
+                    
+                    if(!GAMLibrary.GAMisTablet){
+                        gam_skinad    = googletag.defineOutOfPageSlot('/36504930/www.bola.com/dfp-skinad', 'div-gpt-ad-bolacom-skinad-oop').addService(googletag.pubads());
+                        googletag.display('div-gpt-ad-bolacom-skinad-oop');
+                        googletag.pubads().refresh([gam_billboard, gam_topfrm, gam_bottomfrm, gam_skinad]);
+                    }else{
+                        googletag.pubads().refresh([gam_billboard, gam_topfrm, gam_bottomfrm]);
+                    }
+                }
+            }
+
+          
+            /* DISPLAY NONE THE IFRAME, FOR ADS ELEMENT OUTSIDE IT'S IFRAME CONTAINER */
+            // if (dfp_slotElementId.match(/-oop/) && !dfp_slotElementId.match(/billboard/)) {
+            //     if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1) {
+            //         document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
+            //     }
+            // }
+        });
+
+        /*  START TARGETING BLOCK   */
+        if (isMatcont) { googletag.pubads().setTargeting("isMatcont", ["1"]);}
+        if(typeof Krux !== "undefined"){
+            googletag.pubads().setTargeting('ksg', Krux.segments);
+            googletag.pubads().setTargeting('kuid', Krux.user);
+        }
+        googletag.pubads().setTargeting("tags",dfp_keywords);
+        googletag.pubads().setTargeting("currentUrl", urlPath);
+        googletag.pubads().setTargeting("type", kmklabs.gtm.type);
+        googletag.pubads().setTargeting("pageType", kmklabs.pageType);
+        googletag.pubads().setTargeting("channel", kmklabs.gtm.subCategory);
+        googletag.pubads().setTargeting("audience", kmklabs.gtm.audience.split("|"));
+        googletag.pubads().setTargeting("isAdvertorial", typeof (isAdvertorial = kmklabs.article && kmklabs.article.isAdvertorial.toString()) === "undefined" ? "false" :  isAdvertorial);   
+        googletag.pubads().setTargeting("isMultipage", typeof (isMultipage = kmklabs.article && kmklabs.article.isMultipage.toString()) === "undefined" ? "false" : isMultipage );
+        googletag.pubads().setTargeting("articleId", kmklabs.gtm.articleId.toString());
+      	googletag.pubads().setTargeting("site", kmklabs.site);
+        googletag.pubads().setTargeting("age", typeof (age = kmklabs.gtm.age) === "undefined" ? "false" : kmklabs.gtm.age.toString());
+        googletag.pubads().setTargeting("gender", typeof (gender = kmklabs.gtm.gender) === "undefined" ? "false" : kmklabs.gtm.gender.toString());
+        /*  END TARGETING BLOCK   */
+      
+				/* SET VISITOR ID AS PUBLISHER PROVIDED ID - START*/
+				var cVisitorId = (visId = document.cookie.split('liputan6_id_visitor_id=')[1]) ? visId.split(';')[0].replace(/[^a-zA-Z0-9]/ig,'') : 0;
+				cVisitorId ? googletag.pubads().setPublisherProvidedId(cVisitorId+'kly') : '';
+				/* SET VISITOR ID AS PUBLISHER PROVIDED ID - END*/
+      
+        googletag.pubads().setCentering(true);
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().collapseEmptyDivs();
+        googletag.enableServices();
+      });
+  
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-immersive-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-sc'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-halfpage1'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-halfpage2'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-lb'); });
+  
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-balloon-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-contextual-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-headline1-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-headline2-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-headline3-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-middle'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-nativeOut1-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-nativeOut4-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-nativeOut8-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-dfp-nativeOut12-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-popup-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-newsTag1-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-crm-headline-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-crm1-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-crm2-oop'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-bolacom-crm3-oop'); });
+  </script>
