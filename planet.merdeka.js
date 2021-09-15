@@ -666,34 +666,6 @@ if(isMobile) {
                                                 feature_position: auPath /* ==> diambil dari adunit path ( e.slot.getSlotId().getAdUnitPath(); ), Example: "/36504930/m.kapanlagi.com/dfp-bottomfrm"*/
                                             });
                                         },
-        /* START - TOPFRAME FREEZE - 30 june 2020 */
-        lockScroll          		:   {
-                                            timeout: 3000,
-                                            unset: function() {
-                                                (typeof unfreezePages === 'function') ? unfreezePages() : '';
-                                                (typeof gamInitTopFrame === 'object') ? gamInitTopFrame.gamTFunfreeze(): '';
-                                            },
-                                            set: function() {
-                                                    var that = this;
-                                                    var lockTime = new Date().getTime();
-                                                    var startLoad = window.kly && window.kly.startLoad ? window.kly.startLoad : 0;
-                                                    var diff = lockTime - startLoad;
-                                                    var lockTimeStamp = Math.floor(diff / 1000 % 60);
-                                                    this.eventTrackingLock(lockTimeStamp);
-                                                    setTimeout(function() {
-                                                        that.unset();
-                                                    }, that.timeout);
-                                            },
-                                            eventTrackingLock		: 	function(lockDuration){
-                                                window.dataLayer.push({
-                                                event: "impression",
-                                                feature_name: "load-scroll",
-                                                feature_location: lockDuration,
-                                                feature_position: "" 
-                                                });
-                                            }
-                                        },
-        /* END - TOPFRAME FREEZE - 30 june 2020 */
         lazzyLoadingAdunit : function(){
                                 var __lazzYSetting__ = {
                                     "div-gpt-ad-merdeka-mobile-contextual-oop" :{
@@ -868,11 +840,8 @@ if(isMobile) {
         GAMLibrary.timedBottomFrm = googletag.defineSlot(GAMLibrary.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-merdeka-bottomfrm').addService(googletag.pubads());
         GAMLibrary.scrollBottomFrame();
         /*Bottom Frame Scrolling*/
-        var _countAdUnit = 0,
-        _slots = kly.pageType !== "ReadPage" ? [9] : [10,11,12],
-        _send = false;
+        
         googletag.pubads().addEventListener('slotResponseReceived', function(event) {
-            _countAdUnit++;
             var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
             var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
             var dfp_slotAdUnitID = event.slot.getSlotId().getId(); /* get adunit container id*/
@@ -884,53 +853,12 @@ if(isMobile) {
                     console.log('INIT STICKY HEADLINE ');
                     headlineSticky();
                 }
-                /* START - TOPFRAME FREEZE - 30 june 2020 */
-                if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                    var deviceOrientation = window.matchMedia("(orientation: portrait)");
-                    var that = GAMLibrary.lockScroll;
-                    if (!deviceOrientation.matches) {
-                        GAMLibrary.lockScroll.unset();
-                    }else{
-                        GAMLibrary.lockScroll.set();
-                    }
-                    window.addEventListener("resize", function() {
-                        if (!deviceOrientation.matches) {
-                            that.unset();
-                        }
-                    });
-                }
-                /* END - TOPFRAME FREEZE - 30 june 2020 */
-            }else{
-                /* START - TOPFRAME FREEZE - 30 june 2020 */
-                if (dfp_slotAdUnitPath == GAMLibrary.dfpTopFrame) {
-                    GAMLibrary.lockScroll.unset();                     
-                }	
-                /* END - TOPFRAME FREEZE - 30 june 2020 */					
             }
 
             if (dfp_slotElementId.match(/-oop/)) { 
                 if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && (document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1)) {
                     document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
                 }
-            }
-            if (_slots.indexOf(_countAdUnit) != -1) {
-                    var _timeEnd = _getDateTimeNow().date;
-                    _globalVar.timeEnd = _getDateTimeNow().milisecond;
-                    var _totalResponse = _globalVar.timeEnd - _globalVar.timeStart;
-                    if(!_send){
-                        var  _timeEndParse= _totalResponse / 1000;
-                        _timeEndResult = +_timeEndParse.toFixed(2);
-                        _callConsoleTime("GPT LOADTIME END WITH "+_countAdUnit +" AD RESPONSE AT", _timeEnd);
-                        _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( milisecond )", _totalResponse + " milisecond");
-                        _callConsoleTime("GPT LOADTIME TOTAL RESPONSE ( second )", _timeEndResult + " second");
-
-                        window.dataLayer.push({
-                            event: "load-time",
-                            feature_name: "ads-latency",
-                            feature_value: _timeEndResult
-                        });
-                        _send = true;
-                    }
             }
         });
 
