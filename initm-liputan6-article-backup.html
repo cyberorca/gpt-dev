@@ -41,7 +41,7 @@
 <script type="text/javascript">
 
             /** Prebid.js - Start */
-            
+
             function spotxOutstreamFunc(bid) {
                 function mobileAndTabletcheck() {
                     var check = false;
@@ -384,11 +384,10 @@
                                                                 var scrollNode = document.scrollingElement || document.documentElement;
                                                                 var scrollTop = scrollNode.scrollTop;
                                                                 if (scrollTop >= "200") {
-                                                                    // console.log('testing scroll',scrollTop,this.timedBottomFrm);
                                                                     this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-liputan6-bottomfrm').addService(googletag.pubads());
                                                                     window.removeEventListener("scroll", this.scrollHandler);
+                                                                    pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
                                                                     googletag.pubads().refresh([this.timedBottomFrm]);
-
                                                                     this.refreshSlot = this.timedBottomFrm;
                                                                     this.setGamBFInterval();
                                                                 }
