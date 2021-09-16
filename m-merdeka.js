@@ -897,6 +897,11 @@ googletag.cmd.push(function() {
         [250, 250],
         [200, 200]
     ], 'div-gpt-ad-merdeka-sc').addService(googletag.pubads());
+    googletag.defineSlot(GAMLibrary.scSlot, [
+        [300, 250],
+        [250, 250],
+        [200, 200]
+    ], 'div-gpt-ad-merdeka-sc-2').addService(googletag.pubads());
     googletag.defineSlot(GAMLibrary.dfpExposer1, [
         [300, 250],
         [300, 600],
