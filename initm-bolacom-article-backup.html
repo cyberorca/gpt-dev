@@ -259,6 +259,7 @@
                                         }
                                         window.GAMLibrary.gamBFInterval = setInterval(function () {
                                         document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
+                                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
                                         googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
                                         }, 60000);
                                     },
@@ -363,6 +364,7 @@
                                                                         _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
                                                                     }
                                                                     googletag.display(_defineSlot_);
+                                                                    (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                                     googletag.pubads().refresh([_defineSlot_]);
                                                                     value.generated = 1;
                                                                 }
@@ -398,6 +400,7 @@
                                                             }
 
                                                             googletag.display(_defineSlot_);
+                                                            (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                             googletag.pubads().refresh([_defineSlot_]);
                                                             value.generated = 1;
 

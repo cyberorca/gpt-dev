@@ -275,6 +275,7 @@
                                     }
                                     window.GAMLibrary.gamBFInterval = setInterval(function () {
                                         document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
+                                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
                                         googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
                                     }, 40000);
                                 },
@@ -332,6 +333,7 @@
                                                                 if ( SC = googletag.defineSlot('/36504930/m.fimela.com/dfp-sc', [[300,250],[250,250],[200,200]], child.id) ) {
                                                                     SC.addService(googletag.pubads()).setTargeting("pagetype", kmklabs.pageType).setTargeting("position", (pagingIndex-1));
                                                                     googletag.display(child.id);
+                                                                    pbjs.setTargetingForGPTAsync(['/36504930/m.fimela.com/dfp-sc']);
                                                                     googletag.pubads().refresh([SC]);
                                                                 }
                                                             }
@@ -387,6 +389,7 @@
 
                                                             this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-fimela-bottomfrm').addService(googletag.pubads());
                                                             window.removeEventListener("scroll", this.scrollHandler);
+                                                            pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
                                                             googletag.pubads().refresh([this.timedBottomFrm]);
 
                                                             this.refreshSlot = this.timedBottomFrm;
@@ -428,6 +431,7 @@
                                                             _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
                                                         }
                                                         googletag.display(_defineSlot_);
+                                                        (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                         googletag.pubads().refresh([_defineSlot_]);
                                                         value.generated = 1;
                                                     }
@@ -463,6 +467,7 @@
                                                 }
 
                                                 googletag.display(_defineSlot_);
+                                                (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                 googletag.pubads().refresh([_defineSlot_]);
                                                 value.generated = 1;
 
