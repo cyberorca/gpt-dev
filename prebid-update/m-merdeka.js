@@ -88,7 +88,8 @@ var adUnits = [
                             { bidder: "adnuntius",  params: {  auId: "00000000001093da" } },
                             { bidder: "grid", params: { uid: 73361, bidFloor: 0.2 } },
                             { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } },
-                            { bidder: 'ix', params: { siteId: '683428' } }
+                            { bidder: 'ix', params: { siteId: '683428' } },
+                            { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Merdeka-Mobile-300x250_1' } }
                     ],
                 },
                 {
@@ -118,8 +119,9 @@ var adUnits = [
                             { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
                             { bidder: "adnuntius", params: { auId: "00000000001093d3" } },
                             { bidder: "grid", params: { uid: 73363, bidFloor: 0.2 } },
-                            { bidder: 'rubicon',params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } },
-                            { bidder: 'ix', params: { siteId: '683427' } }
+                            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } },
+                            { bidder: 'ix', params: { siteId: '683427' } },
+                            { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Merdeka-Mobile-320x50_1' } }
                     ],
                 },
                 {
@@ -144,6 +146,7 @@ var adUnits = [
                             { bidder: "emx_digital", params: { tagid: "113616" } },
                             { bidder: "innity", params: { zone: 98045, pub: 539 } },
                             { bidder: "oftmedia", params: { placementId: "18777699" }},
+                            { bidder: "teads", params: { pageId: 122248, placementId: 132780 } },
                             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                             { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
                             { bidder: "adnuntius", params: { auId: "00000000001093dc" } },
@@ -151,7 +154,7 @@ var adUnits = [
                                 bidder: 'pubmatic',
                                 params: {
                                     publisherId: '156536',
-                                    videoAdUnit : '4045173',
+                                    videoAdUnit : '4045177',
                                     adSlot: 'kly_prebid_outstream_mobile_merdeka',
                                     outstreamAU: 'kly_prebid_outstream_mobile_merdeka',
                                     video: {
@@ -202,7 +205,8 @@ var adUnits = [
                         { bidder: "grid", params: { uid: 55685, bidFloor: 0.2 } }, 
                         { bidder: "innity", params: { zone: 98046, pub: 539 } }, 
                         { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } }, 
-                        { bidder: 'ix', params: { siteId: '683430' } }
+                        { bidder: 'ix', params: { siteId: '683430' } },
+                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Merdeka-Mobile-300x600' } }
                     ],
                 },
 ];

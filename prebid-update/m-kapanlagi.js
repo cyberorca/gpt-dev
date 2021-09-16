@@ -87,7 +87,8 @@
                         { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
                         { bidder: 'rubicon', params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
                         { bidder: 'ix', params: { siteId: '683432' } },
-                        { bidder: "innity", params: { zone: 97836, pub: 539 } }
+                        { bidder: "innity", params: { zone: 97836, pub: 539 } },
+                        { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-300x250_1', } } 
                     ],
                 },
                 {
@@ -119,7 +120,8 @@
                         { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
                         { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
                         { bidder: "ix", params: { siteId: "683431" } },
-                        { bidder: "innity", params: { zone: 97835, pub: 539 }}
+                        { bidder: "innity", params: { zone: 97835, pub: 539 }},
+                        { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-320x50_1', } } 
                     ],
                 },
                 {
@@ -153,7 +155,7 @@
                             bidder: 'pubmatic',
                             params: {
                                 publisherId: '156536',
-                                videoAdUnit : '4045177',
+                                videoAdUnit : '4045181',
                                 adSlot: 'kly_prebid_outstream_mobile_kapanlagi',
                                 outstreamAU: 'kly_prebid_outstream_mobile_kapanlagi',
                                 video: {
@@ -203,7 +205,8 @@
                         { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                         { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
                         { bidder: "innity", params: { zone: 97107, pub: 539 } },
-                        { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } }
+                        { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
+                        { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-300x600' } }
                     ],
                 },
             ];

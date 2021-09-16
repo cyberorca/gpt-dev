@@ -43,41 +43,23 @@ function spotxOutstreamFunc(bid) {
     vid_contain.appendChild(script);
 }
 
+
 const priceGranularityConfig = {
     buckets: [
-        {
-            precision: 2,
-            min: 0.2,
-            max: 2.99,
-            increment: 0.01,
-        },
-        {
-            precision: 2,
-            min: 3.0,
-            max: 5.95,
-            increment: 0.05,
-        },
-        {
-            precision: 2,
-            min: 6.0,
-            max: 20.0,
-            increment: 0.5,
-        },
+        { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
+        { precision: 2, min: 3, max: 10, increment: 0.1 },
     ],
 };
 
 var gptadslots = [];
 var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
 var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
-
-var PREBID_TIMEOUT = 1500;
+var PREBID_TIMEOUT = 1000;
 var FAILSAFE_TIMEOUT = 3000;
 var HB_TIMEOUT = 1000;
 var adUnits = [
     {
-        code: "div-gpt-ad-bola-sc",
+        code: "/36504930/m.bola.net/dfp-SC",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -97,48 +79,18 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113621" } },
-            { bidder: "innity", params: { zone: 97841 , pub : 536} },
+            { bidder: "innity", params: { zone: 97841 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777772" } },
             { bidder: "teads", params: { pageId: 120637, placementId: 130843 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093fa" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Bolanet-Mobile-300x250',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377462,
-                    zoneId: 2082392
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Bolanet-Mobile-300x250', } }, 
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377462, zoneId: 2082392 } }
         ],
     },
     {
-        code: "div-gpt-ad-bola-hl",
+        code: "/36504930/m.bola.net/dfp-headline",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -157,47 +109,18 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113621" } },
-            { bidder: "innity", params: { zone: 97840 , pub : 536} },
+            { bidder: "innity", params: { zone: 97840 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777772" } },
+            { bidder: "teads", params: { pageId: 120637, placementId: 130843 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093f3" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Bolanet-Mobile-320x100_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377462,
-                    zoneId: 2082392
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Bolanet-Mobile-320x50_1' } }, 
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377462, zoneId: 2082392 } }
         ],
     },
     {
-        code: "div-gpt-ad-bola-bottomfrm",
+        code: "/36504930/m.bola.net/dfp-bottomfrm",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -216,46 +139,35 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113621" } },
-            { bidder: "innity", params: { zone: 97842 , pub : 536} },
+            { bidder: "innity", params: { zone: 97842 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777772" } },
+            { bidder: "teads", params: { pageId: 120637, placementId: 130843 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
             {
                 bidder: 'pubmatic',
                 params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Bolanet-Mobile-320x50_1',
+                    publisherId: "156536",
+                    videoAdUnit: "4045169",
+                    adSlot: "kly_prebid_outstream_mobile_bola_net",
+                    outstreamAU: "kly_prebid_outstream_mobile_bola_net",
                     video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
+                        skippable: false,
+                        playbackmethod: [2],
+                        context: "outstream",
+                        api: [2, 7],
+                        minduration: 5,
+                        maxduration: 30,
+                        mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                        placement: 3
                     }
                 }
             },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377462,
-                    zoneId: 2082392
-                }
-            }
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377462, zoneId: 2082392 } }
         ],
     },
     {
-        code: "div-gpt-ad-bola-dfp-exposer-slot1-oop",
+        code: "/36504930/m.bola.net/dfp-exposer-slot1",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -277,55 +189,30 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113621" } },
-            { bidder: "innity", params: { zone: 97843 , pub : 536} },
+            { bidder: "innity", params: { zone: 97843 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777772" } },
-            { bidder: "teads", params: { pageId: 120938, placementId: 111233 } },
+            { bidder: "teads", params: { pageId: 120637, placementId: 130843 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "0000000000109407" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Bolanet-Mobile-300x600',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377462,
-                    zoneId: 2082392
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Bolanet-Mobile-300x600' } }, 
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377462, zoneId: 2082392 } }
         ],
     },
 ];
 
+pbjs.que = pbjs.que || [];
+googletag.cmd = googletag.cmd || [];
 googletag.cmd.push(function () {
     googletag.pubads().disableInitialLoad();
 });
 
 pbjs.que.push(() => {
     pbjs.setConfig({
-        enableSendAllBids:true
+        enableSendAllBids:true,
+        cache: {
+            url: 'https://prebid.adnxs.com/pbc/v1/cache'
+        },
         // bidderTimeout: 2000,
 
     });
@@ -355,7 +242,7 @@ setTimeout(function () {
 }, FAILSAFE_TIMEOUT);
 /** LOAD PREBID - END */
 
-var gpt_gam_ver = 'V-11 DK';
+var gpt_gam_ver = 'V12-ADS';
 gpt_gam_site = window.location.hostname.toUpperCase();
 gpt_gam_ver = (typeof gpt_gam_site !== 'undefined') ? gpt_gam_ver.toUpperCase() : 'V.0.1';
 console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');

@@ -44,39 +44,20 @@ function spotxOutstreamFunc(bid) {
 
 const priceGranularityConfig = {
     buckets: [
-        {
-            precision: 2,
-            min: 0.2,
-            max: 2.99,
-            increment: 0.01,
-        },
-        {
-            precision: 2,
-            min: 3.0,
-            max: 5.95,
-            increment: 0.05,
-        },
-        {
-            precision: 2,
-            min: 6.0,
-            max: 20.0,
-            increment: 0.5,
-        },
+        { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
+        { precision: 2, min: 3, max: 10, increment: 0.1 },
     ],
 };
 
 var gptadslots = [];
 var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
 var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
-
-var PREBID_TIMEOUT = 1500;
+var PREBID_TIMEOUT = 1000;
 var FAILSAFE_TIMEOUT = 3000;
 var HB_TIMEOUT = 1000;
 var adUnits = [
     {
-        code: "div-gpt-ad-dream-sc",
+        code: "/36504930/m.dream.co.id/dfp-sc",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -96,48 +77,18 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113619" } },
-            { bidder: "innity", params: { zone: 97857 , pub : 536} },
+            { bidder: "innity", params: { zone: 97857 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777744" } },
             { bidder: "teads", params: { pageId: 120639, placementId: 130845 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093ae" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Dream-Mobile-300x250_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377456,
-                    zoneId: 2082386
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc, }, }, 
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Dream-Mobile-300x250_1' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377456, zoneId: 2082386 } }
         ],
     },
     {
-        code: "div-gpt-ad-dream-hl",
+        code: "/36504930/m.dream.co.id/dfp-hl",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -156,47 +107,18 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113619" } },
-            { bidder: "innity", params: { zone: 97856 , pub : 536} },
+            { bidder: "innity", params: { zone: 97856 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777744" } },
+            { bidder: "teads", params: { pageId: 120639, placementId: 130845 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093ab" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Dream-Mobile-320x100_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377456,
-                    zoneId: 2082386
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc, }, }, 
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Dream-Mobile-320x50_1' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377456, zoneId: 2082386 } }
         ],
     },
     {
-        code: "div-gpt-ad-dream-bottomfrm",
+        code: "/36504930/m.dream.co.id/dfp-bottomfrm",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -215,47 +137,36 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113619" } },
-            { bidder: "innity", params: { zone: 98055 , pub : 536} },
+            { bidder: "innity", params: { zone: 98055 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777744" } },
+            { bidder: "teads", params: { pageId: 120639, placementId: 130845 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093b0" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
             {
                 bidder: 'pubmatic',
                 params: {
                     publisherId: '156536',
-                    adSlot: 'Prebid-Dream-Mobile-320x50_1',
+                    videoAdUnit: "4045173",
+                    adSlot: "kly_prebid_outstream_mobile_dream",
+                    outstreamAU: "kly_prebid_outstream_mobile_dream",
                     video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
+                        skippable: false,
+                        playbackmethod: [2],
+                        context: "outstream",
+                        api: [2, 7],
+                        minduration: 5,
+                        maxduration: 30,
+                        mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                        placement: 3
                     }
                 }
             },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377456,
-                    zoneId: 2082386
-                }
-            }
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377456, zoneId: 2082386 } }
         ],
     },
     {
-        code: "div-gpt-ad-dream-dfp-exposer-slot1",
+        code: "/36504930/m.dream.co.id/dfp-exposer-slot1",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -277,55 +188,30 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113619" } },
-            { bidder: "innity", params: { zone: 98056 , pub : 536} },
+            { bidder: "innity", params: { zone: 98056 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777744" } },
-            { bidder: "teads", params: { pageId: 120940, placementId: 111235 } },
+            { bidder: "teads", params: { pageId: 120639, placementId: 130845 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "00000000001093c2" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Dream-Mobile-300x600',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377456,
-                    zoneId: 2082386
-                }
-            }
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Dream-Mobile-300x600' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377456, zoneId: 2082386 } }
         ],
     },
 ];
 
+pbjs.que = pbjs.que || [];
+googletag.cmd = googletag.cmd || [];   
 googletag.cmd.push(function () {
     googletag.pubads().disableInitialLoad();
 });
 
 pbjs.que.push(() => {
     pbjs.setConfig({
-        enableSendAllBids:true
+        enableSendAllBids:true,
+        cache: {
+                url: 'https://prebid.adnxs.com/pbc/v1/cache'
+        },
         // bidderTimeout: 2000,
 
     });
@@ -377,6 +263,7 @@ var gpt_gam_ver = 'V-11 DK';
                                     }
                                     window.GAMLibrary.gamBFInterval = setInterval(function() {
                                         document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove();
+                                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomframe]);
                                         googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
                                     }, 60000);
                                 },
@@ -438,8 +325,8 @@ var gpt_gam_ver = 'V-11 DK';
                                                             //window.removeEventListener("scroll", scrollBottomFrame);
                                                             this.timedBottomFrm = googletag.defineSlot(this.dfpBottomframe, [[320, 50],[320, 100]], 'div-gpt-ad-dream-bottomfrm').addService(googletag.pubads());
                                                             window.removeEventListener("scroll", this.scrollHandler);
+                                                            pbjs.setTargetingForGPTAsync([this.dfpBottomframe]);
                                                             googletag.pubads().refresh([this.timedBottomFrm]);
-
                                                             this.refreshSlot = this.timedBottomFrm;
                                                             this.setGamBFInterval();
                                                         }
@@ -471,6 +358,7 @@ var gpt_gam_ver = 'V-11 DK';
                                 
                                                         gam_sc = googletag.defineSlot('/36504930/m.dream.co.id/dfp-sc', [[300, 250],[250, 250],[200, 200]], showcaseId + countShowcaseContainer).addService(googletag.pubads()).setTargeting("position", [countShowcaseContainer.toString()]);
                                                         googletag.display(showcaseId + countShowcaseContainer);
+                                                        pbjs.setTargetingForGPTAsync(['/36504930/m.dream.co.id/dfp-sc']);
                                                         googletag.pubads().refresh([gam_sc]);
                                                         if (countShowcaseContainer === sumShowcaseContainer) {
                                                             mo.disconnect();
@@ -525,6 +413,7 @@ var gpt_gam_ver = 'V-11 DK';
                                                             _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
                                                         }
                                                         googletag.display(_defineSlot_);
+                                                        (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                         googletag.pubads().refresh([_defineSlot_]);
                                                         value.generated = 1;
                                                     }
@@ -560,6 +449,7 @@ var gpt_gam_ver = 'V-11 DK';
                                                 }
 
                                                 googletag.display(_defineSlot_);
+                                                (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
                                                 googletag.pubads().refresh([_defineSlot_]);
                                                 value.generated = 1;
 

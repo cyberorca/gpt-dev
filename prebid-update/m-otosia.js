@@ -45,39 +45,21 @@ function spotxOutstreamFunc(bid) {
 
 const priceGranularityConfig = {
     buckets: [
-        {
-            precision: 2,
-            min: 0.2,
-            max: 2.99,
-            increment: 0.01,
-        },
-        {
-            precision: 2,
-            min: 3.0,
-            max: 5.95,
-            increment: 0.05,
-        },
-        {
-            precision: 2,
-            min: 6.0,
-            max: 20.0,
-            increment: 0.5,
-        },
+        { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
+        { precision: 2, min: 3, max: 10, increment: 0.1 },
     ],
 };
 
+
 var gptadslots = [];
 var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
 var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
-
-var PREBID_TIMEOUT = 1500;
+var PREBID_TIMEOUT = 1000;
 var FAILSAFE_TIMEOUT = 3000;
 var HB_TIMEOUT = 1000;
 var adUnits = [
     {
-        code: "div-gpt-ad-otosia-sc",
+        code: "/36504930/m.otosia.com/dfp-sc",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -97,40 +79,17 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113622" } },
-            { bidder: "innity", params: { zone: 97848 , pub : 536} },
+            { bidder: "innity", params: { zone: 97848 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777787" } },
           	{ bidder: "teads", params: { pageId: 120641, placementId: 130847 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "0000000000109433" } },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Otosia-Mobile-300x250_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377676,
-                    zoneId: 2083796
-                }
-            }
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Otosia-Mobile-300x250_1' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377676, zoneId: 2083796 } }
         ],
     },
     {
-        code: "div-gpt-ad-otosia-hl",
+        code: "/36504930/m.otosia.com/dfp-headline",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -149,39 +108,17 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113622" } },
-            { bidder: "innity", params: { zone: 97847 , pub : 536} },
+            { bidder: "innity", params: { zone: 97847 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777787" } },
+            { bidder: "teads", params: { pageId: 120641, placementId: 130847 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "000000000010942e" } },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Otosia-Mobile-320x100_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377676,
-                    zoneId: 2083796
-                }
-            }
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Otosia-Mobile-320x50_1' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377676, zoneId: 2083796 } }
         ],
     },
     {
-        code: "div-gpt-ad-otosia-bottomfrm",
+        code: "/36504930/m.otosia.com/dfp-bottomfrm",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -200,39 +137,35 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113622" } },
-            { bidder: "innity", params: { zone: 98041 , pub : 536} },
+            { bidder: "innity", params: { zone: 98041 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777787" } },
+            { bidder: "teads", params: { pageId: 120641, placementId: 130847 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "0000000000109429" } },
             {
                 bidder: 'pubmatic',
                 params: {
                     publisherId: '156536',
-                    adSlot: 'Prebid-Otosia-Mobile-320x50_1',
+                    videoAdUnit: "4045171",
+                    adSlot: "kly_prebid_outstream_mobile_otosia",
+                    outstreamAU: "kly_prebid_outstream_mobile_otosia",
                     video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
+                        skippable: false,
+                        playbackmethod: [2],
+                        context: "outstream",
+                        api: [2, 7],
+                        minduration: 5,
+                        maxduration: 30,
+                        mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                        placement: 3
                     }
                 }
             },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377676,
-                    zoneId: 2083796
-                }
-            }
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377676, zoneId: 2083796 } }
         ],
     },
     {
-        code: "div-gpt-ad-otosia-dfp-exposer-slot1-oop",
+        code: "/36504930/m.otosia.com/dfp-exposer-slot1",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -254,47 +187,29 @@ var adUnits = [
         },
         bids: [
             { bidder: "emx_digital", params: { tagid: "113622" } },
-            { bidder: "innity", params: { zone: 98042 , pub : 536} },
+            { bidder: "innity", params: { zone: 98042 , pub : 539} },
             { bidder: "oftmedia", params: { placementId: "18777787" } },
-            { bidder: "teads", params: { pageId: 120942, placementId: 111237 } },
+            { bidder: "teads", params: { pageId: 120641, placementId: 130847 } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
           	{ bidder: "adnuntius", params: { auId: "0000000000109439" } },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Otosia-Mobile-300x600',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-            { 
-                bidder: 'rubicon',
-                params: {
-                    accountId: 12534,
-                    siteId: 377676,
-                    zoneId: 2083796
-                }
-            }
+            { bidder: 'pubmatic', params: { publisherId: '156536', adSlot: 'Prebid-Otosia-Mobile-300x600' } }, 
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377676, zoneId: 2083796 } }
         ],
     },
 ];
 
+pbjs.que = pbjs.que || [];
+googletag.cmd = googletag.cmd || [];   
 googletag.cmd.push(function () {
     googletag.pubads().disableInitialLoad();
 });
 
 pbjs.que.push(() => {
     pbjs.setConfig({
-        enableSendAllBids:true
+        enableSendAllBids:true,
+        cache: {
+                url: 'https://prebid.adnxs.com/pbc/v1/cache'
+        },
         // bidderTimeout: 2000,
 
     });
@@ -324,7 +239,7 @@ setTimeout(function () {
 }, FAILSAFE_TIMEOUT);
 /** LOAD PREBID - END */
 
-var gpt_gam_ver = 'v010-DK';
+var gpt_gam_ver = 'v011-ADS';
 gpt_gam_site = window.location.hostname.toUpperCase();
 gpt_gam_ver = (typeof gpt_gam_site !== 'undefined') ? gpt_gam_ver.toUpperCase() : 'V.0.1';
 console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
@@ -357,6 +272,7 @@ window.GAMLibrary = {
                                 }
                                 window.GAMLibrary.gamBFInterval = setInterval(function () {
                                     document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
+                                    pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
                                     googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
                                 }, 60000);
                             },
@@ -394,6 +310,7 @@ window.GAMLibrary = {
                                                             if ( SC = googletag.defineSlot('/36504930/m.otosia.com/dfp-sc', [[300,250],[250,250],[200,200]], child.id) ) {
                                                                 SC.addService(googletag.pubads()).setTargeting("pagetype", kly.pageType).setTargeting("position", (pagingIndex));
                                                                 googletag.display(child.id);
+                                                                pbjs.setTargetingForGPTAsync(['/36504930/m.otosia.com/dfp-sc']);
                                                                 googletag.pubads().refresh([SC]);
                                                             }
                                                         }
@@ -462,6 +379,7 @@ window.GAMLibrary = {
                                         // console.log('testing scroll',scrollTop,this.timedBottomFrm);
                                         this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-otosia-bottomfrm').addService(googletag.pubads());
                                         window.removeEventListener("scroll", this.scrollHandler);
+                                        pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
                                         googletag.pubads().refresh([this.timedBottomFrm]);
 
                                         this.refreshSlot = this.timedBottomFrm;
