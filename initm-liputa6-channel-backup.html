@@ -301,6 +301,7 @@
                                             }
                                             window.GAMLibrary.gamBFInterval = setInterval(function () {
                                                 document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
+                                                pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
                                                 googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
                                             }, 60000);
                                         },
