@@ -1,3 +1,4 @@
+
 /** PREBID MOBILE MERDEKA END */
 function spotxOutstreamFunc(bid) {
     function mobileAndTabletcheck() {
@@ -44,40 +45,22 @@ function spotxOutstreamFunc(bid) {
 }
 
 const priceGranularityConfig = {
-    buckets: [{
-            precision: 2,
-            min: 0.2,
-            max: 2.99,
-            increment: 0.01,
-        },
-        {
-            precision: 2,
-            min: 3.0,
-            max: 5.95,
-            increment: 0.05,
-        },
-        {
-            precision: 2,
-            min: 6.0,
-            max: 20.0,
-            increment: 0.5,
-        },
-    ],
-};
+                buckets: [
+                    { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
+                    { precision: 2, min: 3, max: 10, increment: 0.1 },
+                ],
+            };
+
 
 var gptadslots = [];
-
 var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
 var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
-
-var PREBID_TIMEOUT = 1500;
+var PREBID_TIMEOUT = 1000;
 var FAILSAFE_TIMEOUT = 3000;
 var HB_TIMEOUT = 1000;
 var adUnits = [
                 {
-                    code: "div-gpt-ad-merdeka-sc",
+                    code: "/36504930/m.merdeka.com/dfp-sc",
                     mediaTypes: {
                         banner: {
                             sizes: [
@@ -95,108 +78,21 @@ var adUnits = [
                             context: "instream",
                         },
                     },
-                    bids: [{
-                            bidder: "emx_digital",
-                            params: {
-                                tagid: "113616"
-                            }
-                        },
-                        {
-                            bidder: "innity",
-                            params: {
-                                zone: 97851,
-                                pub: 536
-                            }
-                        },
-                        {
-                            bidder: "oftmedia",
-                            params: {
-                                placementId: "18777699"
-                            }
-                        },
-                        { 	bidder: "teads", 
-                         	params: { 
-                              	pageId: 122248, 
-                              	placementId: 132780 
-                            } 
-                        },
-                        {
-                            bidder: "rtbhouse",
-                            params: {
-                                publisherId: "bI2sp5Pt1ubwkv6C9Hs5",
-                                region: "prebid-asia"
-                            }
-                        },
-                        {
-                            bidder: "spotx",
-                            params: {
-                                channel_id: 285432,
-                                ad_unit: "outstream",
-                                outstream_function: spotxOutstreamFunc,
-                            },
-                        },
-                        {   bidder: "adnuntius", 
-                            params: { 
-                              auId: "00000000001093da" 
-                            } 
-                        },
-                        {
-                            bidder: 'pubmatic',
-                            params: {
-                                publisherId: '156536',
-                                adSlot: 'Prebid-Merdeka-Mobile-300x250_1',
-                                video: {
-                                    mimes: ['video/mp4', 'video/x-flv'],
-                                    skippable: true,
-                                    startdelay: 0,
-                                    playbackmethod: [1,2,3],
-                                    api: [ 1, 2, 7 ],
-                                    protocols: [ 2, 3, 5, 6 ],
-                                    linearity: 1,
-                                    placement: 1
-                                }
-                            }
-                        },
-                        {
-                            bidder: "grid",
-                            params: {
-                                uid: 73361,
-                                bidFloor: 0.2
-                            }
-                        },
-                        { 
-                            bidder: 'rubicon',
-                            params: {
-                                accountId: 12534,
-                                siteId: 377458,
-                                zoneId: 2082388
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [300, 250]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [250, 250]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [200, 200]
-                            }
-                        }
+                    bids: [
+                            { bidder: "emx_digital", params: { tagid: "113616" } },
+                            { bidder: "innity", params: { zone: 97851, pub: 539 } },
+                            { bidder: "oftmedia", params: { placementId: "18777699" } },
+                            { bidder: "teads", params: { pageId: 122248, placementId: 132780 } },
+                            { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                            { bidder: "adnuntius",  params: {  auId: "00000000001093da" } },
+                            { bidder: "grid", params: { uid: 73361, bidFloor: 0.2 } },
+                            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } },
+                            { bidder: 'ix', params: { siteId: '683428' } }
                     ],
                 },
                 {
-                    code: "div-gpt-ad-merdeka-hl",
+                    code: "/36504930/m.merdeka.com/dfp-headline",
                     mediaTypes: {
                         banner: {
                             sizes: [
@@ -213,95 +109,21 @@ var adUnits = [
                             context: "instream",
                         },
                     },
-                    bids: [{
-                            bidder: "emx_digital",
-                            params: {
-                                tagid: "113616"
-                            }
-                        },
-                        {
-                            bidder: "innity",
-                            params: {
-                                zone: 97850,
-                                pub: 536
-                            }
-                        },
-                        {
-                            bidder: "oftmedia",
-                            params: {
-                                placementId: "18777699"
-                            }
-                        },
-                        {
-                            bidder: "rtbhouse",
-                            params: {
-                                publisherId: "bI2sp5Pt1ubwkv6C9Hs5",
-                                region: "prebid-asia"
-                            }
-                        },
-                        {
-                            bidder: "spotx",
-                            params: {
-                                channel_id: 285432,
-                                ad_unit: "outstream",
-                                outstream_function: spotxOutstreamFunc,
-                            },
-                        },
-                        {   bidder: "adnuntius", 
-                            params: { 
-                              auId: "00000000001093d3" 
-                            } 
-                        },
-                        {
-                            bidder: 'pubmatic',
-                            params: {
-                                publisherId: '156536',
-                                adSlot: 'Prebid-Merdeka-Mobile-320x100_1',
-                                video: {
-                                    mimes: ['video/mp4', 'video/x-flv'],
-                                    skippable: true,
-                                    startdelay: 0,
-                                    playbackmethod: [1,2,3],
-                                    api: [ 1, 2, 7 ],
-                                    protocols: [ 2, 3, 5, 6 ],
-                                    linearity: 1,
-                                    placement: 1
-                                }
-                            }
-                        },
-                        {
-                            bidder: "grid",
-                            params: {
-                                uid: 73363,
-                                bidFloor: 0.2
-                            }
-                        },
-                        { 
-                            bidder: 'rubicon',
-                            params: {
-                                accountId: 12534,
-                                siteId: 377458,
-                                zoneId: 2082388
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [320, 50]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [320, 100]
-                            }
-                        }
+                    bids: [
+                            { bidder: "emx_digital", params: { tagid: "113616" } },
+                            { bidder: "innity", params: { zone: 97850, pub: 539 } },
+                            { bidder: "oftmedia", params: { placementId: "18777699" } },
+                            { bidder: "teads", params: { pageId: 122248, placementId: 132780 } },
+                            { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                            { bidder: "adnuntius", params: { auId: "00000000001093d3" } },
+                            { bidder: "grid", params: { uid: 73363, bidFloor: 0.2 } },
+                            { bidder: 'rubicon',params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } },
+                            { bidder: 'ix', params: { siteId: '683427' } }
                     ],
                 },
                 {
-                    code: "div-gpt-ad-merdeka-bottomfrm",
+                    code: "/36504930/m.merdeka.com/dfp-bottomfrm",
                     mediaTypes: {
                         banner: {
                             sizes: [
@@ -318,95 +140,39 @@ var adUnits = [
                             context: "instream",
                         },
                     },
-                    bids: [{
-                            bidder: "emx_digital",
-                            params: {
-                                tagid: "113616"
-                            }
-                        },
-                        {
-                            bidder: "innity",
-                            params: {
-                                zone: 98045,
-                                pub: 536
-                            }
-                        },
-                        {
-                            bidder: "oftmedia",
-                            params: {
-                                placementId: "18777699"
-                            }
-                        },
-                        {
-                            bidder: "rtbhouse",
-                            params: {
-                                publisherId: "bI2sp5Pt1ubwkv6C9Hs5",
-                                region: "prebid-asia"
-                            }
-                        },
-                        {
-                            bidder: "spotx",
-                            params: {
-                                channel_id: 285432,
-                                ad_unit: "outstream",
-                                outstream_function: spotxOutstreamFunc,
-                            },
-                        },
-                        {   bidder: "adnuntius", 
-                            params: { 
-                              auId: "00000000001093dc" 
-                            } 
-                        },
-                        {
-                            bidder: 'pubmatic',
-                            params: {
-                                publisherId: '156536',
-                                adSlot: 'Prebid-Merdeka-Mobile-320x50_1',
-                                video: {
-                                    mimes: ['video/mp4', 'video/x-flv'],
-                                    skippable: true,
-                                    startdelay: 0,
-                                    playbackmethod: [1,2,3],
-                                    api: [ 1, 2, 7 ],
-                                    protocols: [ 2, 3, 5, 6 ],
-                                    linearity: 1,
-                                    placement: 1
+                    bids: [
+                            { bidder: "emx_digital", params: { tagid: "113616" } },
+                            { bidder: "innity", params: { zone: 98045, pub: 539 } },
+                            { bidder: "oftmedia", params: { placementId: "18777699" }},
+                            { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+                            { bidder: "adnuntius", params: { auId: "00000000001093dc" } },
+                            {
+                                bidder: 'pubmatic',
+                                params: {
+                                    publisherId: '156536',
+                                    videoAdUnit : '4045173',
+                                    adSlot: 'kly_prebid_outstream_mobile_merdeka',
+                                    outstreamAU: 'kly_prebid_outstream_mobile_merdeka',
+                                    video: {
+                                        skippable: false,
+                                        playbackmethod: [2],
+                                        context: "outstream",
+                                        api: [2, 7],
+                                        minduration: 5,
+                                        maxduration: 30,
+                                        mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                                        placement: 3
+                                    }
                                 }
-                            }
-                        },
-                        {
-                            bidder: "grid",
-                            params: {
-                                uid: 55689,
-                                bidFloor: 0.25
-                            }
-                        },
-                        { 
-                            bidder: 'rubicon',
-                            params: {
-                                accountId: 12534,
-                                siteId: 377458,
-                                zoneId: 2082388
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [320, 50]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [320, 100]
-                            }
-                        }
+                            },
+                            { bidder: "grid", params: { uid: 55689, bidFloor: 0.25 } }, 
+                            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } }, 
+                            { bidder: 'ix', params: { siteId: '683429' } }
                     ],
                 },
                 {
-                    code: "div-gpt-ad-merdeka-dfp-exposer-slot1-oop",
+                    code: "/36504930/m.merdeka.com/dfp-exposer-slot1",
                     mediaTypes: {
                         banner: {
                             sizes: [
@@ -426,132 +192,34 @@ var adUnits = [
                             context: "instream",
                         },
                     },
-                    bids: [{
-                            bidder: "emx_digital",
-                            params: {
-                                tagid: "113616"
-                            }
-                        },
-                        {
-                            bidder: "oftmedia",
-                            params: {
-                                placementId: "18777699"
-                            }
-                        },
-                      	{ 	bidder: "teads", 
-                         	params: { 
-                              	pageId: 122247, 
-                              	placementId: 132779 
-                            } 
-                        },
-                        // { bidder: "pubmatic", params: { publisherId: "224248", adSlot: "1501749" } },
-                        {
-                            bidder: "rtbhouse",
-                            params: {
-                                publisherId: "bI2sp5Pt1ubwkv6C9Hs5",
-                                region: "prebid-asia"
-                            }
-                        },
-                        {
-                            bidder: "spotx",
-                            params: {
-                                channel_id: 285432,
-                                ad_unit: "outstream",
-                                outstream_function: spotxOutstreamFunc,
-                            },
-                        },
-                        {   bidder: "adnuntius", 
-                            params: { 
-                              auId: "00000000001093dd" 
-                            } 
-                        },
-                        {
-                            bidder: 'pubmatic',
-                            params: {
-                                publisherId: '156536',
-                                adSlot: 'Prebid-Merdeka-Mobile-300x600',
-                                video: {
-                                    mimes: ['video/mp4', 'video/x-flv'],
-                                    skippable: true,
-                                    startdelay: 0,
-                                    playbackmethod: [1,2,3],
-                                    api: [ 1, 2, 7 ],
-                                    protocols: [ 2, 3, 5, 6 ],
-                                    linearity: 1,
-                                    placement: 1
-                                }
-                            }
-                        },
-                        {
-                            bidder: "grid",
-                            params: {
-                                uid: 55685,
-                                bidFloor: 0.2
-                            }
-                        },
-                        {
-                            bidder: "innity",
-                            params: {
-                                zone: 98046,
-                                pub: 536
-                            }
-                        },
-                        { 
-                            bidder: 'rubicon',
-                            params: {
-                                accountId: 12534,
-                                siteId: 377458,
-                                zoneId: 2082388
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [300, 250]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [300, 600]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [320, 480]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [160, 600]
-                            }
-                        },
-                        {
-                            bidder: 'ix',
-                            params: {
-                                siteId: '662138',
-                                size: [250, 250]
-                            }
-                        }
+                    bids: [
+                        { bidder: "emx_digital", params: { tagid: "113616" } }, 
+                        { bidder: "oftmedia", params: { placementId: "18777699" } }, 
+                        { bidder: "teads", params: { pageId: 122248, placementId: 132780 } }, 
+                        { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } }, 
+                        { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } }, 
+                        { bidder: "adnuntius", params: { auId: "00000000001093dd" } }, 
+                        { bidder: "grid", params: { uid: 55685, bidFloor: 0.2 } }, 
+                        { bidder: "innity", params: { zone: 98046, pub: 539 } }, 
+                        { bidder: 'rubicon', params: { accountId: 12534, siteId: 377458, zoneId: 2082388 } }, 
+                        { bidder: 'ix', params: { siteId: '683430' } }
                     ],
                 },
 ];
 
+pbjs.que = pbjs.que || [];
+googletag.cmd = googletag.cmd || [];
 googletag.cmd.push(function() {
     googletag.pubads().disableInitialLoad();
 });
 
 pbjs.que.push(() => {
     pbjs.setConfig({
-        enableSendAllBids: true
+        enableSendAllBids: true,
+        cache: {
+            url: 'https://prebid.adnxs.com/pbc/v1/cache'
+        },
         // bidderTimeout: 2000,
-
     });
     pbjs.addAdUnits(adUnits);
     pbjs.setConfig({
@@ -580,7 +248,7 @@ setTimeout(function() {
 /** PREBID MOBILE MERDEKA END */
 
 /** GPT START */
-var gpt_gam_ver = 'v09-DK';
+var gpt_gam_ver = 'v10-ADS';
 gpt_gam_site = window.location.hostname.toUpperCase();
 gpt_gam_ver = (typeof gpt_gam_site !== 'undefined') ? gpt_gam_ver.toUpperCase() : 'V.0.1';
 console.log('%c GPT ' + gpt_gam_site + ' ' + gpt_gam_ver, 'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
@@ -663,6 +331,7 @@ window.GAMLibrary = {
         }
         window.GAMLibrary.gamBFInterval = setInterval(function() {
             document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove();
+            pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
             googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
         }, 60000);
     },
@@ -701,6 +370,7 @@ window.GAMLibrary = {
                     [320, 100]
                 ], 'div-gpt-ad-merdeka-bottomfrm').addService(googletag.pubads());
                 window.removeEventListener("scroll", this.scrollHandler);
+                pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
                 googletag.pubads().refresh([this.timedBottomFrm]);
 
                 this.refreshSlot = this.timedBottomFrm;
@@ -846,9 +516,8 @@ googletag.cmd.push(function() {
     var _klyObject = typeof window.kly !== 'undefined' ? window.kly : window.kmklabs;
     var _articlePages = _klyObject && _klyObject.article;
     var _isAdultContent = _articlePages && _articlePages.isAdultContent;
-    var isMatcont = false;
-    /*NO-ADS WORD LIST*/
-    
+    var isViolateBrandSafety = "0";
+    var isMatcont = "0";
     var dfp_brandSafety = new Array('matcont', 'aduhai', 'kelamin', 'vital', 'anal', 'belahan', 'bercinta', 'bergairah', 'gairah', 'intim', 'bikini', 'bokong', 'boob', 'bra', 'bugil', 'celana', 'ciuman', 'cleavage', 'dada', 'dewasa', 'diremas', 'doggie', 'ejakulasi', 'ereksi', 'erotis', 'foreplay', 'kiss', 'seks', 'gangbang', 'horny', 'hot', 'kamasutra', 'keperawanan', 'perawan', 'kondom', 'kontrasepsi', 'libido', 'lingerie', 'masturbasi', 'mature', 'menggairahkan', 'menggoda', 'mesra', 'miss-v', 'mr-p', 'nakal', 'naughty', 'nipple', 'nipples', 'onani', 'oral', 'oral seks', 'organ', 'orgasme', 'paha', 'pantat', 'panties', 'payudara', 'pelecehan', 'telanjang', 'penetrasi', 'penis', 'perkosa', 'perkosaan', 'pole', 'porno', 'pornoaksi', 'pornografi', 'telentang', 'provokatif', 'putting', 'ranjang', 'sex', 'penetratif', 'seksi', 'seksual', 'sensual', 'seronok', 'doll', 'toys', 'skandal', 'sperma', 'striptease', 'striptis', 'syur', 'terangsang', 'tiduri', 'topless', 'vagina', 'vibrator', 'lendir', 'prostitusi', 'homoseks', 'meraba-raba', 'mesum', 'memerkosa', 'rudapaksa', 'kemaluan', 'kasus asusila', 'pemerkosaan', 'hubungan seksual', 'hubungan intim', 'video porno', 'berita hoax', 'ternyata hoax', 'ahed tamimi', 'konflik palestina israel', 'konflik suriah', 'ujaran kebencian', 'g30s', 'kediktatoran arab saudi', 'konflik palestina-israel', 'fpi', 'penembakan', 'pelecehan seksual', 'tips seks', 'komunitas swinger', 'fenomena kelainan seksual', 'penyimpangan seks', 'posisi seks', 'obat kuat', 'bentuk payudara', 'implan payudara', 'chat firza-rizieq', 'anarkisme suporter sepakbola', 'bentrok suporter', 'pengeroyokan', 'penganiayaan', 'begal motor', 'kekerasan pada wartawan', 'pemerkosaan anak', 'pencabulan', 'bentrokan warga', 'bentrokan', 'kasus narkoba', 'akibat merokok', 'bahaya merokok', 'berhenti merokok', 'cara berhenti merokok', 'efek berhenti merokok', 'larangan merokok', 'tips berhenti merokok', 'rokok elektrik', 'pilpres 2019', 'koalisi pilpres 2019', 'koalisi prabowo', 'koalisi jokowi', 'prabowo-sandiaga', 'ratna sarumpaet', 'capres jokowi', 'capres prabowo', 'kebohongan ratna sarumpaet', 'prabowo subianto', 'jemaah ansharut daulah', 'aliran sesat', 'lia eden', 'kisah mualaf', 'penistaan agama', 'suporter tewas', 'gempa palu', 'gempa donggala', 'gempa sulawesi tengah', 'pembunuhan', 'tsunami palu', 'penemuan mayat', 'lion air jatuh di karawang', 'lion air jatuh', 'pembunuhan sadis', 'lion air hilang kontak', 'pesawat jatuh', 'pesawat hilang kontak', 'kecelakaan', 'kapal tenggelam di danau toba', 'kecelakaan bus', 'kapal tenggelam', 'kasus tabrak lari', 'bunuh diri', 'perselingkuhan', 'kisah perselingkuhan', 'razia pasangan mesum', 'seks bebas', 'gangguan jiwa', 'tes keperawanan', 'kontroversi hukuman mati', 'stres dan depresi', 'ahok gugat cerai veronica tan', 'Kanker', 'Impotensi', 'merokok', 'Perokok', 'Rokok', 'tembakau', 'Pelanggaran', 'Tablet', 'Overdosis', 'Jantung', 'Stroke', 'Cancer', 'Narkoba', 'Djarum', 'Ganja', 'BNN', 'Obesitas', 'Osteoporosis', 'Corona', 'Corona di indonesia', 'virus corona', 'virus-corona', 'covid-19', 'wabah corona', 'menewaskan', 'menewaskan orang', 'mengancam nyawa', 'meninggal', 'meninggal dunia', 'orang mati', 'orang tewas', 'pemakaman', 'petugas penyelamat', 'telah meninggal', 'terbunuh', 'tewas', 'tewaskan', 'tim penyelamat', 'wanita meninggal', 'autopsi', 'belasungkawa', 'bencana', 'bencana besar', 'bunuh orang', 'darurat bencana', 'dilaporkan tewas', 'dimakamkan', 'dipastikan tewas', 'ditemukan mati', 'ditemukan tewas', 'hilangnya nyawa', 'identitas korban', 'inalillahi', 'jasad korban', 'jasadnya', 'jenasah wanita', 'jenazah', 'jenazah pria', 'jenazah teridentifikasi', 'jasad', 'kehilangan hidupnya', 'kehilangan nyawa', 'kehilangan nyawanya', 'kematian', 'korban', 'korban jiwa', 'korban meninggal', 'korban tewas', 'mati', 'mayat', 'mayat korban', 'membunuh', 'membunuh istrinya', 'membunuh mereka', 'membunuh suaminya', 'menemui ajal', 'mengalami koma', 'menghembuskan nafas terakhir', 'menimbulkan korban', 'meninggal akibat sakit', 'menyebabkan kematian', 'meregang nyawa', 'meregggut nyawa', 'modar', 'nyawa hilang', 'nyawa melayang', 'penyebab kematian', 'tak bernyawa', 'tak sadarkan diri', 'terkapar', 'tidak bernyawa', 'tutup usia', 'wafat', 'kematian virus', 'kematian wabah', 'korban terinfeksi', 'virus menyerang', 'merenggut nyawa', 'pelayat', 'hilangkan nyawa', 'renggut nyawa', 'wabah', 'keadaan kritis', 'kehilangan darah', 'merenggut jiwa', 'telan nyawa', 'menelan nyawa', 'memakan nyawa', 'dinyatakan meninggal', 'nyawa tak tertolong', 'penyakit', 'sakit pernapasan', 'sesak', 'korona', 'corona', 'odp', 'pdp', 'virus', 'rumah sakit', 'Covid-19', 'virus korona', 'positif korona', 'COVID-19', 'terjangkit COVID-19', 'terinfeksi virus corona', '15lam','agen poker','agen sbobet','al quran','al-quran','alat kontrasepsi','alat vital pria','alergi','anatomi vagina','anjeng','anjing','anjlng','anjrit','anying','apa itu kondom','artis indonesia bugil','artis porno','asu','babi','bahaya masturbasi','bajingan','bandar ceme','bangsat','bego','bentuk payudara','bercinta','bercinta saat hamil','berhubungan intim','berita jateng','bintang film porno','bintang porno','bitch','bocah sd foto mesum','bokne','bom surabaya 2018','boneka seks','bonus deposit','bonus refferal','bonus rollingan','buda','budha','bullshit','bulshit','bulu kemaluan','cara berhubungan intim','cara membuat suami bergairah','cara memperbesar penis','cara mengatasi ejakulasi dini','cara seksual','cashtree','corona','corona di indonesia','covid 19','covid-19','cukur bulu kemaluan','disfungsi ereksi','ejakulasi','ejakulasi dini','ejakulasi wanita','elo','entot','ereksi','ewe','fase menstruasi','fenomena kelainan seksual','foto berhubungan intim','foto intim','fuck','gairah seksual','gangguan seks','ganja','gay','gaya bercinta','gaya bercinta dalam islam','gaya bercinta yang disukai pria','gaya seks','gejala penyakit','gemar368','goblok','gue','gwe','henceut','hindu','hubungan intim','hubungan seksual','ibu hamil','implan payudara','industri film porno','infeksi saluran kencing','injil','insomnia dan tidur','intim','isl4m','islam','itil','jancok','jancuk','jenis alat kontrasepsi','jerawat','jual beli sperma','judi','kafir','kakek cabul','kanibal','kanibalisme','kanker payudara','katolik','kecanduan seks','kemaluan wanita','kencing','kesehatan kulit dan kelamin','kesehatan payudara','kesehatan reproduksi','kesehatan wanita','khusus deewasa','kimpet','klitoris','kondom','kondom pria','kontol','kontolnya','kontrasepsi','kontroversi lgbt','kristen','legalisasi ganja','lgbt','lonte','m3m3k','makanan berbahaya','makanan sehat','masa subur pria','masturbasi','meki','melakukan hubungan intim','memek','mencukur bulu kemaluan','menstruasi','minimal deposit','model hot','model seksi','monyet','mucikari siswi smp','muh4mmad','muhammad','muhammad saw','nabi','ngentot','ngewe','nonok','obat ejakulasi dini','obat pembesar','obat pembesar penis terbaik','oral seks','organ intim wanita','orgasme','orgasme wanita','pakistan','payudara kecil','payudara wanita','pelacur','pembesar penis','pemerkosaan','pengetahuan seks','pengobatan alternatif','penis','penis','penis bengkok','penis besar','penis kecil','penis pria','penyakit sipilis','penyakit vagina','penyimpangan seks','perang dunia','perawatan vagina','perek','poker','poker online','pornoaksi','pornografi','posisi bercinta','posisi hubungan intim suami istri menurut islam','posisi seks','posisi seksual','pria dewasa','pria idaman','prostitusi','puki','puting','puting payudara','rasisme','rokok elektrik','sbobet','seks','seks bebas','seks oral','seksual','seksual lelaki dan perempuan','seksualitas','sex toy','shit','siklus menstruasi','situs poker terpercaya','situs porno','sperma','tai','taik','taruhan online','telanjang','terorisme','test pack','testis','tips bercinta','tips seks','titit','toket','tolol','ukuran normal penis','ukuran penis','ukuran penis normal','ukuran penis orang indonesia','vagina','vagina gatal','vagina wanita','vakum pembesar penis','viagra','video bercinta dengan pasangan','video porno','video seks','virus corona','xxxx online','yesus');
 
     /*END NO-ADS WORD LIST*/
