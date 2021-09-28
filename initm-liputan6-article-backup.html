@@ -20,29 +20,34 @@
     });
 </script>
 <!--TEMPORARY SCRIPT FOR IQOS ADVERTORIAL TRACKING END-->
-
 <!--SpotX Sync pixel tag-->
 <script>
     spotxDataLayer = [{
         source: "148766",
         sync_limit: 7
     }];
-    </script>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+</script>
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','spotxDataLayer','GTM-NH3RQL3');</script>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NH3RQL3&source=148766&sync_limit=7"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    })(window,document,'script','spotxDataLayer','GTM-NH3RQL3');
+</script>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NH3RQL3&source=148766&sync_limit=7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!--SpotX Sync pixel tag-->
+
+
 
 <!-- MOBILE LIPUTAN6 ARTICLE -->
 <script type="text/javascript">
+            /*PROTOTYPE CUSTOM FILTERING*/
+            String.prototype.klyFiltering = function (delimiter) {
+                return this.trim().split(delimiter).map(function(t){return t.trim().toLowerCase()}).filter(x => x != "");
+            };
 
-/** Prebid.js - Start */
-            
-function spotxOutstreamFunc(bid) {
+            /** START - PREBID FUNCTION LIST */
+            function spotxOutstreamFunc(bid) {
                 function mobileAndTabletcheck() {
                     var check = false;
                     (function (a) {
@@ -85,20 +90,70 @@ function spotxOutstreamFunc(bid) {
                 vid_contain.style.cssText = "display: none; margin-bottom: 20px";
                 vid_contain.appendChild(script);
             }
-        
-            const priceGranularityConfig = {
-                buckets: [
-                    { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
-                    { precision: 2, min: 3, max: 10, increment: 0.1 },
-                ],
-            };
-        
+            /** END - PREBID FUNCTION LIST */
+
+            /** START - PREBID INITIATE CLASS  */
+            class PrebidInstantiate {
+                constructor(timeout,fstimeout,hbtimeout, adunit, price ){
+                    this.PREBID_TIMEOUT = timeout;
+                    this.FAILSAFE_TIMEOUT = fstimeout;
+                    this.HB_TIMEOUT = hbtimeout;
+                    this.ADUNIT = adunit;
+                    this.PRICE = price;
+                    this.failsafePrebid();
+                    this.pushBid();
+                }
+
+                failsafePrebid(){
+                    let that = this;
+                    setTimeout(function () {
+                        that.initAdserver(); 
+                        console.log("FAILSAFE TIMEOUT!");
+                    }, this.FAILSAFE_TIMEOUT);
+                }
+                pushBid(){
+                    pbjs.que.push(() => {
+                        pbjs.setConfig({
+                            enableSendAllBids:true,
+                            cache: {
+                                url: 'https://prebid.adnxs.com/pbc/v1/cache'
+                            },
+                            // bidderTimeout: 2000,
+                        });
+                        pbjs.addAdUnits(this.ADUNIT);
+                        pbjs.setConfig({
+                            priceGranularity: this.PRICE,
+                        });
+                        pbjs.requestBids({
+                            bidsBackHandler: this.initAdserver,
+                            timeout: this.PREBID_TIMEOUT,
+                        });
+                    });
+
+                    console.log("PUSH PB CONFIG : ",pbjs.requestBids);
+                }
+
+                initAdserver() {
+                    if (pbjs.initAdserverSet) return;
+                    pbjs.initAdserverSet = true;
+                    googletag.cmd.push(function () {      
+                        pbjs.que.push(function () {
+                            pbjs.setTargetingForGPTAsync();
+                            googletag.pubads().refresh([window.GAMLibrary.headline]); 
+                            googletag.pubads().refresh([window.GAMLibrary.showcase]);
+                            googletag.pubads().refresh([window.GAMLibrary.exposer1]);
+                        });
+                    });
+                    
+                }
+            }
+            /** START - PREBID INITIATE CLASS  */
+
+            /** START - PREBID INIT, CONFIGURATION & GOOGLE INIT   */ 
+            const priceGranularityConfig = { buckets: [ { precision: 2, min: 0.20, max: 2.99, increment: 0.01 }, { precision: 2, min: 3, max: 10, increment: 0.1 },],};
             var gptadslots = [];
             var googletag = googletag || {};
             var pbjs = pbjs || {};
-            var PREBID_TIMEOUT = 1000;
-            var FAILSAFE_TIMEOUT = 3000;
-            var HB_TIMEOUT = 1000;
             var adUnits =  [
                                 {
                                     code: "/36504930/m.liputan6.com/dfp-sc",
@@ -156,7 +211,6 @@ function spotxOutstreamFunc(bid) {
                                         { bidder: "emx_digital", params: { tagid: "113615" } },
                                         { bidder: "innity", params: { zone: 98037 , pub : 536} },
                                         { bidder: "oftmedia", params: { placementId: "18777687" } },
-                                        { bidder: "teads", params: { pageId: 120636 , placementId: 130842 } },
                                         { bidder: "gamma", params: { siteId: 1527751257 , zoneId: 1529648189 } },
                                         { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                                         { bidder: "adnuntius", params: { auId: "00000000000f8444" } },
@@ -189,7 +243,6 @@ function spotxOutstreamFunc(bid) {
                                         { bidder: "emx_digital", params: { tagid: "113615" } },
                                         { bidder: "innity", params: { zone: 97890 , pub : 536} },
                                         { bidder: "oftmedia", params: { placementId: "18777687" } },
-                                        { bidder: "teads", params: { pageId: 120636 , placementId: 130842 } },
                                         { bidder: "gamma", params: { siteId: 1527751257 , zoneId: 1529648189 } },
                                         { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                                         { bidder: "adnuntius", params: { auId: "00000000000f8445" } },
@@ -242,7 +295,7 @@ function spotxOutstreamFunc(bid) {
                                         { bidder: "emx_digital", params: { tagid: "113615" } },
                                         { bidder: "innity", params: { zone: 97891 , pub : 536} },
                                         { bidder: "oftmedia", params: { placementId: "18777687" } },
-                                        { bidder: "teads", params: { pageId: 120636 , placementId: 130842 } },
+                                        { bidder: "teads", params: { pageId: 110351 , placementId: 119973 } },
                                         { bidder: "gamma", params: { siteId: 1527751257 , zoneId: 1529647956 } },
                                         { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                                         { bidder: "adnuntius", params: { auId: "00000000000f89c8" } },
@@ -254,62 +307,10 @@ function spotxOutstreamFunc(bid) {
                                     ],
                                 },
                             ];
-            
             pbjs.que = pbjs.que || [];
+            googletag.cmd = googletag.cmd || []; 
+            /** END - PREBID INIT, CONFIGURATION & GOOGLE INIT   */ 
 
-            googletag.cmd = googletag.cmd || [];
-            googletag.cmd.push(function () {
-                googletag.pubads().disableInitialLoad();
-            });
-
-            pbjs.que.push(() => {
-                pbjs.setConfig({
-                    enableSendAllBids:true,
-                    cache: {
-                        url: 'https://prebid.adnxs.com/pbc/v1/cache'
-                    },
-                    // bidderTimeout: 2000,
-                });
-                pbjs.addAdUnits(adUnits);
-                pbjs.setConfig({
-                    priceGranularity: priceGranularityConfig,
-                });
-                pbjs.requestBids({
-                    bidsBackHandler: initAdserver,
-                    timeout: PREBID_TIMEOUT,
-                });
-            });
-        
-            function initAdserver() {
-                if (pbjs.initAdserverSet) return;
-                pbjs.initAdserverSet = true;
-                googletag.cmd.push(function () {
-                    pbjs.que.push(function () {
-                        pbjs.setTargetingForGPTAsync();
-                        googletag.pubads().refresh();
-                    });
-                });
-            }
-        
-            setTimeout(function () {
-                initAdserver();
-            }, FAILSAFE_TIMEOUT);
-
-            /** Prebid.js - End */
-
-            var gpt_gam_site = window.location.hostname.toUpperCase(),
-            gpt_gam_ver = 'V07-ADS';
-            console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
-
-            /*HL VIDEO STICKY STATE*/    
-            var dfp_videoHLStickyState = false;
-
-            /*PROTOTYPE CUSTOM FILTERING*/
-            String.prototype.klyFiltering = function (delimiter) {
-                return this.trim().split(delimiter).map(function(t){return t.trim().toLowerCase()}).filter(x => x != "");
-            };
-
-            /* INIT CONFIG */
             window.GAMLibrary = {};
             window.GAMLibrary = {
                 dfpSlideup          :   '/36504930/m.liputan6.com/dfp-slideup',
@@ -550,47 +551,35 @@ function spotxOutstreamFunc(bid) {
 
             }
 
-            
-            
+            var gpt_gam_site = window.location.hostname.toUpperCase(),
+            gpt_gam_ver = 'GPT V2.0 - ADS';
+            console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
+
             /* DMP CATEGORY LIST */
-            window.widgetBLV02 = true;
             window.createDMPTracker = function(adsCatList, dfpTracker, macro) {
                 window.createCDPTracker(adsCatList, macro);
                 parent.window.open(dfpTracker, '_blank');
             };
-
             window.createCDPTracker = function(cat, macro) {
                 var cName = 'liputan6_id_visitor_id=',
                     cVisitorId = document.cookie.split(';').find(v => { return v.match(cName);}),
                     partnerUID = cVisitorId ? decodeURIComponent(cVisitorId).trim().replace(cName, '') : 0,
                     gamMacro = typeof macro === "string" ? JSON.parse(macro) : macro,
-                    defaultKey = {
-                        adunitId: "ads_adunit_id",
-                        advertiserId: "ads_advertiser_id",
-                        creativeId: "ads_creative_id",
-                        lineitemId: "ads_lineitem_id",
-                        orderId: "ads_order_id",
-                    };
-
+                    defaultKey = { adunitId: "ads_adunit_id", advertiserId: "ads_advertiser_id",creativeId: "ads_creative_id",lineitemId: "ads_lineitem_id",orderId: "ads_order_id", };
                     actionDetails = Object.keys(gamMacro).reduce((obj, k) => Object.assign(obj, defaultKey[k] ? { [defaultKey[k]]: gamMacro[k] } : { [k]: gamMacro[k] }), {}),
-                    cdpData = {
-                        action: actionDetails.action ? actionDetails.action : 'ads_click',
-                        action_category: cat,
-                        action_details: actionDetails.action ? (delete actionDetails.action,actionDetails=actionDetails) : actionDetails,
-                        visitor_id: partnerUID
-                    };
-
-                console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
-                console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
-
-                partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
+                    cdpData = { action: actionDetails.action ? actionDetails.action : 'ads_click', action_category: cat, action_details: actionDetails.action ? ( delete actionDetails.action, actionDetails=actionDetails ) : actionDetails, visitor_id: partnerUID };
+                    console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
+                    console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
+                    partnerUID ? ( window.VidioPersonalization && ( window.VidioPersonalization.sendData(null, cdpData) ) ) : '';                    
             };
+            /* DMP CATEGORY LIST */
 
             /*LOAD CONTEXTUAL ON DOM READY*/
             GAMLibrary.lazzyLoadingAdunit();
-            
-            googletag.cmd.push(function() {
+            /*LOAD CONTEXTUAL ON DOM READY*/
 
+            /* GOOGLE TAG CONFIG */
+            googletag.cmd.push(function() {
                 var urlPath = document.URL,
                     _klyObject = typeof window.kly !== 'undefined' ? window.kly : window.kmklabs,
                     _articlePages = _klyObject && _klyObject.article,
@@ -618,95 +607,100 @@ function spotxOutstreamFunc(bid) {
                                     
                     isMatcont = (_isAdultContent || isViolateBrandSafety === "1") ? "1" : "0";
 
-
-                /*DEFINE ALL SLOT*/
-                if( GAMLibrary.topFrameFixedSize ){
-                    googletag.defineSlot(GAMLibrary.dfpTopFrame, [1, 1], 'div-gpt-ad-liputan6-topfrm-oop').addService(googletag.pubads());
-                }else{
-                    googletag.defineOutOfPageSlot(GAMLibrary.dfpTopFrame, 'div-gpt-ad-liputan6-topfrm-oop').addService(googletag.pubads());
-                }
-
-                googletag.defineSlot(GAMLibrary.dfpHeadline, [
-                    [320, 50],
-                    [320, 100]
-                ], 'div-gpt-ad-liputan6-hl').addService(googletag.pubads());
-                googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-liputan6-sc').addService(googletag.pubads());
-                googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-liputan6-dfp-exposer-oop').addService(googletag.pubads());
-                // googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-contextual', 'div-gpt-ad-liputan6-contextual-oop').addService(googletag.pubads()); 
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-newsTag1', 'div-gpt-ad-liputan6-newsTag1-oop').addService(googletag.pubads());
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-insertion', 'div-gpt-ad-liputan6-insertion-oop').addService(googletag.pubads());
-                googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-liputan6-overlay-oop').addService(googletag.pubads());
-                /*
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-headline', 'div-gpt-ad-liputan6-crm-headline-oop').addService(googletag.pubads());
-                */
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-1', 'div-gpt-ad-liputan6-crm1-oop').addService(googletag.pubads());
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-2', 'div-gpt-ad-liputan6-crm2-oop').addService(googletag.pubads());
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-3', 'div-gpt-ad-liputan6-crm3-oop').addService(googletag.pubads());
-                googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-feedboard', 'div-gpt-ad-liputan6-feedboard').addService(googletag.pubads());
-
-                /*Bottom Frame Scrolling*/
-                GAMLibrary.scrollBottomFrame();
-                /*Bottom Frame Scrolling*/
-
-                googletag.pubads().addEventListener('slotResponseReceived', function(event) {
-                    var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
-                    var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
-                    var dfp_slotAdUnitID = event.slot.getSlotId().getId(); /* get adunit container id*/
-                    var dfp_slotElementId = event.slot.getSlotId().getDomId(); /* get adunit dom id*/
-                    /*check delivering ads slot*/
-                    if (dfp_slotDelivered == 'block')
-                    {
-                        if ( dfp_slotAdUnitPath == GAMLibrary.dfpHeadline ) {
-                            var urlParams = new URLSearchParams(window.location.search);
-                            var myParam = JSON.parse(urlParams.get('interval'));
-                            headlineSticky(myParam);
-                        }
+                    /*DEFINE ALL SLOT*/
+                    if( GAMLibrary.topFrameFixedSize ){
+                        window.GAMLibrary.topframe = googletag.defineSlot(GAMLibrary.dfpTopFrame, [1, 1], 'div-gpt-ad-liputan6-topfrm-oop').addService(googletag.pubads());
+                    }else{
+                        window.GAMLibrary.topframe = googletag.defineOutOfPageSlot(GAMLibrary.dfpTopFrame, 'div-gpt-ad-liputan6-topfrm-oop').addService(googletag.pubads());
                     }
 
-                    /* DISPLAY NONE THE IFRAME, FOR ADS ELEMENT OUTSIDE IT'S IFRAME CONTAINER */
-                    if (dfp_slotElementId.match(/-oop/)) { /* && !dfp_slotElementId.match(/billboard|lb/)) {*/
-                        if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && (document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1)) {
-                            document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
+                    /*
+                    googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-contextual', 'div-gpt-ad-liputan6-contextual-oop').addService(googletag.pubads()); 
+                    googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-headline', 'div-gpt-ad-liputan6-crm-headline-oop').addService(googletag.pubads());
+                    */
+                    window.GAMLibrary.newstag1 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-newsTag1', 'div-gpt-ad-liputan6-newsTag1-oop').addService(googletag.pubads());
+                    window.GAMLibrary.insertion = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-insertion', 'div-gpt-ad-liputan6-insertion-oop').addService(googletag.pubads());
+                    window.GAMLibrary.overlay = googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-liputan6-overlay-oop').addService(googletag.pubads());
+                    window.GAMLibrary.crmOrganic1 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-1', 'div-gpt-ad-liputan6-crm1-oop').addService(googletag.pubads());
+                    window.GAMLibrary.crmOrganic2 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-2', 'div-gpt-ad-liputan6-crm2-oop').addService(googletag.pubads());
+                    window.GAMLibrary.crmOrganic3 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-3', 'div-gpt-ad-liputan6-crm3-oop').addService(googletag.pubads());
+                    window.GAMLibrary.feedboard = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-feedboard', 'div-gpt-ad-liputan6-feedboard').addService(googletag.pubads());
+
+                    window.GAMLibrary.headline = googletag.defineSlot(GAMLibrary.dfpHeadline, [[320, 50],[320, 100]], 'div-gpt-ad-liputan6-hl').addService(googletag.pubads());
+                    window.GAMLibrary.showcase = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-liputan6-sc').addService(googletag.pubads());
+                    window.GAMLibrary.exposer1 = googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-liputan6-dfp-exposer-oop').addService(googletag.pubads());
+                    
+                    /*Bottom Frame Scrolling*/
+                    GAMLibrary.scrollBottomFrame();
+                    /*Bottom Frame Scrolling*/
+
+                    googletag.pubads().addEventListener('slotResponseReceived', function(event) {
+                        var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
+                        var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
+                        var dfp_slotAdUnitID = event.slot.getSlotId().getId(); /* get adunit container id*/
+                        var dfp_slotElementId = event.slot.getSlotId().getDomId(); /* get adunit dom id*/
+                        /*check delivering ads slot*/
+                        if (dfp_slotDelivered == 'block')
+                        {
+                            if ( dfp_slotAdUnitPath == GAMLibrary.dfpHeadline ) {
+                                var urlParams = new URLSearchParams(window.location.search);
+                                var myParam = JSON.parse(urlParams.get('interval'));
+                                headlineSticky(myParam);
+                            }
                         }
+
+                        /* DISPLAY NONE THE IFRAME, FOR ADS ELEMENT OUTSIDE IT'S IFRAME CONTAINER */
+                        if (dfp_slotElementId.match(/-oop/)) { /* && !dfp_slotElementId.match(/billboard|lb/)) {*/
+                            if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && (document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1)) {
+                                document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
+                            }
+                        }
+                    });
+
+                    GAMLibrary.infiniteSCArticle();
+
+                    /*  START TARGETING BLOCK   */
+                    googletag.pubads().setTargeting("isMatcont", isMatcont);
+                    googletag.pubads().setTargeting("brandsafety", isViolateBrandSafety);
+                    
+                    if(typeof Krux !== "undefined"){
+                        googletag.pubads().setTargeting('ksg', Krux.segments);
+                        googletag.pubads().setTargeting('kuid', Krux.user);
                     }
-                });
 
-                GAMLibrary.infiniteSCArticle();
+                    googletag.pubads().setTargeting("tags",tagForAds);
+                    googletag.pubads().setTargeting("currentUrl", urlPath);
+                    googletag.pubads().setTargeting("type", kmklabs.gtm.type);
+                    googletag.pubads().setTargeting("pageType", kmklabs.pageType);
+                    googletag.pubads().setTargeting("channel", kmklabs.gtm.subCategory);
+                    googletag.pubads().setTargeting("audience", kmklabs.gtm.audience.split("|"));
+                    googletag.pubads().setTargeting("isAdvertorial", typeof (isAdvertorial = kmklabs.article && kmklabs.article.isAdvertorial.toString()) === "undefined" ? "false" :  isAdvertorial);   
+                    googletag.pubads().setTargeting("isMultipage", typeof (isMultipage = kmklabs.article && kmklabs.article.isMultipage.toString()) === "undefined" ? "false" : isMultipage );
+                    googletag.pubads().setTargeting("articleId", kmklabs.gtm.articleId.toString());
+                    googletag.pubads().setTargeting("pagingNum", typeof (pageParam = kmklabs.gtm.pageParam && kmklabs.gtm.pageParam.toString()) === "undefined" ? "false" : pageParam );
+                    googletag.pubads().setTargeting("site", kmklabs.site);
+                    googletag.pubads().setTargeting("age", typeof (age = kmklabs.gtm.age) === "undefined" ? "false" : kmklabs.gtm.age.toString());
+                    googletag.pubads().setTargeting("gender", typeof (gender = kmklabs.gtm.gender) === "undefined" ? "false" : kmklabs.gtm.gender.toString());
+                    /*  END TARGETING BLOCK   */
 
-                /*  START TARGETING BLOCK   */
-                googletag.pubads().setTargeting("isMatcont", isMatcont);
-                googletag.pubads().setTargeting("brandsafety", isViolateBrandSafety);
+                    /* SET VISITOR ID AS PUBLISHER PROVIDED ID - START*/
+                    var cVisitorId = (visId = document.cookie.split('liputan6_id_visitor_id=')[1]) ?    visId.split(';')[0].replace(/[^a-zA-Z0-9]/ig,'') : 0;
+                        cVisitorId ? googletag.pubads().setPublisherProvidedId(cVisitorId+'kly') : '';
+                    /* SET VISITOR ID AS PUBLISHER PROVIDED ID - END*/
                 
-                if(typeof Krux !== "undefined"){
-                    googletag.pubads().setTargeting('ksg', Krux.segments);
-                    googletag.pubads().setTargeting('kuid', Krux.user);
-                }
-                googletag.pubads().setTargeting("tags",tagForAds);
-                googletag.pubads().setTargeting("currentUrl", urlPath);
-                googletag.pubads().setTargeting("type", kmklabs.gtm.type);
-                googletag.pubads().setTargeting("pageType", kmklabs.pageType);
-                googletag.pubads().setTargeting("channel", kmklabs.gtm.subCategory);
-                googletag.pubads().setTargeting("audience", kmklabs.gtm.audience.split("|"));
-                googletag.pubads().setTargeting("isAdvertorial", typeof (isAdvertorial = kmklabs.article && kmklabs.article.isAdvertorial.toString()) === "undefined" ? "false" :  isAdvertorial);   
-                googletag.pubads().setTargeting("isMultipage", typeof (isMultipage = kmklabs.article && kmklabs.article.isMultipage.toString()) === "undefined" ? "false" : isMultipage );
-                googletag.pubads().setTargeting("articleId", kmklabs.gtm.articleId.toString());
-                googletag.pubads().setTargeting("pagingNum", typeof (pageParam = kmklabs.gtm.pageParam && kmklabs.gtm.pageParam.toString()) === "undefined" ? "false" : pageParam );
-                googletag.pubads().setTargeting("site", kmklabs.site);
-                googletag.pubads().setTargeting("age", typeof (age = kmklabs.gtm.age) === "undefined" ? "false" : kmklabs.gtm.age.toString());
-                googletag.pubads().setTargeting("gender", typeof (gender = kmklabs.gtm.gender) === "undefined" ? "false" : kmklabs.gtm.gender.toString());
-                /*  END TARGETING BLOCK   */
+                    googletag.pubads().setCentering(true);
+                    googletag.pubads().enableSingleRequest();
+                    googletag.pubads().collapseEmptyDivs();
+                    googletag.pubads().disableInitialLoad();
+                    googletag.enableServices();
 
-                /* SET VISITOR ID AS PUBLISHER PROVIDED ID - START*/
-                var cVisitorId = (visId = document.cookie.split('liputan6_id_visitor_id=')[1]) ?    visId.split(';')[0].replace(/[^a-zA-Z0-9]/ig,'') : 0;
-                    cVisitorId ? googletag.pubads().setPublisherProvidedId(cVisitorId+'kly') : '';
-                /* SET VISITOR ID AS PUBLISHER PROVIDED ID - END*/
-            
-                googletag.pubads().setCentering(true);
-                googletag.pubads().enableSingleRequest();
-                googletag.pubads().collapseEmptyDivs();
-                googletag.enableServices();
+                    /* REFRESH ON DEMAND */
+                    googletag.pubads().refresh([window.GAMLibrary.topframe, window.GAMLibrary.newstag1, window.GAMLibrary.insertion, window.GAMLibrary.overlay, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard]);
 
             });
+
+            /* INITIATE PREBID */
+            var prebidObject = new PrebidInstantiate(1000,3000,1000,adUnits,priceGranularityConfig);
 
             /* ============ HEADLINE STICKY - DEFAULT 3s ============ */
             var headlineStickyInterval=5,headlineStickyStatus=!1;function headlineSticky(t){null!=t&&(headlineStickyInterval=t);var e=document.getElementById("div-gpt-ad-liputan6-hl"),n=document.createElement("div");n.setAttribute("id","div-gpt-ad-liputan6-hl-shadow"),e.parentElement.insertBefore(n,e),console.log(headlineStickyInterval),injectStickyStyleAndAnimation(),window.addEventListener("scroll",headlineStickyScrollEevent)}function headlineStickyScrollEevent(){var t=document.getElementById("div-gpt-ad-liputan6-hl"),e=document.getElementById("div-gpt-ad-liputan6-hl-shadow").getBoundingClientRect().top,n=document.querySelector(".layout__nav-content");document.documentElement.scrollTop||document.body.scrollTop;headlineStickyStatus?e<=0?n.classList.contains("layout__nav-content--no-hanging")?t.classList.remove("hl-navbar-hanging"):t.classList.add("hl-navbar-hanging"):(window.removeEventListener("scroll",headlineStickyScrollEevent),removeStickyHeadline(t,!1)):e<=0&&(t.classList.add("hl-active-sticky"),t.style="",removeStickyHeadline(t,!0),headlineStickyStatus=!0)}function removeStickyHeadline(t,e){var n=setInterval(function(){headlineStickyInterval<=0?(t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0",clearInterval(n),window.removeEventListener("scroll",headlineStickyScrollEevent)):headlineStickyInterval--},1e3);e||(clearInterval(n),t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0")}function injectStickyStyleAndAnimation(){var t=document.createElement("style");t.textContent="\n\t\t.hl-active-sticky {\n\t\t\tposition: fixed;\n\t\t\ttop: -100%;\n\t\t\tz-index: 9999;\n\t\t\tleft: 50%;\n\t\t\ttransform: translateX(-50%);\n\t\t\tmargin-top: 50px !important;\n\t\t\ttransition : margin-top .5s ease;\n\t\t\tanimation: hlSlideDown .5s forwards;\n\t\t}\n\n\t\t.hl-navbar-hanging{\n\t\t\tmargin-top : 50px !important;\n\t\t}\n\n\t\t@keyframes hlSlideDown{\n\t\t\t0%{top : -100px;}\n\t\t\t100%{top : 0px;}\n\t\t}\n\t\t",document.head.appendChild(t)}
