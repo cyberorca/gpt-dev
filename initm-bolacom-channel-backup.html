@@ -45,12 +45,7 @@
                 vid_contain.appendChild(script);
             }
             
-            const priceGranularityConfig = {
-                buckets: [
-                    { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
-                    { precision: 2, min: 3, max: 10, increment: 0.1 },
-                ],
-            };
+            const priceGranularityConfig = {buckets: [{ precision: 2, min: 0.20, max: 2.99, increment: 0.01 },{ precision: 2, min: 3, max: 10, increment: 0.1 },],};
 
             var gptadslots = [];
             var googletag = googletag || {};
@@ -107,7 +102,6 @@
                         },
                     },
                     bids: [
-                            { bidder: "teads", params: { pageId: 120642, placementId: 130848}},
                             { bidder: "emx_digital", params: { tagid: "113620" } },
                             { bidder: "oftmedia", params: { placementId: "18777760" } },
                             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
@@ -136,7 +130,6 @@
                         },
                     },
                     bids: [
-                            { bidder: "teads", params: { pageId: 120642, placementId: 130848}},
                             { bidder: "innity", params: { zone: 98059, pub: 539	} },
                             { bidder: "emx_digital", params: { tagid: "113620" } },
                             { bidder: "oftmedia", params: { placementId: "18777760" } },
@@ -185,7 +178,7 @@
                         },
                     },
                     bids: [
-                            { bidder: "teads", params: { pageId: 120642, placementId: 130848 } },
+                            { bidder: "teads", params: { pageId: 111238, placementId: 120943 } },
                             { bidder: "innity", params: { zone: 98060, pub: 539 } },
                             { bidder: "emx_digital", params: { tagid: "113620" } },
                             { bidder: "oftmedia", params: { placementId: "18777760" } },
@@ -240,7 +233,7 @@
             /** LOAD PREBID - END */
 
             var gpt_gam_site = window.location.hostname.toUpperCase(),
-            gpt_gam_ver = 'V05-ADS';
+            gpt_gam_ver = 'V06-ADS';
             console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
             /* PROTOTYPE CUSTOM FILTERING */
             String.prototype.klyFiltering = function (delimiter) {
@@ -371,7 +364,7 @@
             console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
             console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
 
-            partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
+            partnerUID ? ( window.VidioPersonalization && ( window.VidioPersonalization.sendData(null, cdpData)) ) : '';
         };
 
             googletag.cmd.push(function() {

@@ -45,12 +45,7 @@
         vid_contain.appendChild(script);
     }
 
-    const priceGranularityConfig = {
-            buckets: [
-                { precision: 2, min: 0.20, max: 2.99, increment: 0.01 },
-                { precision: 2, min: 3, max: 10, increment: 0.1 },
-            ],
-    };
+    const priceGranularityConfig = { buckets: [ { precision: 2, min: 0.20, max: 2.99, increment: 0.01 }, { precision: 2, min: 3, max: 10, increment: 0.1 }, ], };
 
     var gptadslots = [];
     var googletag = googletag || {};
@@ -113,7 +108,6 @@
                 { bidder: "emx_digital", params: { tagid: "113618" } },
                 { bidder: "innity", params: { zone: 97853 , pub : 539 } },
                 { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "teads", params: { pageId: 120638 , placementId: 130844 } },
                 { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                 { bidder: "adnuntius", params: { auId: "000000000010943f" } },
                 { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
@@ -145,7 +139,6 @@
                 { bidder: "emx_digital", params: { tagid: "113618" } },
                 { bidder: "innity", params: { zone: 98049 , pub : 539} },
                 { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "teads", params: { pageId: 120638 , placementId: 130844 } },
                 { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                 { bidder: "adnuntius", params: { auId: "000000000010943e" } },
                 { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
@@ -197,7 +190,7 @@
                 { bidder: "emx_digital", params: { tagid: "113618" } },
                 { bidder: "innity", params: { zone: 98050 , pub : 539} },
                 { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "teads", params: { pageId: 120638 , placementId: 130844 } },
+                { bidder: "teads", params: { pageId: 111234 , placementId: 120939 } },
                 { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
                 { bidder: "adnuntius", params: { auId: "0000000000109444" } },
                 { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
@@ -250,7 +243,7 @@
     /** LOAD PREBID - END */
 
     var gpt_gam_site = window.location.hostname.toUpperCase(),
-    gpt_gam_ver = 'V05-ADS';
+    gpt_gam_ver = 'V06-ADS';
     console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
 
     /*PROTOTYPE CUSTOM FILTERING*/
@@ -453,7 +446,7 @@ window.createCDPTracker = function(cat, macro) {
     console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
     console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
 
-    partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
+    partnerUID ? ( window.VidioPersonalization && ( window.VidioPersonalization.sendData(null, cdpData)) ) : '';
 };
 
     googletag.cmd.push(function() {
