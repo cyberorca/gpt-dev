@@ -183,10 +183,6 @@
                             playerSize: [320, 100], // Not set so that the player can be repsonsive
                             context: "outstream",
                         },
-                        video: {
-                            playerSize: [320, 100], // Not set so that the player can be repsonsive
-                            context: "instream",
-                        },
                     },
                     bids: [
                             { bidder: "innity", params: { zone: 98059, pub: 539	} },
@@ -264,94 +260,104 @@
             /*SET INTERVAL TO AUTO REFRESH BOTTOM FRAME ADS - NEW*/
             window.GAMLibrary = {};
             window.GAMLibrary = {
-            dfpSlideup          :   '/36504930/m.bola.com/dfp-slideup',
-            dfpExposer          :   '/36504930/m.bola.com/dfp-exposer',
-            dfpBottomFrame      :   '/36504930/m.bola.com/dfp-bottomfrm',
-            dfpTopFrame         :   '/36504930/m.bola.com/dfp-topfrm',
-            dfpHeadline         :   '/36504930/m.bola.com/dfp-headline',
-            timedBottomFrm      :   null,
-            infiniteSCId        :   1,
-            topFrameFixedSize   :   1,
-            setGamBFInterval    :   function (active = true) {
-                                        if (!active) {
-                                        clearInterval(window.GAMLibrary.gamBFInterval);
-                                        return;
-                                        }
-                                        window.GAMLibrary.gamBFInterval = setInterval(function () {
-                                        document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
-                                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
-                                        googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
-                                        }, 60000);
-                                    },
-            countScInfinite     :   function(){ return this.infiniteSCId++;},
-            gptInitInfiniteSC   :   function(){
-                                        var pageType = kmklabs.pageType;
-                                        if (pageType !== 'readPage') {
-                                        var that = this;
-                                        $('.js-page__articles').on('before_display', function() {
-                                            var scIndex = that.countScInfinite();
-                                            var slotName = 'div-gpt-ad-bolacom-infinite-sc-' + scIndex;
-                                            var slotDiv = document.createElement('div');
+                dfpSlideup          :   '/36504930/m.bola.com/dfp-slideup',
+                dfpExposer          :   '/36504930/m.bola.com/dfp-exposer',
+                dfpBottomFrame      :   '/36504930/m.bola.com/dfp-bottomfrm',
+                dfpTopFrame         :   '/36504930/m.bola.com/dfp-topfrm',
+                dfpHeadline         :   '/36504930/m.bola.com/dfp-headline',
+                timedBottomFrm      :   null,
+                infiniteSCId        :   1,
+                topFrameFixedSize   :   1,
+                setGamBFInterval: function(active = true) {
+                    if (!active) {
+                        clearInterval(window.GAMLibrary.gamBFInterval);
+                        return;
+                    }
+                    window.GAMLibrary.gamBFInterval = setInterval(function() {
+                        document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove();
+                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
+                        googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
+                    }, 60000);
+                },
+                countScInfinite: function() {
+                    return this.infiniteSCId++;
+                },
+                gptInitInfiniteSC: function() {
+                    var pageType = kmklabs.pageType;
+                    if (pageType !== 'readPage') {
+                        var that = this;
+                        $('.js-page__articles').on('before_display', function() {
+                            var scIndex = that.countScInfinite();
+                            var slotName = 'div-gpt-ad-bolacom-infinite-sc-' + scIndex;
+                            var slotDiv = document.createElement('div');
 
-                                            slotDiv.id = slotName;
-                                            slotDiv.className = "infinite_ad";
-                                            slotDiv.setAttribute("data-info", "ad");
-                                            slotDiv.setAttribute("style", "text-align:center;border-top: 1px solid #E2E2E6;padding-top: 15px;");
-                                            $(slotDiv).prependTo($(this));
-                                            console.log(slotName);
+                            slotDiv.id = slotName;
+                            slotDiv.className = "infinite_ad";
+                            slotDiv.setAttribute("data-info", "ad");
+                            slotDiv.setAttribute("style", "text-align:center;border-top: 1px solid #E2E2E6;padding-top: 15px;");
+                            $(slotDiv).prependTo($(this));
+                            console.log(slotName);
 
-                                            /*REGISTER DIV AND REFRESH SLOT*/
-                                            googletag.cmd.push(function() {
-                                            var slot = googletag.defineSlot('/36504930/m.bola.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], slotName).addService(googletag.pubads()).setTargeting("position",[scIndex]);
-                                            googletag.display(slotName);
-                                            });
-                                        });
-                                        } else {
-                                        googletag.cmd.push(function() {
-                                            googletag.defineSlot('/36504930/m.bola.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-bolacom-sc').addService(googletag.pubads());
-                                            googletag.display('div-gpt-ad-bolacom-sc');
-                                        });
-                                        }
-                                    },
-            documentMeta        :   function document_meta(metaName) {
-                                        var metaResult = '';
-                                        var metas = document.getElementsByTagName('meta');
-                                        if (metas) {
-                                        for (var x = 0, y = metas.length; x < y; x++) {
-                                            if (metas[x].name.toLowerCase() == metaName) {
-                                            metaResult += metas[x].content;
-                                            }
-                                        }
-                                        }
-                                        return metaResult != '' ? metaResult : '';
-                                    },
-            inArray             :   function (needle, haystack) {
-                                        var length = haystack.length;
-                                        for (var i = 0; i < length; i++) {
-                                            if (haystack[i] == needle) return true;
-                                        }
-                                        return false;
-                                    },
-            arrToLowerCase      :   function (arr){
-                                        return arr.map(function(v,i){
-                                        return v.toLowerCase();
-                                        });
-                                    },
-            scrollBottomFrame   :   function() {
-                                        this.scroll = function(){
-                                                var scrollNode = document.scrollingElement || document.documentElement;
-                                                var scrollTop = scrollNode.scrollTop;
-                                                if (scrollTop >= "200") {
-                                                this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-bolacom-bottomfrm').addService(googletag.pubads());
-                                                window.removeEventListener("scroll", this.scrollHandler);
-                                                pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
-                                                googletag.pubads().refresh([this.timedBottomFrm]);
-                                                this.refreshSlot = this.timedBottomFrm;
-                                                this.setGamBFInterval();
-                                            }
-                                        };
-                                        this.scrollHandler = this.scroll.bind(this);
-                                        window.addEventListener("scroll", this.scrollHandler);
+                            /*REGISTER DIV AND REFRESH SLOT*/
+                            googletag.cmd.push(function() {
+                                var slot = googletag.defineSlot('/36504930/m.bola.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], slotName).addService(googletag.pubads()).setTargeting("position", [scIndex]);
+                                googletag.display(slotName);
+                            });
+                        });
+                    } else {
+                        googletag.cmd.push(function() {
+                            googletag.defineSlot('/36504930/m.bola.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-bolacom-sc').addService(googletag.pubads());
+                            googletag.display('div-gpt-ad-bolacom-sc');
+                        });
+                    }
+                },
+                documentMeta: function document_meta(metaName) {
+                    var metaResult = '';
+                    var metas = document.getElementsByTagName('meta');
+                    if (metas) {
+                        for (var x = 0, y = metas.length; x < y; x++) {
+                            if (metas[x].name.toLowerCase() == metaName) {
+                                metaResult += metas[x].content;
+                            }
+                        }
+                    }
+                    return metaResult != '' ? metaResult : '';
+                },
+                inArray: function(needle, haystack) {
+                    var length = haystack.length;
+                    for (var i = 0; i < length; i++) {
+                        if (haystack[i] == needle) return true;
+                    }
+                    return false;
+                },
+                arrToLowerCase: function(arr) {
+                    return arr.map(function(v, i) {
+                        return v.toLowerCase();
+                    });
+                },
+                scrollBottomFrame:  function() {
+                                            this.scroll = function(){
+                                                    var scrollNode = document.scrollingElement || document.documentElement;
+                                                    var scrollTop = scrollNode.scrollTop;
+                                                    if (scrollTop >= "200") {
+                                                        if (!this.timedBottomFrm) {
+                                                            console.log("generated!");
+                                                            this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-bolacom-bottomfrm').addService(googletag.pubads());
+                                                            setTimeout(() => {
+                                                                if (pbjs) {
+                                                                    pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
+                                                                    googletag.pubads().refresh([this.timedBottomFrm]);
+                                                                    this.refreshSlot = this.timedBottomFrm;
+                                                                    this.setGamBFInterval();
+                                                                }
+                                                            }, 400);
+                                                        } else {
+                                                            window.removeEventListener("scroll", this.scroll);
+                                                        }
+                                                    }
+                                            };
+                                            this.scrollHandler = this.scroll.bind(this);
+                                            window.addEventListener("scroll", this.scrollHandler);
                                     }
             };
 
@@ -425,7 +431,7 @@
                 window.GAMLibrary.exposer1 = googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-bolacom-dfp-exposer-oop').addService(googletag.pubads());
                 
                 /*Bottom Frame Scrolling*/
-                GAMLibrary.scrollBottomFrame();
+                /*GAMLibrary.scrollBottomFrame();*/
                 /*Bottom Frame Scrolling*/
 
                 googletag.pubads().addEventListener('slotResponseReceived', function(event) {
@@ -487,7 +493,7 @@
                 googletag.enableServices();
 
                 /* REFRESH ON DEMAND */
-                googletag.pubads().refresh([window.GAMLibrary.topframe, window.GAMLibrary.contextual, window.GAMLibrary.overlay, window.GAMLibrary.crmHeadline, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3]);
+                googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.contextual, window.GAMLibrary.overlay, window.GAMLibrary.crmHeadline, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3]);
 
             });
 

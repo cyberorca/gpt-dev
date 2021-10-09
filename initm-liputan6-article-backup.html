@@ -234,10 +234,6 @@
                                             playerSize: [320, 100], // Not set so that the player can be repsonsive
                                             context: "outstream",
                                         },
-                                        video: {
-                                            playerSize: [320, 100], // Not set so that the player can be repsonsive
-                                            context: "instream",
-                                        },
                                     },
                                     bids: [
                                         { bidder: "emx_digital", params: { tagid: "113615" } },
@@ -321,233 +317,255 @@
                 timedBottomFrm      :   null,
                 infiniteSCId        :   1,
                 topFrameFixedSize   :   1,
-                setGamBFInterval    :   function (active = true) {
-                                            if (!active) {
-                                                clearInterval(window.GAMLibrary.gamBFInterval);
-                                                return;
-                                            }
-                                            window.GAMLibrary.gamBFInterval = setInterval(function () {
-                                                document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
-                                                pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
-                                                googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
-                                            }, 60000);
-                                        },
-                countScInfinite     :   function(){ return this.infiniteSCId++;},                       
-                gptInitInfiniteSC   :   function () {
-                                            var pageType = kmklabs.pageType;
-                                            if (pageType !== 'readPage') {
-                                                var that = this;
-                                                $('.js-page__articles').on('before_display', function() {
-                                                    var scIndex = that.countScInfinite();
-                                                    var slotName = 'div-gpt-ad-liputan6-infinite-sc-' + scIndex;
-                                                    var slotDiv = document.createElement('div');
-                                                    slotDiv.id = slotName;
-                                                    slotDiv.className = "infinite_ad";
-                                                    slotDiv.setAttribute("data-info", "ad");
-                                                    slotDiv.setAttribute("style", "text-align:center;border-top: 1px solid #E2E2E6;padding-top: 15px;");
-                                                    $(slotDiv).prependTo($(this));
-                                                    /*REGISTER DIV AND REFRESH SLOT*/
-                                                    googletag.cmd.push(function() {
-                                                        var slot = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc',[[300,250],[250,250],[200,200]],slotName).addService(googletag.pubads()).setTargeting("position", [scIndex]);
-                                                        googletag.display(slotName);
-                                                    });
-                                                });
+                setGamBFInterval: function(active = true) {
+                    if (!active) {
+                        clearInterval(window.GAMLibrary.gamBFInterval);
+                        return;
+                    }
+                    window.GAMLibrary.gamBFInterval = setInterval(function() {
+                        document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove();
+                        pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
+                        googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
+                    }, 60000);
+                },
+                countScInfinite: function() {
+                    return this.infiniteSCId++;
+                },
+                gptInitInfiniteSC: function() {
+                    var pageType = kmklabs.pageType;
+                    if (pageType !== 'readPage') {
+                        var that = this;
+                        $('.js-page__articles').on('before_display', function() {
+                            var scIndex = that.countScInfinite();
+                            var slotName = 'div-gpt-ad-liputan6-infinite-sc-' + scIndex;
+                            var slotDiv = document.createElement('div');
+                            slotDiv.id = slotName;
+                            slotDiv.className = "infinite_ad";
+                            slotDiv.setAttribute("data-info", "ad");
+                            slotDiv.setAttribute("style", "text-align:center;border-top: 1px solid #E2E2E6;padding-top: 15px;");
+                            $(slotDiv).prependTo($(this));
+                            /*REGISTER DIV AND REFRESH SLOT*/
+                            googletag.cmd.push(function() {
+                                var slot = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [
+                                    [300, 250],
+                                    [250, 250],
+                                    [200, 200]
+                                ], slotName).addService(googletag.pubads()).setTargeting("position", [scIndex]);
+                                googletag.display(slotName);
+                            });
+                        });
+                    } else {
+                        googletag.cmd.push(function() {
+                            googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [
+                                [300, 250],
+                                [250, 250],
+                                [200, 200]
+                            ], 'div-gpt-ad-liputan6-sc').addService(googletag.pubads());
+                            googletag.display('div-gpt-ad-liputan6-sc');
+                        });
+                    }
+                },
+                documentMeta: function(metaName) {
+                    var metaResult = '';
+                    var metas = document.getElementsByTagName('meta');
+                    if (metas) {
+                        for (var x = 0, y = metas.length; x < y; x++) {
+                            if (metas[x].name.toLowerCase() == metaName) {
+                                metaResult += metas[x].content;
+                            }
+                        }
+                    }
+                    return metaResult != '' ? metaResult : '';
+                },
+                inArray: function(needle, haystack) {
+                    var length = haystack.length;
+                    for (var i = 0; i < length; i++) {
+                        if (haystack[i] == needle) return true;
+                    }
+                    return false;
+                },
+                arrToLowerCase: function(arr) {
+                    return arr.map(function(v, i) {
+                        return v.toLowerCase();
+                    });
+                },
+                scrollBottomFrame: function() {
+                    this.scroll = function() {
+                        var scrollNode = document.scrollingElement || document.documentElement;
+                        var scrollTop = scrollNode.scrollTop;
+                        if (scrollTop >= "200") {
+                            if (!this.timedBottomFrm) {
+                                console.log("generated!");
+                                this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-liputan6-bottomfrm').addService(googletag.pubads());
+                                setTimeout(() => {
+                                    if (pbjs) {
+                                        pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
+                                        googletag.pubads().refresh([this.timedBottomFrm]);
+                                        this.refreshSlot = this.timedBottomFrm;
+                                        this.setGamBFInterval();
+
+                                    }
+                                }, 400);
+                            } else {
+                                window.removeEventListener("scroll", this.scroll);
+                            }
+
+                        }
+                    };
+                    this.scrollHandler = this.scroll.bind(this);
+                    window.addEventListener("scroll", this.scrollHandler);
+                },
+                lazzyLoadingAdunit: function() {
+                    const _noIntersectionMethod = !window.IntersectionObserver;
+                    var __lazzYSetting__ = {
+                        "div-gpt-ad-liputan6-contextual-oop": {
+                            "type": "oop",
+                            "adunit": "/36504930/m.liputan6.com/dfp-contextual",
+                            "generated": 0,
+                        }
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        let _options = {
+                            root: null,
+                            rootMargin: "750px",
+                            threshold: 0
+                        };
+                        let _observer = null;
+                        if (_noIntersectionMethod) {
+                            window.addEventListener("scroll", renderAdunit);
+                        } else {
+                            _observer = new IntersectionObserver(_entries => {
+                                _entries.forEach(entry => {
+                                    if (entry.isIntersecting) {
+                                        value = __lazzYSetting__[entry.target.id];
+                                        if (!value.generated) {
+                                            if (value.type == "oop") {
+                                                _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, entry.target.id).addService(googletag.pubads());
                                             } else {
-                                                googletag.cmd.push(function() {
-                                                    googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-liputan6-sc').addService(googletag.pubads());
-                                                    googletag.display('div-gpt-ad-liputan6-sc');
-                                                });
+                                                _defineSlot_ = googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
                                             }
-                                        },
-                documentMeta       :   function (metaName) {
-                                            var metaResult = '';
-                                            var metas = document.getElementsByTagName('meta');
-                                            if (metas) {
-                                                for (var x = 0, y = metas.length; x < y; x++) {
-                                                    if (metas[x].name.toLowerCase() == metaName) {
-                                                        metaResult += metas[x].content;
-                                                    }
-                                                }
-                                            }
-                                            return metaResult != '' ? metaResult : '';
-                                        },
-
-                inArray             :   function (needle, haystack) {
-                                            var length = haystack.length;
-                                            for (var i = 0; i < length; i++) {
-                                                if (haystack[i] == needle) return true;
-                                            }
-                                            return false;
-                                        },
-
-                arrToLowerCase      :    function (arr){
-                                            return arr.map(function(v,i){
-                                                return v.toLowerCase();
-                                            });
-                                        },
-                scrollBottomFrame   : function() {
-                                            this.scroll = function(){
-                                                                var scrollNode = document.scrollingElement || document.documentElement;
-                                                                var scrollTop = scrollNode.scrollTop;
-                                                                if (scrollTop >= "200") {
-                                                                    this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-liputan6-bottomfrm').addService(googletag.pubads());
-                                                                    window.removeEventListener("scroll", this.scrollHandler);
-                                                                    pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
-                                                                    googletag.pubads().refresh([this.timedBottomFrm]);
-                                                                    this.refreshSlot = this.timedBottomFrm;
-                                                                    this.setGamBFInterval();
-                                                                }
-                                                            };
-                                            this.scrollHandler = this.scroll.bind(this);
-                                            window.addEventListener("scroll", this.scrollHandler);
-                                        },
-                lazzyLoadingAdunit : function() {
-                                            const _noIntersectionMethod = !window.IntersectionObserver;
-                                            var __lazzYSetting__ = {
-                                                "div-gpt-ad-liputan6-contextual-oop" :{
-                                                    "type" : "oop",
-                                                    "adunit" : "/36504930/m.liputan6.com/dfp-contextual",
-                                                    "generated" : 0,
-                                                }
-                                            }
-                                        
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                let _options = {
-                                                    root: null,
-                                                    rootMargin: "750px",
-                                                    threshold: 0
-                                                };
-                                                let _observer = null;
-                                                if(_noIntersectionMethod){
-                                                    window.addEventListener("scroll",renderAdunit);
-                                                }else{
-                                                    _observer = new IntersectionObserver(_entries => {
-                                                        _entries.forEach(entry => {
-                                                            if (entry.isIntersecting) {
-                                                                value = __lazzYSetting__[entry.target.id];
-                                                                if (!value.generated) {
-                                                                    if (value.type == "oop") {
-                                                                        _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, entry.target.id).addService(googletag.pubads());
-                                                                    }else{
-                                                                        _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
-                                                                    }
-                                                                    googletag.display(_defineSlot_);
-                                                                    (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
-                                                                    googletag.pubads().refresh([_defineSlot_]);
-                                                                    value.generated = 1;
-                                                                }
-                                                            }
-                                                        });
-                                                    },_options);
-                                                    for (const [key, value] of Object.entries(__lazzYSetting__)) {
-                                                        let _adunitElement = document.querySelector(`#${key}`);
-
-                                                        if(_adunitElement) {
-                                                            _observer.observe(_adunitElement);
-                                                        }
-                                                    };
-                                                }
-
-                                                function renderAdunit(){
-                                                    var _generatedCount_ = 0;
-                                                    var _itemCount_ = 0;
-
-                                                    for (const [key, value] of Object.entries(__lazzYSetting__)) {
-                                                        console.log(`${key}: ${value}`);
-                                                        _itemCount_ ++;
-                                                        var _defineSlot_ = null;
-
-                                                        console.log("viewport --",elementInViewport(document.getElementById(key)), null);
-
-                                                        if (!value.generated && elementInViewport(document.getElementById(key))) {
-
-                                                            if (value.type == "oop") {
-                                                                _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
-                                                            }else{
-                                                                _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
-                                                            }
-
-                                                            googletag.display(_defineSlot_);
-                                                            (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
-                                                            googletag.pubads().refresh([_defineSlot_]);
-                                                            value.generated = 1;
-
-                                                        }
-
-                                                        if (_generatedCount_ == _itemCount_) {
-                                                            window.removeEventListener('scroll',renderAdunit);
-                                                        }
-                                                    }
-
-                                                }
-                                                
-                                                function elementInViewport(el) {
-                                                        let rect = el.getBoundingClientRect()
-                                                        return (
-                                                            rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
-                                                        )
-                                                }
-                                            });
-                                        },
-                infiniteSCArticle   :  function() {
-                                                /**
-                                                * DEPENDEND CLASS, TAG AND ID
-                                                * Class : article-content-body__item--hidden
-                                                * Tag : -
-                                                * ID : gpt-ad-liputan6-sc-[n]
-                                                **/
-
-                                                var parentElement = document.querySelector(".article-content-body"),
-                                                    pagingElement = parentElement ? parentElement.querySelectorAll(".article-content-body__item") : 0;
-                                                                if(pagingElement){
-                                                pagingElement.forEach(function(element, index) {
-                                                    element.setAttribute("paging-index", index + 1);
-                                                })
-
-                                                mo = new MutationObserver(function(mutations) {
-
-                                                    mutations.forEach(function(el) {
-                                                        var oldValue = el.oldValue,
-                                                            target = el.target,
-                                                            SC,
-                                                            pagingIndex;
-
-                                                        if (oldValue && oldValue.match(/article-content-body__item/ig)) {
-                                                            pagingIndex = target.getAttribute('paging-index');
-                                                            if (!(pagingIndex % 2)) {
-                                                                target.childNodes.forEach(function(child, index) {
-                                                                    if (child.id && child.id.match(/gpt-ad-liputan6-sc/ig)) {
-                                                                        if (document.getElementById(child.id) && !SC) {
-
-                                                                            /* DEFINE AND FETCH SC */
-                                                                            if ( SC = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [[300,250],[250,250],[200,200]], child.id) ) {
-                                                                                SC.addService(googletag.pubads()).setTargeting("pagetype", kmklabs.pageType).setTargeting("position", (pagingIndex/2));
-                                                                                googletag.display(child.id);
-                                                                                pbjs.setTargetingForGPTAsync(['/36504930/m.liputan6.com/dfp-sc']);
-                                                                                googletag.pubads().refresh([SC]);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                });
-
-                                                            }
-
-                                                        }
-
-                                                    });
-                                                });
-
-                                                parentElement && mo.observe(parentElement, {
-                                                    childList: true,
-                                                    attributes: true,
-                                                    characterData: false,
-                                                    subtree: true,
-                                                    attributeOldValue: true,
-                                                    characterDataOldValue: false,
-
-                                                });
+                                            googletag.display(_defineSlot_);
+                                            (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]): '';
+                                            googletag.pubads().refresh([_defineSlot_]);
+                                            value.generated = 1;
                                         }
+                                    }
+                                });
+                            }, _options);
+                            for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                                let _adunitElement = document.querySelector(`#${key}`);
+
+                                if (_adunitElement) {
+                                    _observer.observe(_adunitElement);
+                                }
+                            };
+                        }
+
+                        function renderAdunit() {
+                            var _generatedCount_ = 0;
+                            var _itemCount_ = 0;
+
+                            for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                                console.log(`${key}: ${value}`);
+                                _itemCount_++;
+                                var _defineSlot_ = null;
+
+                                console.log("viewport --", elementInViewport(document.getElementById(key)), null);
+
+                                if (!value.generated && elementInViewport(document.getElementById(key))) {
+
+                                    if (value.type == "oop") {
+                                        _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
+                                    } else {
+                                        _defineSlot_ = googletag.defineSlot(value.adunit, value.size, key).addService(googletag.pubads());
+                                    }
+
+                                    googletag.display(_defineSlot_);
+                                    (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]): '';
+                                    googletag.pubads().refresh([_defineSlot_]);
+                                    value.generated = 1;
+
+                                }
+
+                                if (_generatedCount_ == _itemCount_) {
+                                    window.removeEventListener('scroll', renderAdunit);
+                                }
+                            }
+
+                        }
+
+                        function elementInViewport(el) {
+                            let rect = el.getBoundingClientRect()
+                            return (
+                                rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+                            )
+                        }
+                    });
+                },
+                infiniteSCArticle: function() {
+                    /**
+                     * DEPENDEND CLASS, TAG AND ID
+                     * Class : article-content-body__item--hidden
+                     * Tag : -
+                     * ID : gpt-ad-liputan6-sc-[n]
+                     **/
+
+                    var parentElement = document.querySelector(".article-content-body"),
+                        pagingElement = parentElement ? parentElement.querySelectorAll(".article-content-body__item") : 0;
+                    if (pagingElement) {
+                        pagingElement.forEach(function(element, index) {
+                            element.setAttribute("paging-index", index + 1);
+                        })
+
+                        mo = new MutationObserver(function(mutations) {
+
+                            mutations.forEach(function(el) {
+                                var oldValue = el.oldValue,
+                                    target = el.target,
+                                    SC,
+                                    pagingIndex;
+
+                                if (oldValue && oldValue.match(/article-content-body__item/ig)) {
+                                    pagingIndex = target.getAttribute('paging-index');
+                                    if (!(pagingIndex % 2)) {
+                                        target.childNodes.forEach(function(child, index) {
+                                            if (child.id && child.id.match(/gpt-ad-liputan6-sc/ig)) {
+                                                if (document.getElementById(child.id) && !SC) {
+
+                                                    /* DEFINE AND FETCH SC */
+                                                    if (SC = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [
+                                                            [300, 250],
+                                                            [250, 250],
+                                                            [200, 200]
+                                                        ], child.id)) {
+                                                        SC.addService(googletag.pubads()).setTargeting("pagetype", kmklabs.pageType).setTargeting("position", (pagingIndex / 2));
+                                                        googletag.display(child.id);
+                                                        pbjs.setTargetingForGPTAsync(['/36504930/m.liputan6.com/dfp-sc']);
+                                                        googletag.pubads().refresh([SC]);
                                                     }
+                                                }
+                                            }
+                                        });
+
+                                    }
+
+                                }
+
+                            });
+                        });
+
+                        parentElement && mo.observe(parentElement, {
+                            childList: true,
+                            attributes: true,
+                            characterData: false,
+                            subtree: true,
+                            attributeOldValue: true,
+                            characterDataOldValue: false,
+
+                        });
+                    }
+                }
 
             }
 
@@ -631,7 +649,7 @@
                     window.GAMLibrary.exposer1 = googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-liputan6-dfp-exposer-oop').addService(googletag.pubads());
                     
                     /*Bottom Frame Scrolling*/
-                    GAMLibrary.scrollBottomFrame();
+                    /*GAMLibrary.scrollBottomFrame();*/
                     /*Bottom Frame Scrolling*/
 
                     googletag.pubads().addEventListener('slotResponseReceived', function(event) {
@@ -695,7 +713,7 @@
                     googletag.enableServices();
 
                     /* REFRESH ON DEMAND */
-                    googletag.pubads().refresh([window.GAMLibrary.topframe, window.GAMLibrary.newstag1, window.GAMLibrary.insertion, window.GAMLibrary.overlay, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard]);
+                    googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.newstag1, window.GAMLibrary.insertion, window.GAMLibrary.overlay, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard]);
 
             });
 
