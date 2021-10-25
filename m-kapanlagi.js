@@ -1,3 +1,9 @@
+/*PROTOTYPE CUSTOM FILTERING*/
+String.prototype.klyFiltering = function (delimiter) {
+    return this.trim().split(delimiter).map(function(t){return t.trim().toLowerCase()}).filter(x => x != "");
+};      
+
+/** START - PREBID FUNCTION LIST */
 function spotxOutstreamFunc(bid) {
     function mobileAndTabletcheck() {
         var check = false;
@@ -41,49 +47,80 @@ function spotxOutstreamFunc(bid) {
     vid_contain.style.cssText = "display: none; margin-bottom: 20px";
     vid_contain.appendChild(script);
 }
+/** END - PREBID FUNCTION LIST */
 
-const priceGranularityConfig = {
-    buckets: [
-        {
-            precision: 2,
-            min: 0.2,
-            max: 2.99,
-            increment: 0.01,
-        },
-        {
-            precision: 2,
-            min: 3.0,
-            max: 5.95,
-            increment: 0.05,
-        },
-        {
-            precision: 2,
-            min: 6.0,
-            max: 20.0,
-            increment: 0.5,
-        },
-    ],
-};
+/** START - PREBID INITIATE CLASS  */
+class PrebidInstantiate {
+    constructor(timeout,fstimeout,hbtimeout, adunit, price ){
+        this.PREBID_TIMEOUT = timeout;
+        this.FAILSAFE_TIMEOUT = fstimeout;
+        this.HB_TIMEOUT = hbtimeout;
+        this.ADUNIT = adunit;
+        this.PRICE = price;
+        this.pushBid();
+        this.failsafePrebid();
+    }
 
+    failsafePrebid(){
+        let that = this;
+        setTimeout(function () {
+            that.initAdserver(); 
+            console.log("FAILSAFE TIMEOUT!");
+        }, this.FAILSAFE_TIMEOUT);
+    }
+    pushBid(){
+        pbjs.que.push(() => {
+            pbjs.setConfig({
+                enableSendAllBids:true,
+                cache: {
+                    url: 'https://prebid.adnxs.com/pbc/v1/cache'
+                },
+                // bidderTimeout: 2000,
+            });
+            pbjs.addAdUnits(this.ADUNIT);
+            pbjs.setConfig({
+                priceGranularity: this.PRICE,
+            });
+            pbjs.requestBids({
+                bidsBackHandler: this.initAdserver,
+                timeout: this.PREBID_TIMEOUT,
+            });
+        });
+
+        console.log("PUSH PB CONFIG : ",pbjs.requestBids);
+    }
+
+    initAdserver() {
+        if (pbjs.initAdserverSet) return;
+        pbjs.initAdserverSet = true;
+        googletag.cmd.push(function () {      
+            pbjs.que.push(function () {
+                pbjs.setTargetingForGPTAsync();
+                googletag.pubads().refresh([window.GAMLibrary.headline]); 
+                googletag.pubads().refresh([window.GAMLibrary.showcase]);
+                googletag.pubads().refresh([window.GAMLibrary.exposer1]);
+            });
+        });
+        
+    }
+}
+/** START - PREBID INITIATE CLASS  */
+
+/** START - PREBID INIT, CONFIGURATION & GOOGLE INIT   */ 
+const priceGranularityConfig = { buckets: [ { precision: 2, min: 0.20, max: 2.99, increment: 0.01 }, { precision: 2, min: 3, max: 10, increment: 0.1 },],};
 var gptadslots = [];
 var googletag = googletag || {};
-googletag.cmd = googletag.cmd || [];
 var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
-
-var PREBID_TIMEOUT = 1500;
-var FAILSAFE_TIMEOUT = 3000;
-var HB_TIMEOUT = 1000;
 var adUnits = [
     {
-        code: "div-gpt-ad-kapanlagi-sc",
+        code: "/36504930/m.kapanlagi.com/dfp-sc",
         mediaTypes: {
             banner: {
                 sizes: [
-					[300, 250],
-					[250, 250],
-					[200, 200],
-				],
+                    [300, 250],
+                    [250, 250],
+                    [200, 200],
+                ],
             },
             video: {
                 playerSize: [300, 250], // Not set so that the player can be repsonsive
@@ -101,72 +138,16 @@ var adUnits = [
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-          	{ bidder: "adnuntius", params: { auId: "00000000001093e7" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Kapanlagi-Mobile-300x250_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-			{ 
-				bidder: 'rubicon',
-				params: {
-					accountId: 12534,
-					siteId: 377460,
-					zoneId: 2082390
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [300, 250]
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [250, 250]
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [200, 200]
-				}
-			},
-            {
-                bidder: "innity",
-                params: {
-                        zone: 97836,
-                        pub: 536
-                        }
-            }
+            { bidder: "adnuntius", params: { auId: "00000000001093e7" } },
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+            { bidder: 'rubicon', params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
+            { bidder: 'ix', params: { siteId: '683432' } },
+            { bidder: "innity", params: { zone: 97836, pub: 539 } },
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-300x250_1', } } 
         ],
     },
     {
-        code: "div-gpt-ad-kapanlagi-hl",
+        code: "/36504930/m.kapanlagi.com/dfp-headline",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -189,65 +170,16 @@ var adUnits = [
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-          	{ bidder: "adnuntius", params: { auId: "00000000001093e8" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Kapanlagi-Mobile-320x100_1',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-			{ 
-				bidder: 'rubicon',
-				params: {
-					accountId: 12534,
-					siteId: 377460,
-					zoneId: 2082390
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [320, 50]
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [320, 100]
-				}
-			},
-            {
-                bidder: "innity",
-                params: {
-                        zone: 97835,
-                        pub: 536
-                        }
-            }
+            { bidder: "adnuntius", params: { auId: "00000000001093e8" } },
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
+            { bidder: "ix", params: { siteId: "683431" } },
+            { bidder: "innity", params: { zone: 97835, pub: 539 }},
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-320x50_1', } } 
         ],
     },
     {
-        code: "div-gpt-ad-kapanlagi-bottomfrm",
+        code: "/36504930/m.kapanlagi.com/dfp-bottomfrm",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -259,10 +191,6 @@ var adUnits = [
                 playerSize: [320, 100], // Not set so that the player can be repsonsive
                 context: "outstream",
             },
-            video: {
-                playerSize: [320, 100], // Not set so that the player can be repsonsive
-                context: "instream",
-            },
         },
         bids: [
             { bidder: "appnexus", params: { placementId: 14771937, member: "10375" } },
@@ -270,65 +198,34 @@ var adUnits = [
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-          	{ bidder: "adnuntius", params: { auId: "00000000001093eb" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
+            { bidder: "adnuntius", params: { auId: "00000000001093eb" } },
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
             {
                 bidder: 'pubmatic',
                 params: {
                     publisherId: '156536',
-                    adSlot: 'Prebid-Kapanlagi-Mobile-320x50_1',
+                    videoAdUnit : '4045181',
+                    adSlot: 'kly_prebid_outstream_mobile_kapanlagi',
+                    outstreamAU: 'kly_prebid_outstream_mobile_kapanlagi',
                     video: {
-                        mimes: ['video/mp4','video/x-flv'],
                         skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
+                        playbackmethod: [2],
+                        context: "outstream",
+                        api: [2, 7],
+                        minduration: 5,
+                        maxduration: 30,
+                        mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                        placement: 3
                     }
                 }
             },
-			{
-                bidder: "innity",
-                params: {
-                        zone: 97106,
-                        pub: 536
-                        }
-            },
-			{ 
-				bidder: 'rubicon',
-				params: {
-					accountId: 12534,
-					siteId: 377460,
-					zoneId: 2082390
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [320, 50]
-				}
-			},
-			{
-				bidder: 'ix',
-				params: {
-					siteId: '665766',
-					size: [320, 100]
-				}
-			}
+            { bidder: "innity", params: { zone: 97106, pub: 539 } },
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
+            { bidder: "ix", params: { siteId: "683433" } }
         ],
     },
     {
-        code: "div-gpt-ad-kapanlagi-dfp-exposer-slot1-oop",
+        code: "/36504930/m.kapanlagi.com/dfp-exposer-slot1",
         mediaTypes: {
             banner: {
                 sizes: [
@@ -351,484 +248,402 @@ var adUnits = [
         bids: [
             { bidder: "appnexus", params: { placementId: 14771938, member: "10375" } },
             { bidder: "gamma", params: { siteId: 1526627763, zoneId: 1529648373 } },
-            { bidder: "teads", params: { pageId: 120941, placementId: 111236 } },
+            { bidder: "teads", params: { pageId: 111236, placementId: 120941 } },
             { bidder: "emx_digital", params: { tagid: "113617" } },
             { bidder: "oftmedia", params: { placementId: "18777710" } },
             { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-            {
-                bidder: "spotx",
-                params: {
-                    channel_id: 285432,
-                    ad_unit: "outstream",
-                    outstream_function: spotxOutstreamFunc,
-                },
-            },
-            {
-                bidder: 'pubmatic',
-                params: {
-                    publisherId: '156536',
-                    adSlot: 'Prebid-Kapanlagi-Mobile-300x600',
-                    video: {
-                        mimes: ['video/mp4','video/x-flv'],
-                        skippable: true,
-                        startdelay: 0,
-                        playbackmethod: [1,2,3],
-                        api: [ 1, 2, 7 ],
-                        protocols: [ 2, 3, 5, 6 ],
-                        linearity: 1,
-                        placement: 1
-                    }
-                }
-            },
-			{
-                bidder: "innity",
-                params: {
-                        zone: 97107,
-                        pub: 536
-                        }
-            },
-			{ 
-				bidder: 'rubicon',
-				params: {
-					accountId: 12534,
-					siteId: 377460,
-					zoneId: 2082390
-				}
-			}
+            { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+            { bidder: "innity", params: { zone: 97107, pub: 539 } },
+            { bidder: "rubicon", params: { accountId: 12534, siteId: 377460, zoneId: 2082390 } },
+            { bidder: "pubmatic", params: { publisherId: '156536', adSlot: 'Prebid-Kapanlagi-Mobile-300x600' } }
         ],
     },
 ];
 
-googletag.cmd.push(function () {
-    googletag.pubads().disableInitialLoad();
-});
+pbjs.que = pbjs.que || [];
+googletag.cmd = googletag.cmd || []; 
+/** END - PREBID INIT, CONFIGURATION & GOOGLE INIT   */ 
 
-pbjs.que.push(() => {
-    pbjs.setConfig({
-        enableSendAllBids:true
-        // bidderTimeout: 2000,
+/** LOAD PREBID - END */
 
-    });
-    pbjs.addAdUnits(adUnits);
-    pbjs.setConfig({
-        priceGranularity: priceGranularityConfig,
-    });
-    pbjs.requestBids({
-        bidsBackHandler: initAdserver,
-        timeout: PREBID_TIMEOUT,
-    });
-});
+var gpt_gam_site = window.location.hostname.toUpperCase(),
+gpt_gam_ver = 'V2.0-ADS';
+console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
 
-function initAdserver() {
-    if (pbjs.initAdserverSet) return;
-    pbjs.initAdserverSet = true;
-    googletag.cmd.push(function () {
-        pbjs.que.push(function () {
-            pbjs.setTargetingForGPTAsync();
-            googletag.pubads().refresh();
+window.dataLayer = window.dataLayer || [];
+window.GAMLibrary = {};
+window.GAMLibrary = {
+    dfpSlideup 			: 	'/36504930/m.kapanlagi.com/dfp-slideup',
+    dfpExposer1 		: 	'/36504930/m.kapanlagi.com/dfp-exposer-slot1',
+    dfpExposer2 		: 	'/36504930/m.kapanlagi.com/dfp-exposer-slot2',
+    dfpBottomFrame		: 	'/36504930/m.kapanlagi.com/dfp-bottomfrm',
+    dfpTopframe 		: 	'/36504930/m.kapanlagi.com/dfp-topfrm',
+    dfpHeadline 		: 	'/36504930/m.kapanlagi.com/dfp-headline',
+    scSlot 				: 	'/36504930/m.kapanlagi.com/dfp-sc',
+    topFrameFixedSize   :   1,
+    timedBottomFrm      :  	null,
+    setGamBFInterval: function(active = true) {
+            if (!active) {
+                clearInterval(window.GAMLibrary.gamBFInterval);
+                return;
+            }
+            window.GAMLibrary.gamBFInterval = setInterval(function() {
+                document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove();
+                pbjs.setTargetingForGPTAsync([window.GAMLibrary.dfpBottomFrame]);
+                googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
+            }, 60000);
+    },
+    documentMeta: function(metaName) {
+        var metaResult = '';
+        var metas = document.getElementsByTagName('meta');
+        if (metas) {
+            for (var x = 0, y = metas.length; x < y; x++) {
+                if (metas[x].name.toLowerCase() == metaName) {
+                    metaResult += metas[x].content;
+                }
+            }
+        }
+        return metaResult != '' ? metaResult : '';
+    },
+    inArray: function(needle, haystack) {
+        var length = haystack.length;
+        for (var i = 0; i < length; i++) {
+            if (haystack[i] == needle) return true;
+        }
+        return false;
+    },
+    arrToLowerCase: function(arr) {
+        return arr.map(function(v, i) {
+            return v.toLowerCase();
         });
-    });
+    },
+    scrollBottomFrame: function() {
+        this.scroll = function() {
+            var scrollNode = document.scrollingElement || document.documentElement;
+            var scrollTop = scrollNode.scrollTop;
+            if (scrollTop >= "200") {
+                if (!this.timedBottomFrm) {
+                    console.log("generated!");
+                    this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-kapanlagi-bottomfrm').addService(googletag.pubads());
+                    setTimeout(() => {
+                        if (pbjs) {
+                            pbjs.setTargetingForGPTAsync([this.dfpBottomFrame]);
+                            googletag.pubads().refresh([this.timedBottomFrm]);
+                            this.refreshSlot = this.timedBottomFrm;
+                            this.setGamBFInterval();
+                        }
+                    }, 400);
+                }else {
+                    window.removeEventListener("scroll", this.scroll);
+                }
+            }
+        };
+        this.scrollHandler = this.scroll.bind(this);
+        window.addEventListener("scroll", this.scrollHandler);
+    },
+    initiateSCReadPage: function() {
+        var scContainer = document.querySelectorAll('#div-gpt-ad-kapanlagi-sc'),
+            idx_scMulti = 1;
+        scContainer.forEach(function(v, i) {
+            if (!((i + 1) % 2)) {
+                scId = 'div-gpt-ad-kapanlagi-sc-' + idx_scMulti;
+                v.setAttribute('id', scId);
+                var sc_adunit = googletag.defineSlot('/36504930/m.kapanlagi.com/dfp-sc', [
+                    [300, 250],
+                    [250, 250],
+                    [200, 200]
+                ], scId).addService(googletag.pubads()).setTargeting("position", [idx_scMulti.toString()]);;
+                googletag.display(scId);
+                pbjs.setTargetingForGPTAsync(['/36504930/m.kapanlagi.com/dfp-sc']);
+                googletag.pubads().refresh([sc_adunit]);
+                idx_scMulti++;
+            }
+        });
+    },
+    generateViewabilityTracker: function() {
+        let isFotoGallery = kly && kly.gtm.type.match(/PhotoGallery/ig);
+        let vTrackEl = null;
+        if (isFotoGallery) {
+            vTrackEl = document.createElement('img');
+            vTrackEl.setAttribute('src', 'https://pubads.g.doubleclick.net/gampad/clk?id=5255364166&iu=/36504930');
+            vTrackEl.setAttribute('width', '0');
+            vTrackEl.setAttribute('height', '0');
+            vTrackEl.setAttribute('id', 'gam-viewability-tracker-kl-berita-foto');
+            vTrackEl.setAttribute('alt', '');
+            parent.window.document.body.appendChild(vTrackEl);
+        }
+
+    },
+    eventTrackingImpression: function(subCat, auPath) {
+        window.dataLayer.push({
+            event: "impression",
+            feature_name: "ads",
+            feature_location: subCat,
+            /*==> diambil dari kly.gtm.subCategory, Example : showbiz|korea*/
+            feature_position: auPath /* ==> diambil dari adunit path ( e.slot.getSlotId().getAdUnitPath(); ), Example: "/36504930/m.kapanlagi.com/dfp-bottomfrm"*/
+        });
+    },
+    lazzyLoadingAdunit : function() {
+        const _noIntersectionMethod = !window.IntersectionObserver;
+        var __lazzYSetting__ = {
+            "div-gpt-ad-kapanlagi-mobile-contextual-oop" :{
+                "type" : "oop",
+                "adunit" : "/36504930/m.kapanlagi.com/dfp-contextual",
+                "generated" : 0,
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            let _options = {
+                root: null,
+                rootMargin: "750px",
+                threshold: 0
+            };
+            let _observer = null;
+            if(_noIntersectionMethod){
+                window.addEventListener("scroll",renderAdunit);
+            }else{
+                _observer = new IntersectionObserver(_entries => {
+                    _entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            value = __lazzYSetting__[entry.target.id];
+                            if (!value.generated) {
+                                if (value.type == "oop") {
+                                    _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, entry.target.id).addService(googletag.pubads());
+                                }else{
+                                    _defineSlot_= googletag.defineSlot(value.adunit, value.size, entry.target.id).addService(googletag.pubads());
+                                }
+                                googletag.display(_defineSlot_);
+                                (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
+                                googletag.pubads().refresh([_defineSlot_]);
+                                value.generated = 1;
+                            }
+                        }
+                    });
+                },_options);
+                for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                    let _adunitElement = document.querySelector(`#${key}`);
+
+                    if(_adunitElement) {
+                        _observer.observe(_adunitElement);
+                    }
+                };
+            }
+
+            function renderAdunit(){
+                var _generatedCount_ = 0;
+                var _itemCount_ = 0;
+
+                for (const [key, value] of Object.entries(__lazzYSetting__)) {
+                    console.log(`${key}: ${value}`);
+                    _itemCount_ ++;
+                    var _defineSlot_ = null;
+
+                    console.log("viewport --",elementInViewport(document.getElementById(key)), null);
+
+                    if (!value.generated && elementInViewport(document.getElementById(key))) {
+
+                        if (value.type == "oop") {
+                            _defineSlot_ = googletag.defineOutOfPageSlot(value.adunit, key).addService(googletag.pubads());
+                        }else{
+                            _defineSlot_= googletag.defineSlot(value.adunit,value.size,key).addService(googletag.pubads());
+                        }
+
+                        googletag.display(_defineSlot_);
+                        (value.type !== "oop") ? pbjs.setTargetingForGPTAsync([value.adunit]) : '';
+                        googletag.pubads().refresh([_defineSlot_]);
+                        value.generated = 1;
+
+                    }
+
+                    if (_generatedCount_ == _itemCount_) {
+                        window.removeEventListener('scroll',renderAdunit);
+                    }
+                }
+
+            }
+            
+            function elementInViewport(el) {
+                    let rect = el.getBoundingClientRect()
+                    return (
+                        rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+                    )
+            }
+        });
+    }
+    
 }
 
-setTimeout(function () {
-    initAdserver();
-}, FAILSAFE_TIMEOUT);
-
-            var gpt_gam_ver = 'V12-DK';
-            gpt_gam_site = window.location.hostname.toUpperCase();
-            gpt_gam_ver = (typeof gpt_gam_site !== 'undefined') ? gpt_gam_ver.toUpperCase() : 'V.0.1';
-            console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
-                /*PROTOTYPE CUSTOM FILTERING*/
-                String.prototype.klyFiltering = function(delimiter) {
-                    return this.replace(/[\"\']/g, "").trim().split(delimiter).map(function(t) {
-                        return t.trim().toLowerCase()
-                    }).filter(function(x) {
-                        return x != "";
-                    });
-                };
-                window.dataLayer = window.dataLayer || [];
-                window.GAMLibrary = {};
-                window.GAMLibrary = {
-                    dfpSlideup 			: 	'/36504930/m.kapanlagi.com/dfp-slideup',
-                    dfpExposer1 		: 	'/36504930/m.kapanlagi.com/dfp-exposer-slot1',
-                    dfpExposer2 		: 	'/36504930/m.kapanlagi.com/dfp-exposer-slot2',
-                    dfpBottomFrame		: 	'/36504930/m.kapanlagi.com/dfp-bottomfrm',
-                    dfpTopframe 		: 	'/36504930/m.kapanlagi.com/dfp-topfrm',
-                    dfpHeadline 		: 	'/36504930/m.kapanlagi.com/dfp-headline',
-                    scSlot 				: 	'/36504930/m.kapanlagi.com/dfp-sc',
-                    topFrameFixedSize   :   1,
-                    timedBottomFrm      :  	null,
-                    setGamBFInterval    :  	function (active = true) {
-                                                if (!active) {
-                                                    clearInterval(window.GAMLibrary.gamBFInterval);
-                                                    return;
-                                                }
-                                                window.GAMLibrary.gamBFInterval = setInterval(function () {
-                                                    document.querySelector("#dfp-spinads") && document.querySelector("#dfp-spinads").parentElement.remove(); 
-                                                    googletag.pubads().refresh([window.GAMLibrary.refreshSlot]);
-                                                }, 60000);
-                                            },
-                    documentMeta       :   	function (metaName) {
-                                                var metaResult = '';
-                                                var metas = document.getElementsByTagName('meta');
-                                                if (metas) {
-                                                    for (var x = 0, y = metas.length; x < y; x++) {
-                                                        if (metas[x].name.toLowerCase() == metaName) {
-                                                            metaResult += metas[x].content;
-                                                        }
-                                                    }
-                                                }
-                                                return metaResult != '' ? metaResult : '';
-                                            },
-                    inArray             :   function (needle, haystack) {
-                                                var length = haystack.length;
-                                                for (var i = 0; i < length; i++) {
-                                                    if (haystack[i] == needle) return true;
-                                                }
-                                                return false;
-                                            },                    
-                    arrToLowerCase      :    function (arr){
-                                                return arr.map(function(v,i){
-                                                    return v.toLowerCase();
-                                                });
-                                            },
-                    scrollBottomFrame   : 	function() {
-                                                this.scroll = function(){
-                                                                    var scrollNode = document.scrollingElement || document.documentElement;
-                                                                    var scrollTop = scrollNode.scrollTop;
-                                                                    if (scrollTop >= "200") {
-                                                                        // console.log('testing scroll',scrollTop,this.timedBottomFrm);
-                                                                        this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-kapanlagi-bottomfrm').addService(googletag.pubads());
-                                                                        window.removeEventListener("scroll", this.scrollHandler);
-                                                                        // googletag.display('div-gpt-ad-kapanlagi-bottomfrm');
-                                                                        googletag.pubads().refresh([this.timedBottomFrm]);
-            
-                                                                        this.refreshSlot = this.timedBottomFrm;
-                                                                        this.setGamBFInterval();
-                                                                    }
-                                                                };
-                                                this.scrollHandler = this.scroll.bind(this);
-                                                window.addEventListener("scroll", this.scrollHandler);
-                                            },
-                    initiateSCReadPage	:  function () {
-                                                var scContainer = document.querySelectorAll('#div-gpt-ad-kapanlagi-sc'),
-                                                idx_scMulti = 1;
-                                                scContainer.forEach(function(v,i){
-                                                    if(!((i+1) % 2)){
-                                                        scId = 'div-gpt-ad-kapanlagi-sc-'+idx_scMulti;
-                                                        v.setAttribute('id',scId);
-                                                        var sc_adunit=  googletag.defineSlot('/36504930/m.kapanlagi.com/dfp-sc', [[300, 250],[250, 250],[200, 200]], scId).addService(googletag.pubads()).setTargeting("position", [idx_scMulti.toString()]);;
-                                                                        googletag.display(scId);
-                                                                        googletag.pubads().refresh([sc_adunit]);
-                                                        idx_scMulti++;
-                                                    }
-                                                });
-                                            },
-                    generateViewabilityTracker : function(){
-                                                    let isFotoGallery = kly && kly.gtm.type.match(/PhotoGallery/ig);
-                                                    let vTrackEl = null;
-                                                    if( isFotoGallery ){
-                                                        vTrackEl = document.createElement('img');
-                                                        vTrackEl.setAttribute('src', 'https://pubads.g.doubleclick.net/gampad/clk?id=5255364166&iu=/36504930');
-                                                        vTrackEl.setAttribute('width', '0');
-                                                        vTrackEl.setAttribute('height', '0');
-                                                        vTrackEl.setAttribute('id', 'gam-viewability-tracker-kl-berita-foto');
-                                                        vTrackEl.setAttribute('alt', '');
-                                                          parent.window.document.body.appendChild(vTrackEl);
-                                                    }
-                                                        
-                                                },
-                    eventTrackingImpression		: 	function(subCat,auPath){
-                                                            window.dataLayer.push({
-                                                                event: "impression",
-                                                                feature_name: "ads",
-                                                                feature_location: subCat, /*==> diambil dari kly.gtm.subCategory, Example : showbiz|korea*/
-                                                                feature_position: auPath /* ==> diambil dari adunit path ( e.slot.getSlotId().getAdUnitPath(); ), Example: "/36504930/m.kapanlagi.com/dfp-bottomfrm"*/
-                                                            });
-                                                        },
-					lazzyLoadingAdunit 			:   function(){
-															document.addEventListener('DOMContentLoaded', function () {
-																var generateContextual = 0,
-																containerName = 'div-gpt-ad-kapanlagi-mobile-contextual-oop',
-																containerEl = document.querySelector("#"+containerName);
-                                                                
-                                                                if( !containerEl ) return;
-
-																console.log("container : ", containerEl);
-																function renderContextual(){
-																	let contextualSlot = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-contextual', containerName).addService(googletag.pubads());
-                       												googletag.display(contextualSlot);
-																	googletag.pubads().refresh([contextualSlot]);
-																}
-																function elementInViewport(el) {
-																		let rect = el.getBoundingClientRect()
-																		return (
-																			rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
-																		)
-																}
-																function lazzyLoadScroll(){
-																	console.log('CARI ..... ',containerName);
-																	if( !generateContextual && elementInViewport(containerEl) ){
-																		console.log('GENERATE MGID - VIEWABLE CONTAINER');
-																		renderContextual();
-																		generateContextual = 1;
-																		console.log('GENERATE MGID - REMOVE EVENT SCROLL');
-																		window.removeEventListener('scroll',lazzyLoadScroll);
-																	}
-																}
-
-																function addEventListener (evt, fn){
-																	window.addEventListener
-																	? window.addEventListener(evt, fn, false)
-																	: (window.attachEvent)
-																	? window.attachEvent('on' + evt, fn)
-																	: window['on' + evt] = fn;
-																}
-
-																try{
-																		var intersectionObserver = new IntersectionObserver(function(entries) {
-																			// If intersectionRatio is 0, the target is out of view
-																			// and we do not need to do anything.
-																			if (entries[0].intersectionRatio <= 0) return;
-																			if(!generateContextual){
-																				console.log('RENDERING CONTEXTUAL!');
-																				renderContextual();
-																				generateContextual = 1;
-																				intersectionObserver.unobserve(containerEl);
-																				intersectionObserver.disconnect();
-																			}
-																		});
-																		// start observing
-																		intersectionObserver.observe(containerEl);
-																		
-																}catch(err) {
-																		addEventListener("scroll",lazzyLoadScroll);
-																}
-															});
-														}
-                                                        
-                
-                    
-                }
-            
-                /* DMP CATEGORY LIST */
-window.widgetBLV02 = true;
+/* START - DMP CATEGORY LIST */
 window.createDMPTracker = function(adsCatList, dfpTracker, macro) {
-    /*
-  	var catList = ["fashion-events", "movie-event", "beauty-events", "comedy-events", "fan-conventions", "lifestyle-events", "musical-events", "sporting-events", "auto-shows", "parenting-events", "political-event", "parenting-children-aged-4-11", "special-needs-kids", "apartments", "life-insurance", "motor-insurance", "health-insurance", "education-insurance", "travel-insurance", "home-insurance", "automotive", "auto-racing", "parenting-babies-and-toddlers", "beauty", "disasters", "local-news", "law", "international-news", "crime", "national-news", "elections", "politics", "government-business", "business-and-finance", "cloud-computing", "content-channel", "education", "outdoor-decorating", "consumer-electronics", "esports", "events", "family-and-relationships", "kids-fashion", "mens-fashion", "womens-fashion", "fitness-and-exercise", "fmcg-food-and-drink", "fmcg-personal-care", "fmcg-tobacco", "console-games", "pc-games-and-mobile", "gaming", "computer-peripherals", "hatchback", "health", "healthy-and-wellness", "hobbies-interest", "home-and-garden", "homeschooling", "hotels-and-motels", "pharmaceutical-industry", "financial-industry", "entertainment-industry", "healthcare-industry", "construction-industry", "legal-services-industry", "power-and-energy-industry", "logistics-and-transportation-industry", "food-industry", "manufacturing-industry", "media-industry", "mechanical-and-industrial-engineering-industry", "automotive-industry", "education-industry", "aviation-industry", "hospitality-industry", "advertising-industry", "agriculture", "real-estate-industry", "retail-industry", "technology-industry", "telecommunications-industry", "interior-decorating", "internet", "internet-safety", "residentials-buy-sell-and-rentals", "auto-buying-and-selling", "credit-cards", "household-supplies", "injuries", "pregnancy", "childrens-health", "adults-health", "mental-health", "reproductive-health", "computing", "bollywood-content", "dangdut-content", "movie-content", "entertainment-content", "hijab-content", "hollywood-content", "korean-content", "quiz-content", "music-content", "coffee", "course-education", "green-vehicles", "frozen-foods", "fast-foods", "desserts-and-baking", "snacks", "healthy-cooking-and-eating", "make-up", "marketing-and-advertising", "soft-drinks", "smart-cars", "luxury-cars", "budget-cars", "performance-cars", "mobile-apps", "movies", "mpv", "news-and-politics", "nutrition", "non-profit-organizations", "business-expos-and-conferences", "parenting", "marketplace/ecommerce", "daycare-and-pre-school", "weight-loss", "early-childhood-education", "alternative-medicine", "chronic-disease", "ailment", "sports-equipment", "skin-care", "hair-care", "body-care", "facecare", "home-appliances", "personal-finance", "houses", "loans", "fmcg-oral-care", "fmcg-hair-care", "fmcg-body-care", "fmcg-face-care", "milk-products", "tickets-promo-and-vouchers", "property", "relationship", "parenting-teens", "auto-rentals", "sales-and-promotions", "primary-education", "online-education", "private-school", "soccer", "motorcycles", "auto-repair", "shopping-and-ecommerce", "smartphones", "social-networking", "computer-software-and-applications", "auto-parts", "sports", "startups", "style-and-fashion", "suv", "water-services", "gas-and-electric", "internet-service-providers", "phone-services", "technology-and-computing", "television", "physical-therapy", "train-tickets", "flight-tickets", "online-transportation", "travel", "budget-travel", "special-interest-tv", "childrens-tv", "animation-tv", "news-tv", "drama-tv", "comedy-tv", "music-tv", "sports-tv", "reality-tv", "college-education", "vaccines", "wearable-technology", "web-hosting", "family-travel", "culinary-travel", "religious-tourism"],
-        filteredCat = Object.values(catList).filter((val, key) => adsCatList.find(alVal => alVal == val));
-    window.createCDPTracker(filteredCat, macro);
-    */
     window.createCDPTracker(adsCatList, macro);
     parent.window.open(dfpTracker, '_blank');
 };
-
 window.createCDPTracker = function(cat, macro) {
     var cName = 'liputan6_id_visitor_id=',
         cVisitorId = document.cookie.split(';').find(v => { return v.match(cName);}),
         partnerUID = cVisitorId ? decodeURIComponent(cVisitorId).trim().replace(cName, '') : 0,
         gamMacro = typeof macro === "string" ? JSON.parse(macro) : macro,
-        defaultKey = {
-            adunitId: "ads_adunit_id",
-            advertiserId: "ads_advertiser_id",
-            creativeId: "ads_creative_id",
-            lineitemId: "ads_lineitem_id",
-            orderId: "ads_order_id",
-        };
-
-    	actionDetails = Object.keys(gamMacro).reduce((obj, k) => Object.assign(obj, defaultKey[k] ? { [defaultKey[k]]: gamMacro[k] } : { [k]: gamMacro[k] }), {}),
-        cdpData = {
-            action: actionDetails.action ? actionDetails.action : 'ads_click',
-            action_category: cat,
-            action_details: actionDetails.action ? (delete actionDetails.action,actionDetails=actionDetails) : actionDetails,
-            visitor_id: partnerUID
-        };
-
-    console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
-    console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
-
-    partnerUID ? window.VidioPersonalization.sendData(null, cdpData) : '';
+        defaultKey = {adunitId:"ads_adunit_id",advertiserId:"ads_advertiser_id",creativeId:"ads_creative_id",lineitemId:"ads_lineitem_id",orderId:"ads_order_id"},
+        actionDetails = Object.keys(gamMacro).reduce((obj, k) => Object.assign(obj, defaultKey[k] ? { [defaultKey[k]]: gamMacro[k] } : { [k]: gamMacro[k] }), {}),
+        cdpData = {action:actionDetails.action?actionDetails.action:"ads_click",action_category:cat,action_details:actionDetails.action?(delete actionDetails.action,actionDetails=actionDetails):actionDetails,visitor_id:partnerUID};
+        console.log("%c DATA CDP : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", cdpData);
+        console.log("%c PARTNER USER ID : ", "color:#cad315; font-size:12px; font-weight: bold; -webkit-text-stroke: 1px black;", partnerUID);
+        partnerUID ? ( window.VidioPersonalization && ( window.VidioPersonalization.sendData(null, cdpData)) ) : '';
 };
+/* END - DMP CATEGORY LIST */
+
+/*LOAD CONTEXTUAL ON DOM READY*/
+GAMLibrary.lazzyLoadingAdunit();
+    
+var isReadPage = kly.pageType === "ReadPage";
+
+googletag.cmd.push(function() {
+        var urlPath = document.URL;
+        var _klyObject = typeof window.kly !== 'undefined' ? window.kly : window.kmklabs;
+        var _articlePages = _klyObject && _klyObject.article;
+        var _isAdultContent = _articlePages && _articlePages.isAdultContent;
+        var isMatcont = "0";
+        var isViolateBrandSafety = "0";
+        var dfp_brandSafety = new Array('matcont', 'aduhai', 'kelamin', 'vital', 'anal', 'belahan', 'bercinta', 'bergairah', 'gairah', 'intim', 'bikini', 'bokong', 'boob', 'bra', 'bugil', 'celana', 'ciuman', 'cleavage', 'dada', 'dewasa', 'diremas', 'doggie', 'ejakulasi', 'ereksi', 'erotis', 'foreplay', 'kiss', 'seks', 'gangbang', 'horny', 'hot', 'kamasutra', 'keperawanan', 'perawan', 'kondom', 'kontrasepsi', 'libido', 'lingerie', 'masturbasi', 'mature', 'menggairahkan', 'menggoda', 'mesra', 'miss-v', 'mr-p', 'nakal', 'naughty', 'nipple', 'nipples', 'onani', 'oral', 'oral seks', 'organ', 'orgasme', 'paha', 'pantat', 'panties', 'payudara', 'pelecehan', 'telanjang', 'penetrasi', 'penis', 'perkosa', 'perkosaan', 'pole', 'porno', 'pornoaksi', 'pornografi', 'telentang', 'provokatif', 'putting', 'ranjang', 'sex', 'penetratif', 'seksi', 'seksual', 'sensual', 'seronok', 'doll', 'toys', 'skandal', 'sperma', 'striptease', 'striptis', 'syur', 'terangsang', 'tiduri', 'topless', 'vagina', 'vibrator', 'lendir', 'prostitusi', 'homoseks', 'meraba-raba', 'mesum', 'memerkosa', 'rudapaksa', 'kemaluan', 'kasus asusila', 'pemerkosaan', 'hubungan seksual', 'hubungan intim', 'video porno', 'berita hoax', 'ternyata hoax', 'ahed tamimi', 'konflik palestina israel', 'konflik suriah', 'ujaran kebencian', 'g30s', 'kediktatoran arab saudi', 'konflik palestina-israel', 'fpi', 'penembakan', 'pelecehan seksual', 'tips seks', 'komunitas swinger', 'fenomena kelainan seksual', 'penyimpangan seks', 'posisi seks', 'obat kuat', 'bentuk payudara', 'implan payudara', 'chat firza-rizieq', 'anarkisme suporter sepakbola', 'bentrok suporter', 'pengeroyokan', 'penganiayaan', 'begal motor', 'kekerasan pada wartawan', 'pemerkosaan anak', 'pencabulan', 'bentrokan warga', 'bentrokan', 'kasus narkoba', 'akibat merokok', 'bahaya merokok', 'berhenti merokok', 'cara berhenti merokok', 'efek berhenti merokok', 'larangan merokok', 'tips berhenti merokok', 'rokok elektrik', 'pilpres 2019', 'koalisi pilpres 2019', 'koalisi prabowo', 'koalisi jokowi', 'prabowo-sandiaga', 'ratna sarumpaet', 'capres jokowi', 'capres prabowo', 'kebohongan ratna sarumpaet', 'prabowo subianto', 'jemaah ansharut daulah', 'aliran sesat', 'lia eden', 'kisah mualaf', 'penistaan agama', 'suporter tewas', 'gempa palu', 'gempa donggala', 'gempa sulawesi tengah', 'pembunuhan', 'tsunami palu', 'penemuan mayat', 'lion air jatuh di karawang', 'lion air jatuh', 'pembunuhan sadis', 'lion air hilang kontak', 'pesawat jatuh', 'pesawat hilang kontak', 'kecelakaan', 'kapal tenggelam di danau toba', 'kecelakaan bus', 'kapal tenggelam', 'kasus tabrak lari', 'bunuh diri', 'perselingkuhan', 'kisah perselingkuhan', 'razia pasangan mesum', 'seks bebas', 'gangguan jiwa', 'tes keperawanan', 'kontroversi hukuman mati', 'stres dan depresi', 'ahok gugat cerai veronica tan', 'Kanker', 'Impotensi', 'merokok', 'Perokok', 'Rokok', 'tembakau', 'Pelanggaran', 'Tablet', 'Overdosis', 'Jantung', 'Stroke', 'Cancer', 'Narkoba', 'Djarum', 'Ganja', 'BNN', 'Obesitas', 'Osteoporosis', 'Corona', 'Corona di indonesia', 'virus corona', 'virus-corona', 'covid-19', 'wabah corona', 'menewaskan', 'menewaskan orang', 'mengancam nyawa', 'meninggal', 'meninggal dunia', 'orang mati', 'orang tewas', 'pemakaman', 'petugas penyelamat', 'telah meninggal', 'terbunuh', 'tewas', 'tewaskan', 'tim penyelamat', 'wanita meninggal', 'autopsi', 'belasungkawa', 'bencana', 'bencana besar', 'bunuh orang', 'darurat bencana', 'dilaporkan tewas', 'dimakamkan', 'dipastikan tewas', 'ditemukan mati', 'ditemukan tewas', 'hilangnya nyawa', 'identitas korban', 'inalillahi', 'jasad korban', 'jasadnya', 'jenasah wanita', 'jenazah', 'jenazah pria', 'jenazah teridentifikasi', 'jasad', 'kehilangan hidupnya', 'kehilangan nyawa', 'kehilangan nyawanya', 'kematian', 'korban', 'korban jiwa', 'korban meninggal', 'korban tewas', 'mati', 'mayat', 'mayat korban', 'membunuh', 'membunuh istrinya', 'membunuh mereka', 'membunuh suaminya', 'menemui ajal', 'mengalami koma', 'menghembuskan nafas terakhir', 'menimbulkan korban', 'meninggal akibat sakit', 'menyebabkan kematian', 'meregang nyawa', 'meregggut nyawa', 'modar', 'nyawa hilang', 'nyawa melayang', 'penyebab kematian', 'tak bernyawa', 'tak sadarkan diri', 'terkapar', 'tidak bernyawa', 'tutup usia', 'wafat', 'kematian virus', 'kematian wabah', 'korban terinfeksi', 'virus menyerang', 'merenggut nyawa', 'pelayat', 'hilangkan nyawa', 'renggut nyawa', 'wabah', 'keadaan kritis', 'kehilangan darah', 'merenggut jiwa', 'telan nyawa', 'menelan nyawa', 'memakan nyawa', 'dinyatakan meninggal', 'nyawa tak tertolong', 'penyakit', 'sakit pernapasan', 'sesak', 'korona', 'corona', 'odp', 'pdp', 'virus', 'rumah sakit', 'Covid-19', 'virus korona', 'positif korona', 'COVID-19', 'terjangkit COVID-19', 'terinfeksi virus corona', '15lam','agen poker','agen sbobet','al quran','al-quran','alat kontrasepsi','alat vital pria','alergi','anatomi vagina','anjeng','anjing','anjlng','anjrit','anying','apa itu kondom','artis indonesia bugil','artis porno','asu','babi','bahaya masturbasi','bajingan','bandar ceme','bangsat','bego','bentuk payudara','bercinta','bercinta saat hamil','berhubungan intim','berita jateng','bintang film porno','bintang porno','bitch','bocah sd foto mesum','bokne','bom surabaya 2018','boneka seks','bonus deposit','bonus refferal','bonus rollingan','buda','budha','bullshit','bulshit','bulu kemaluan','cara berhubungan intim','cara membuat suami bergairah','cara memperbesar penis','cara mengatasi ejakulasi dini','cara seksual','cashtree','corona','corona di indonesia','covid 19','covid-19','cukur bulu kemaluan','disfungsi ereksi','ejakulasi','ejakulasi dini','ejakulasi wanita','elo','entot','ereksi','ewe','fase menstruasi','fenomena kelainan seksual','foto berhubungan intim','foto intim','fuck','gairah seksual','gangguan seks','ganja','gay','gaya bercinta','gaya bercinta dalam islam','gaya bercinta yang disukai pria','gaya seks','gejala penyakit','gemar368','goblok','gue','gwe','henceut','hindu','hubungan intim','hubungan seksual','ibu hamil','implan payudara','industri film porno','infeksi saluran kencing','injil','insomnia dan tidur','intim','isl4m','islam','itil','jancok','jancuk','jenis alat kontrasepsi','jerawat','jual beli sperma','judi','kafir','kakek cabul','kanibal','kanibalisme','kanker payudara','katolik','kecanduan seks','kemaluan wanita','kencing','kesehatan kulit dan kelamin','kesehatan payudara','kesehatan reproduksi','kesehatan wanita','khusus deewasa','kimpet','klitoris','kondom','kondom pria','kontol','kontolnya','kontrasepsi','kontroversi lgbt','kristen','legalisasi ganja','lgbt','lonte','m3m3k','makanan berbahaya','makanan sehat','masa subur pria','masturbasi','meki','melakukan hubungan intim','memek','mencukur bulu kemaluan','menstruasi','minimal deposit','model hot','model seksi','monyet','mucikari siswi smp','muh4mmad','muhammad','muhammad saw','nabi','ngentot','ngewe','nonok','obat ejakulasi dini','obat pembesar','obat pembesar penis terbaik','oral seks','organ intim wanita','orgasme','orgasme wanita','pakistan','payudara kecil','payudara wanita','pelacur','pembesar penis','pemerkosaan','pengetahuan seks','pengobatan alternatif','penis','penis','penis bengkok','penis besar','penis kecil','penis pria','penyakit sipilis','penyakit vagina','penyimpangan seks','perang dunia','perawatan vagina','perek','poker','poker online','pornoaksi','pornografi','posisi bercinta','posisi hubungan intim suami istri menurut islam','posisi seks','posisi seksual','pria dewasa','pria idaman','prostitusi','puki','puting','puting payudara','rasisme','rokok elektrik','sbobet','seks','seks bebas','seks oral','seksual','seksual lelaki dan perempuan','seksualitas','sex toy','shit','siklus menstruasi','situs poker terpercaya','situs porno','sperma','tai','taik','taruhan online','telanjang','terorisme','test pack','testis','tips bercinta','tips seks','titit','toket','tolol','ukuran normal penis','ukuran penis','ukuran penis normal','ukuran penis orang indonesia','vagina','vagina gatal','vagina wanita','vakum pembesar penis','viagra','video bercinta dengan pasangan','video porno','video seks','virus corona','xxxx online','yesus');/* POPULATE META DATA KEYWORDS */
+        var dfp_pageTitle = _articlePages && _articlePages.title.klyFiltering(' ');
+        var dfp_titles = (typeof dfp_pageTitle !== 'undefined' && dfp_pageTitle.length > 0 ) ? dfp_pageTitle: [];
+        var dfp_pageKeywords = GAMLibrary.documentMeta("keywords");
+        var dfp_keyword = dfp_pageKeywords.klyFiltering(",");
+        /* POPULATE META DATA DESC */
+        var dfp_pageDesc = GAMLibrary.documentMeta("description");
+        var dfp_desc = dfp_pageDesc.klyFiltering(",");
+        var tagForAds = _klyObject.gtm.tag.replace(/[^A-Za-z0-9|\- ]/ig,"").klyFiltering("|");
+        var dfp_keywords = dfp_keyword.concat(dfp_titles, dfp_desc, tagForAds).filter(item=>item!==undefined);
+        var isMultipage = window.kly.article["isMultipage"].toString();
+        
+        /*MATURE CONTENT DEFINED VAR*/
+        isViolateBrandSafety = dfp_brandSafety.some((word)=>{
+            let regWord = new RegExp("(" + word + ")","ig");
+            return dfp_keywords.some((keyword)=>{
+                return keyword.match(regWord);
+            })
+        }) ? "1" : "0";
+        
+        isMatcont = (_isAdultContent || isViolateBrandSafety === "1") ? "1" : "0";
+
+        if(GAMLibrary.topFrameFixedSize){
+            window.GAMLibrary.topframe = googletag.defineSlot(GAMLibrary.dfpTopframe, [1, 1], 'div-gpt-ad-kapanlagi-topfrm-oop').addService(googletag.pubads());
+        }else{
+            window.GAMLibrary.topframe = googletag.defineOutOfPageSlot(GAMLibrary.dfpTopframe, 'div-gpt-ad-kapanlagi-topfrm-oop').addService(googletag.pubads());
+        }
+        
+        /*OUT OF PAGE SLOTS*/
+        window.GAMLibrary.rec2 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-2', 'div-gpt-ad-kapanlagi-recommend-slot-2-oop').addService(googletag.pubads());
+        window.GAMLibrary.rec3 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-3', 'div-gpt-ad-kapanlagi-recommend-slot-3-oop').addService(googletag.pubads());
+        window.GAMLibrary.rec9 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-9', 'div-gpt-ad-kapanlagi-recommend-slot-9-oop').addService(googletag.pubads());
+        window.GAMLibrary.newsTag1 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-newsTag1', 'div-gpt-ad-kapanlagi-dfp-newsTag1-oop').addService(googletag.pubads());
+        window.GAMLibrary.newsTag2 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-newsTag2', 'div-gpt-ad-kapanlagi-dfp-newsTag2-oop').addService(googletag.pubads());
+        window.GAMLibrary.vStory1 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-1', 'div-gpt-ad-kapanlagi-visual-story-1-oop').addService(googletag.pubads());
+        window.GAMLibrary.vStory2 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-2', 'div-gpt-ad-kapanlagi-visual-story-2-oop').addService(googletag.pubads());
+        window.GAMLibrary.vStory3 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-3', 'div-gpt-ad-kapanlagi-visual-story-3-oop').addService(googletag.pubads());
+        window.GAMLibrary.exposer2 = googletag.defineOutOfPageSlot(GAMLibrary.dfpExposer2, 'div-gpt-ad-kapanlagi-dfp-exposer-slot2-oop').addService(googletag.pubads());
+        window.GAMLibrary.overlay = googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-dfp-overlay-oop').addService(googletag.pubads());            
+        window.GAMLibrary.crmHeadline = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-headline', 'div-gpt-ad-kapanlagi-crm-headline-oop').addService(googletag.pubads());
+        window.GAMLibrary.crmOrganic1 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-1', 'div-gpt-ad-kapanlagi-crm1-oop').addService(googletag.pubads());
+        window.GAMLibrary.crmOrganic2 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-2', 'div-gpt-ad-kapanlagi-crm2-oop').addService(googletag.pubads());
+        window.GAMLibrary.crmOrganic3 = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-3', 'div-gpt-ad-kapanlagi-crm3-oop').addService(googletag.pubads());
+        window.GAMLibrary.feedboard = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-feedboard', 'div-gpt-ad-kapanlagi-feedboard').addService(googletag.pubads());
+        
+        if (isReadPage) {
+            window.GAMLibrary.insertion = googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-insertion', 'div-gpt-ad-kapanlagi-insertion-oop').addService(googletag.pubads());
+        }
+
+        /*DEFINE ALL SLOT*/
+        window.GAMLibrary.headline = googletag.defineSlot(GAMLibrary.dfpHeadline, [[320, 50],[320, 100]], 'div-gpt-ad-kapanlagi-hl').addService(googletag.pubads());
+        window.GAMLibrary.showcase = googletag.defineSlot(GAMLibrary.scSlot, [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-kapanlagi-sc').addService(googletag.pubads());
+        window.GAMLibrary.exposer1 = googletag.defineSlot(GAMLibrary.dfpExposer1, [[300, 250],[300, 600],[320, 480],[160, 600],[250, 250]], 'div-gpt-ad-kapanlagi-dfp-exposer-slot1-oop').addService(googletag.pubads());
+        
+        /*Bottom Frame Scrolling*/
+        /*GAMLibrary.scrollBottomFrame();*/
+        /*Bottom Frame Scrolling*/
+
+        googletag.pubads().addEventListener('slotResponseReceived', function(event) {
+            var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
+            var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
+
+            /*check if native ads creative was delivered*/
+            if (dfp_slotDelivered == 'block') {
                 
-                /*LOAD CONTEXTUAL ON DOM READY*/
-				GAMLibrary.lazzyLoadingAdunit();
-                
-                var isReadPage = kly.pageType === "ReadPage";
+                /* tracking impression */
+                GAMLibrary.eventTrackingImpression(kly.gtm.subCategory,dfp_slotAdUnitPath);
             
-                googletag.cmd.push(function() {
-                    var urlPath = document.URL;
-                    var _klyObject = typeof window.kly !== 'undefined' ? window.kly : window.kmklabs;
-                    var _articlePages = _klyObject && _klyObject.article;
-                    var _isAdultContent = _articlePages && _articlePages.isAdultContent;
-                    var isMatcont = false;
-                    var blackListWords = new Array('matcont', 'aduhai', 'kelamin', 'vital', 'anal', 'belahan', 'bercinta', 'bergairah', 'gairah', 'intim', 'bikini', 'bokong', 'boob', 'bra', 'bugil', 'celana', 'ciuman', 'cleavage', 'dada', 'dewasa', 'diremas', 'doggie', 'ejakulasi', 'ereksi', 'erotis', 'foreplay', 'kiss', 'seks', 'gangbang', 'horny', 'hot', 'kamasutra', 'keperawanan', 'perawan', 'kondom', 'kontrasepsi', 'libido', 'lingerie', 'masturbasi', 'mature', 'menggairahkan', 'menggoda', 'mesra', 'miss-v', 'mr-p', 'nakal', 'naughty', 'nipple', 'nipples', 'onani', 'oral', 'oral seks', 'organ', 'orgasme', 'paha', 'pantat', 'panties', 'payudara', 'pelecehan', 'telanjang', 'penetrasi', 'penis', 'perkosa', 'perkosaan', 'pole', 'porno', 'pornoaksi', 'pornografi', 'telentang', 'provokatif', 'putting', 'ranjang', 'sex', 'penetratif', 'seksi', 'seksual', 'sensual', 'seronok', 'doll', 'toys', 'skandal', 'sperma', 'striptease', 'striptis', 'syur', 'terangsang', 'tiduri', 'topless', 'vagina', 'vibrator', 'lendir', 'prostitusi', 'homoseks', 'meraba-raba', 'mesum', 'memerkosa', 'rudapaksa', 'kemaluan', 'kasus asusila', 'pemerkosaan', 'hubungan seksual', 'hubungan intim', 'video porno', 'berita hoax', 'ternyata hoax', 'ahed tamimi', 'konflik palestina israel', 'konflik suriah', 'ujaran kebencian', 'g30s', 'kediktatoran arab saudi', 'konflik palestina-israel', 'fpi', 'penembakan', 'pelecehan seksual', 'tips seks', 'komunitas swinger', 'fenomena kelainan seksual', 'penyimpangan seks', 'posisi seks', 'obat kuat', 'bentuk payudara', 'implan payudara', 'chat firza-rizieq', 'anarkisme suporter sepakbola', 'bentrok suporter', 'pengeroyokan', 'penganiayaan', 'begal motor', 'kekerasan pada wartawan', 'pemerkosaan anak', 'pencabulan', 'bentrokan warga', 'bentrokan', 'kasus narkoba', 'akibat merokok', 'bahaya merokok', 'berhenti merokok', 'cara berhenti merokok', 'efek berhenti merokok', 'larangan merokok', 'tips berhenti merokok', 'rokok elektrik', 'pilpres 2019', 'koalisi pilpres 2019', 'koalisi prabowo', 'koalisi jokowi', 'prabowo-sandiaga', 'ratna sarumpaet', 'capres jokowi', 'capres prabowo', 'kebohongan ratna sarumpaet', 'prabowo subianto', 'jemaah ansharut daulah', 'aliran sesat', 'lia eden', 'kisah mualaf', 'penistaan agama', 'suporter tewas', 'gempa palu', 'gempa donggala', 'gempa sulawesi tengah', 'pembunuhan', 'tsunami palu', 'penemuan mayat', 'lion air jatuh di karawang', 'lion air jatuh', 'pembunuhan sadis', 'lion air hilang kontak', 'pesawat jatuh', 'pesawat hilang kontak', 'kecelakaan', 'kapal tenggelam di danau toba', 'kecelakaan bus', 'kapal tenggelam', 'kasus tabrak lari', 'bunuh diri', 'perselingkuhan', 'kisah perselingkuhan', 'razia pasangan mesum', 'seks bebas', 'gangguan jiwa', 'tes keperawanan', 'kontroversi hukuman mati', 'stres dan depresi', 'ahok gugat cerai veronica tan', 'Kanker', 'Impotensi', 'merokok', 'Perokok', 'Rokok', 'tembakau', 'Pelanggaran', 'Tablet', 'Overdosis', 'Jantung', 'Stroke', 'Cancer', 'Narkoba', 'Djarum', 'Ganja', 'BNN', 'Obesitas', 'Osteoporosis', 'Corona', 'Corona di indonesia', 'virus corona', 'virus-corona', 'covid-19', 'wabah corona', 'menewaskan', 'menewaskan orang', 'mengancam nyawa', 'meninggal', 'meninggal dunia', 'orang mati', 'orang tewas', 'pemakaman', 'petugas penyelamat', 'telah meninggal', 'terbunuh', 'tewas', 'tewaskan', 'tim penyelamat', 'wanita meninggal', 'autopsi', 'belasungkawa', 'bencana', 'bencana besar', 'bunuh orang', 'darurat bencana', 'dilaporkan tewas', 'dimakamkan', 'dipastikan tewas', 'ditemukan mati', 'ditemukan tewas', 'hilangnya nyawa', 'identitas korban', 'inalillahi', 'jasad korban', 'jasadnya', 'jenasah wanita', 'jenazah', 'jenazah pria', 'jenazah teridentifikasi', 'jasad', 'kehilangan hidupnya', 'kehilangan nyawa', 'kehilangan nyawanya', 'kematian', 'korban', 'korban jiwa', 'korban meninggal', 'korban tewas', 'mati', 'mayat', 'mayat korban', 'membunuh', 'membunuh istrinya', 'membunuh mereka', 'membunuh suaminya', 'menemui ajal', 'mengalami koma', 'menghembuskan nafas terakhir', 'menimbulkan korban', 'meninggal akibat sakit', 'menyebabkan kematian', 'meregang nyawa', 'meregggut nyawa', 'modar', 'nyawa hilang', 'nyawa melayang', 'penyebab kematian', 'tak bernyawa', 'tak sadarkan diri', 'terkapar', 'tidak bernyawa', 'tutup usia', 'wafat', 'kematian virus', 'kematian wabah', 'korban terinfeksi', 'virus menyerang', 'merenggut nyawa', 'pelayat', 'hilangkan nyawa', 'renggut nyawa', 'wabah', 'keadaan kritis', 'kehilangan darah', 'merenggut jiwa', 'telan nyawa', 'menelan nyawa', 'memakan nyawa', 'dinyatakan meninggal', 'nyawa tak tertolong', 'penyakit', 'sakit pernapasan', 'sesak', 'korona', 'corona', 'odp', 'pdp', 'virus', 'rumah sakit', 'Covid-19', 'virus korona', 'positif korona', 'COVID-19', 'terjangkit COVID-19', 'terinfeksi virus corona');
-                    /* POPULATE META DATA KEYWORDS */
-                    var dfp_pageTitle = _articlePages && _articlePages.title.klyFiltering(' ');
-                    var dfp_titles = (typeof dfp_pageTitle !== 'undefined' && dfp_pageTitle.length > 0 ) ? dfp_pageTitle: [];
-                    var dfp_pageKeywords = GAMLibrary.documentMeta("keywords");
-                    var dfp_keyword = dfp_pageKeywords.klyFiltering(",");
-                    /* POPULATE META DATA DESC */
-                    var dfp_pageDesc = GAMLibrary.documentMeta("description");
-                    var dfp_desc = dfp_pageDesc.klyFiltering(",");
-                    var tagForAds = _klyObject.gtm.tag.replace(/[^A-Za-z0-9|\- ]/ig,"").klyFiltering("|");
-                    var dfp_keywords = dfp_keyword.concat(dfp_titles, dfp_desc, tagForAds).filter(item=>item!==undefined);
-                    var isMultipage = window.kly.article["isMultipage"].toString();
-                    /*MATURE CONTENT DEFINED VAR*/
-                    if (!blackListWords) {
-                        var blackListWords = new Array('matcont');
-                    }
-                    /*CONTENT FILTERING SCRIPT*/
-                    // blackListWords = GAMLibrary.arrToLowerCase(blackListWords);
-                    // dfp_keywords.forEach(function(sKeyword) {
-                    //     sKeyword = sKeyword.toLowerCase();
-                    //     tagForAds.push(sKeyword);
-                    //     if (GAMLibrary.inArray(sKeyword.trim(), blackListWords)) {
-                    //         isMatcont = true;
-                    //     }
-                    // });
-                    if (_isAdultContent) {
-                        isMatcont = true;
-                        console.log("window object isAdultContent , matcont = ",isMatcont);
-                    } else {
-                        isMatcont = blackListWords.some((word)=>{
-                            let regWord = new RegExp("(" + word + ")","ig");
-                            return dfp_keywords.some((keyword)=>{
-                                return keyword.match(regWord) ? true : false;
-                            })
-                        });
-                        console.log("non window object, matcont = ",isMatcont);
+                if (dfp_slotAdUnitPath == GAMLibrary.dfpHeadline) {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var myParam = JSON.parse(urlParams.get('interval'));
+                    headlineSticky(myParam);
+                }
+            } else {
+                var dfp_slotElementId = event.slot.getSlotId().getDomId();
+                if (dfp_slotElementId.match(/newsTag|recommend/)) {
+                    if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1) {
+                        document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
                     }
 
-                    /*DEFINE ALL SLOT*/
-                    googletag.defineSlot(GAMLibrary.dfpHeadline, [
-                        [320, 50],
-                        [320, 100]
-                    ], 'div-gpt-ad-kapanlagi-hl').addService(googletag.pubads());
-                    googletag.defineSlot(GAMLibrary.scSlot, [
-                        [300, 250],
-                        [250, 250],
-                        [200, 200]
-                    ], 'div-gpt-ad-kapanlagi-sc').addService(googletag.pubads());
-                    googletag.defineSlot(GAMLibrary.dfpExposer1, [
-                        [300, 250],
-                        [300, 600],
-                        [320, 480],
-                        [160, 600],
-                        [250, 250]
-                    ], 'div-gpt-ad-kapanlagi-dfp-exposer-slot1-oop').addService(googletag.pubads());
-                    
-                    //(document.querySelector('#div-gpt-ad-kapanlagi-sc-2')) ? googletag.defineSlot(GAMLibrary.scSlot, [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-kapanlagi-sc-2').addService(googletag.pubads()) : '';
-                    //googletag.defineSlot(GAMLibrary.scSlot, [[300, 250],[250, 250],[200, 200]], 'div-gpt-ad-kapanlagi-sc-3').addService(googletag.pubads());
-                    
-                    if(GAMLibrary.topFrameFixedSize){
-                        googletag.defineSlot(GAMLibrary.dfpTopframe, [1, 1], 'div-gpt-ad-kapanlagi-topfrm-oop').addService(googletag.pubads());
-                    }else{
-                        googletag.defineOutOfPageSlot(GAMLibrary.dfpTopframe, 'div-gpt-ad-kapanlagi-topfrm-oop').addService(googletag.pubads());
-                    }
-                    
-                    /*OUT OF PAGE SLOTS*/
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-2', 'div-gpt-ad-kapanlagi-recommend-slot-2-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-3', 'div-gpt-ad-kapanlagi-recommend-slot-3-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-recommend-slot-9', 'div-gpt-ad-kapanlagi-recommend-slot-9-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-newsTag1', 'div-gpt-ad-kapanlagi-dfp-newsTag1-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-newsTag2', 'div-gpt-ad-kapanlagi-dfp-newsTag2-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-1', 'div-gpt-ad-kapanlagi-visual-story-1-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-2', 'div-gpt-ad-kapanlagi-visual-story-2-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-visual-story-3', 'div-gpt-ad-kapanlagi-visual-story-3-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot(GAMLibrary.dfpExposer2, 'div-gpt-ad-kapanlagi-dfp-exposer-slot2-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot(GAMLibrary.dfpSlideup, 'div-gpt-ad-dfp-overlay-oop').addService(googletag.pubads());
-            
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-headline', 'div-gpt-ad-kapanlagi-crm-headline-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-1', 'div-gpt-ad-kapanlagi-crm1-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-2', 'div-gpt-ad-kapanlagi-crm2-oop').addService(googletag.pubads());
-                    googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-crm-3', 'div-gpt-ad-kapanlagi-crm3-oop').addService(googletag.pubads());
+                }
                   
-                    if (isReadPage) {
-                        googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-insertion', 'div-gpt-ad-kapanlagi-insertion-oop').addService(googletag.pubads());
-                        // googletag.defineOutOfPageSlot('/36504930/m.kapanlagi.com/dfp-contextual', 'div-gpt-ad-kapanlagi-mobile-contextual-oop').addService(googletag.pubads());
-                    }
-            
-                    /*Bottom Frame Scrolling*/
-                    GAMLibrary.scrollBottomFrame();
-                    /*Bottom Frame Scrolling*/
-                    googletag.pubads().addEventListener('slotResponseReceived', function(event) {
-                        var dfp_slotDelivered = event.slot.getResponseInformation() ? 'block' : 'none'; /* check wheter there is ads or not*/
-                        var dfp_slotAdUnitPath = event.slot.getSlotId().getAdUnitPath(); /* get adunit path */
-            
-                        /*check if native ads creative was delivered*/
-                        if (dfp_slotDelivered == 'block') {
-                            
-                            /* tracking impression */
-                            GAMLibrary.eventTrackingImpression(kly.gtm.subCategory,dfp_slotAdUnitPath);
-                        
-                            if (dfp_slotAdUnitPath == GAMLibrary.dfpHeadline) {
-                                var urlParams = new URLSearchParams(window.location.search);
-                                var myParam = JSON.parse(urlParams.get('interval'));
-                                headlineSticky(myParam);
-                            }
-                        } else {
-                            var dfp_slotElementId = event.slot.getSlotId().getDomId();
-                            if (dfp_slotElementId.match(/newsTag|recommend/)) {
-                                if (document.getElementById(dfp_slotElementId) && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0] && document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].getAttribute('height') == 1) {
-                                    document.getElementById(dfp_slotElementId).getElementsByTagName('iframe')[0].style.display = "none";
-                                }
-            
-                            }
-                              
-                            if (dfp_slotElementId.match(/crm\d/)) {
-                              (crmEl = document.querySelector("#"+dfp_slotElementId)) ? (crmEl.parentElement.style.display = "none") : '';
-                            }
-                        }
-                    });
-            
-                    /*INITIATE ADS ON CONTINOUS PAGE */
-                    GAMLibrary.initiateSCReadPage();
-                    GAMLibrary.generateViewabilityTracker();
-                  
-                    /*  START TARGETING BLOCK   */
-                    if (isMatcont) { googletag.pubads().setTargeting("isMatcont", ["1"]);}
-                    
-                    if(typeof Krux !== "undefined"){
-                        googletag.pubads().setTargeting('ksg', Krux.segments);
-                        googletag.pubads().setTargeting('kuid', Krux.user);
-                    }
+                if (dfp_slotElementId.match(/crm\d/)) {
+                  (crmEl = document.querySelector("#"+dfp_slotElementId)) ? (crmEl.parentElement.style.display = "none") : '';
+                }
+            }
+        });
 
-                    googletag.pubads().setTargeting("tags",dfp_keywords);
-                    googletag.pubads().setTargeting("currentUrl", urlPath);
-                    googletag.pubads().setTargeting("type", kly.gtm.type);
-                    googletag.pubads().setTargeting("pageType", kly.pageType);
-                    googletag.pubads().setTargeting("channel", kly.gtm.subCategory);
-                    googletag.pubads().setTargeting("audience", typeof (audience = kly.gtm.audience && kly.gtm.audience.split("|")) === "undefined" ? "false" : audience);
-                    googletag.pubads().setTargeting("isAdvertorial", typeof (isAdvertorial = kly.article && kly.article.isAdvertorial.toString()) === "undefined" ? "false" :  isAdvertorial);   
-                    googletag.pubads().setTargeting("isMultipage", typeof (isMultipage = kly.article && kly.article.isMultipage.toString()) === "undefined" ? "false" : isMultipage );
-                    googletag.pubads().setTargeting("articleId", kly.gtm.articleId.toString());
-                    googletag.pubads().setTargeting("pagingNum", typeof (pageParam = kly.gtm.pageParam && kly.gtm.pageParam.toString()) === "undefined" ? "false" : pageParam );
-                    googletag.pubads().setTargeting("newExp",typeof (newExp = kly.gtm.new_exp) === "undefined" ? "false" : kly.gtm.new_exp.toString());
-                    googletag.pubads().setTargeting("site", kly.site);
-                    googletag.pubads().setTargeting("age", typeof (age = kly.gtm.age) === "undefined" ? "false" : kly.gtm.age.toString());
-                    googletag.pubads().setTargeting("gender", typeof (gender = kly.gtm.gender) === "undefined" ? "false" : kly.gtm.gender.toString());
-                    /*  END TARGETING BLOCK   */
-                    /* SET VISITOR ID AS PUBLISHER PROVIDED ID - START*/
-                    var cVisitorId = (visId = document.cookie.split('liputan6_id_visitor_id=')[1]) ? visId.split(';')[0].replace(/[^a-zA-Z0-9]/ig,'') : 0;
-                    cVisitorId ? googletag.pubads().setPublisherProvidedId(cVisitorId+'kly') : '';
-                    /* SET VISITOR ID AS PUBLISHER PROVIDED ID - END*/                    
-                    googletag.pubads().setCentering(true);
-                    googletag.pubads().enableSingleRequest();      
-                    googletag.enableServices();
-            
-                });
+        /*INITIATE ADS ON CONTINOUS PAGE */
+        GAMLibrary.initiateSCReadPage();
+        GAMLibrary.generateViewabilityTracker();
+      
+        /*  START TARGETING BLOCK   */
+        googletag.pubads().setTargeting("isMatcont", isMatcont);
+        googletag.pubads().setTargeting("brandsafety", isViolateBrandSafety);
+        
+        if(typeof Krux !== "undefined"){
+            googletag.pubads().setTargeting('ksg', Krux.segments);
+            googletag.pubads().setTargeting('kuid', Krux.user);
+        }
 
-                    if (isReadPage) {
-                        googletag.cmd.push(function() {
-                            googletag.display('div-gpt-ad-kapanlagi-insertion-oop');
-                        });
-                    }
-            
-                    var gptMKapanlagiStyle = document.createElement('style');
-                    gptMKapanlagiStyle.textContent = '.div-gpt-ad-kapanlagi-sc-continous{margin-bottom:30px}';
-                    
-                    window.onload = function() { document.body.appendChild(gptMKapanlagiStyle);};
-            
-                    /* ===== HEADLINESTICKY METHOD - DEFAULT 3s ===== */
-                    var headlineStickyInterval=3,headlineStickyStatus=!1;function headlineSticky(t){null!=t&&(headlineStickyInterval=t),console.log(headlineStickyInterval);var e=document.getElementById("div-gpt-ad-kapanlagi-hl"),n=document.createElement("div");n.setAttribute("id","div-gpt-ad-kapanlagi-hl-shadow"),e.parentElement.insertBefore(n,e),injectStickyStyleAndAnimation(),window.addEventListener("scroll",headlineStickyScrollEevent)}function headlineStickyScrollEevent(){var t=document.getElementById("div-gpt-ad-kapanlagi-hl"),e=document.getElementById("div-gpt-ad-kapanlagi-hl-shadow").getBoundingClientRect().top;document.querySelector(".layout__nav-content"),document.documentElement.scrollTop||document.body.scrollTop;headlineStickyStatus?e<=0||(window.removeEventListener("scroll",headlineStickyScrollEevent),removeStickyHeadline(t,!1)):e<=0&&(t.classList.add("hl-active-sticky"),t.style="",removeStickyHeadline(t,!0),headlineStickyStatus=!0)}function removeStickyHeadline(t,e){var n=setInterval(function(){headlineStickyInterval<=0?(t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0",clearInterval(n),window.removeEventListener("scroll",headlineStickyScrollEevent)):headlineStickyInterval--},1e3);e||(clearInterval(n),t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0")}function injectStickyStyleAndAnimation(){var t=document.createElement("style");t.textContent="\n\t\t.hl-active-sticky {\n\t\t\tposition: fixed;\n\t\t\ttop: -100%;\n\t\t\tz-index: 9999;\n\t\t\tleft: 50%;\n\t\t\ttransform: translateX(-50%);\n\t\t\tmargin: 0;\n\t\t\ttransition : margin-top .5s ease;\n\t\t\tanimation: hlSlideDown .5s forwards;\n\t\t}\n\n\t\t.hl-navbar-hanging{\n\t\t\tmargin-top : 50px !important;\n\t\t}\n\n\t\t@keyframes hlSlideDown{\n\t\t\t0%{top : -100px;}\n\t\t\t100%{top : 0px;}\n\t\t}\n\t\t",document.head.appendChild(t)}
-                    /* ===== HEADLINESTICKY METHOD ===== */
+        googletag.pubads().setTargeting("tags",dfp_keywords);
+        googletag.pubads().setTargeting("currentUrl", urlPath);
+        googletag.pubads().setTargeting("type", kly.gtm.type);
+        googletag.pubads().setTargeting("pageType", kly.pageType);
+        googletag.pubads().setTargeting("channel", kly.gtm.subCategory);
+        googletag.pubads().setTargeting("audience", typeof (audience = kly.gtm.audience && kly.gtm.audience.split("|")) === "undefined" ? "false" : audience);
+        googletag.pubads().setTargeting("isAdvertorial", typeof (isAdvertorial = kly.article && kly.article.isAdvertorial.toString()) === "undefined" ? "false" :  isAdvertorial);   
+        googletag.pubads().setTargeting("isMultipage", typeof (isMultipage = kly.article && kly.article.isMultipage.toString()) === "undefined" ? "false" : isMultipage );
+        googletag.pubads().setTargeting("articleId", kly.gtm.articleId.toString());
+        googletag.pubads().setTargeting("pagingNum", typeof (pageParam = kly.gtm.pageParam && kly.gtm.pageParam.toString()) === "undefined" ? "false" : pageParam );
+        googletag.pubads().setTargeting("newExp",typeof (newExp = kly.gtm.new_exp) === "undefined" ? "false" : kly.gtm.new_exp.toString());
+        googletag.pubads().setTargeting("site", kly.site);
+        googletag.pubads().setTargeting("age", typeof (age = kly.gtm.age) === "undefined" ? "false" : kly.gtm.age.toString());
+        googletag.pubads().setTargeting("gender", typeof (gender = kly.gtm.gender) === "undefined" ? "false" : kly.gtm.gender.toString());
+        /*  END TARGETING BLOCK   */
+        /* SET VISITOR ID AS PUBLISHER PROVIDED ID - START*/
+        var cVisitorId = (visId = document.cookie.split('liputan6_id_visitor_id=')[1]) ? visId.split(';')[0].replace(/[^a-zA-Z0-9]/ig,'') : 0;
+        cVisitorId ? googletag.pubads().setPublisherProvidedId(cVisitorId+'kly') : '';
+        /* SET VISITOR ID AS PUBLISHER PROVIDED ID - END*/                    
+        googletag.pubads().setCentering(true);
+        googletag.pubads().enableSingleRequest();   
+        googletag.pubads().disableInitialLoad();   
+        googletag.enableServices();
+        /* REFRESH ON DEMAND */
+        googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.rec2, window.GAMLibrary.rec3, window.GAMLibrary.rec9, window.GAMLibrary.newsTag1, window.GAMLibrary.newsTag2, window.GAMLibrary.vStory1, window.GAMLibrary.vStory2, window.GAMLibrary.vStory3, window.GAMLibrary.exposer2, window.GAMLibrary.overlay, window.GAMLibrary.crmHeadline, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard]);
+        if (isReadPage) {
+            googletag.pubads().refresh([window.GAMLibrary.insertion]);
+        }
+    });
+
+    /* INITIATE PREBID */
+    var prebidObject = new PrebidInstantiate(1000,3000,1000,adUnits,priceGranularityConfig);
+    
+    var gptMKapanlagiStyle = document.createElement('style');
+    gptMKapanlagiStyle.textContent = '.div-gpt-ad-kapanlagi-sc-continous{margin-bottom:30px}';
+        
+    window.onload = function() { document.body.appendChild(gptMKapanlagiStyle);};
+
+    /* ===== HEADLINESTICKY METHOD - DEFAULT 3s ===== */
+    var headlineStickyInterval=3,headlineStickyStatus=!1;function headlineSticky(t){null!=t&&(headlineStickyInterval=t),console.log(headlineStickyInterval);var e=document.getElementById("div-gpt-ad-kapanlagi-hl"),n=document.createElement("div");n.setAttribute("id","div-gpt-ad-kapanlagi-hl-shadow"),e.parentElement.insertBefore(n,e),injectStickyStyleAndAnimation(),window.addEventListener("scroll",headlineStickyScrollEevent)}function headlineStickyScrollEevent(){var t=document.getElementById("div-gpt-ad-kapanlagi-hl"),e=document.getElementById("div-gpt-ad-kapanlagi-hl-shadow").getBoundingClientRect().top;document.querySelector(".layout__nav-content"),document.documentElement.scrollTop||document.body.scrollTop;headlineStickyStatus?e<=0||(window.removeEventListener("scroll",headlineStickyScrollEevent),removeStickyHeadline(t,!1)):e<=0&&(t.classList.add("hl-active-sticky"),t.style="",removeStickyHeadline(t,!0),headlineStickyStatus=!0)}function removeStickyHeadline(t,e){var n=setInterval(function(){headlineStickyInterval<=0?(t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0",clearInterval(n),window.removeEventListener("scroll",headlineStickyScrollEevent)):headlineStickyInterval--},1e3);e||(clearInterval(n),t.classList.remove("hl-active-sticky"),t.classList.remove("hl-navbar-hanging"),t.style.margin="10px 0")}function injectStickyStyleAndAnimation(){var t=document.createElement("style");t.textContent="\n\t\t.hl-active-sticky {\n\t\t\tposition: fixed;\n\t\t\ttop: -100%;\n\t\t\tz-index: 9999;\n\t\t\tleft: 50%;\n\t\t\ttransform: translateX(-50%);\n\t\t\tmargin: 0;\n\t\t\ttransition : margin-top .5s ease;\n\t\t\tanimation: hlSlideDown .5s forwards;\n\t\t}\n\n\t\t.hl-navbar-hanging{\n\t\t\tmargin-top : 50px !important;\n\t\t}\n\n\t\t@keyframes hlSlideDown{\n\t\t\t0%{top : -100px;}\n\t\t\t100%{top : 0px;}\n\t\t}\n\t\t",document.head.appendChild(t)}
+    /* ===== HEADLINESTICKY METHOD ===== */
