@@ -113,148 +113,152 @@
             var googletag = googletag || {};
             var pbjs = pbjs || {};
             var adUnits = [
-        {
-            code: "/36504930/m.fimela.com/dfp-sc",
-            mediaTypes: {
-                banner: {
-                    sizes: [
-                        [300, 250],
-                        [250, 250],
-                        [200, 200],
-                    ],
+            {
+                code: "/36504930/m.fimela.com/dfp-sc",
+                mediaTypes: {
+                    banner: {
+                        sizes: [
+                            [300, 250],
+                            [250, 250],
+                            [200, 200],
+                        ],
+                    },
+                    video: {
+                        playerSize: [300, 250], // Not set so that the player can be repsonsive
+                        context: "outstream",
+                    },
+                    video: {
+                        playerSize: [300, 250], // Not set so that the player can be repsonsive
+                        context: "instream",
+                    },
                 },
-                video: {
-                    playerSize: [300, 250], // Not set so that the player can be repsonsive
-                    context: "outstream",
-                },
-                video: {
-                    playerSize: [300, 250], // Not set so that the player can be repsonsive
-                    context: "instream",
-                },
+                bids: [
+                    { bidder: "emx_digital", params: { tagid: "113618" } },
+                    { bidder: "innity", params: { zone: 97854 , pub : 539 } },
+                    { bidder: "oftmedia", params: { placementId: "18777730" } },
+                    { bidder: "teads", params: { pageId: 120638 , placementId: 130844 } },
+                    { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                    { bidder: "adnuntius", params: { auId: "0000000000109440" } },
+                    { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                    { bidder: "grid", params: { uid: 73366, bidFloor: 0.2}},
+                    { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
+                    { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-300x250_1' } },
+                    { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
+                ],
             },
-            bids: [
-                { bidder: "emx_digital", params: { tagid: "113618" } },
-                { bidder: "innity", params: { zone: 97854 , pub : 539 } },
-                { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "teads", params: { pageId: 120638 , placementId: 130844 } },
-                { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-                { bidder: "adnuntius", params: { auId: "0000000000109440" } },
-                { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
-                { bidder: "grid", params: { uid: 73366, bidFloor: 0.2}},
-                { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
-                { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-300x250_1' } }
-            ],
-        },
-        {
-            code: "/36504930/m.fimela.com/dfp-hl",
-            mediaTypes: {
-                banner: {
-                    sizes: [
-                        [320, 50],
-                        [320, 100],
-                    ],
+            {
+                code: "/36504930/m.fimela.com/dfp-hl",
+                mediaTypes: {
+                    banner: {
+                        sizes: [
+                            [320, 50],
+                            [320, 100],
+                        ],
+                    },
+                    video: {
+                        playerSize: [320, 100], // Not set so that the player can be repsonsive
+                        context: "outstream",
+                    },
+                    video: {
+                        playerSize: [320, 100], // Not set so that the player can be repsonsive
+                        context: "instream",
+                    },
                 },
-                video: {
-                    playerSize: [320, 100], // Not set so that the player can be repsonsive
-                    context: "outstream",
-                },
-                video: {
-                    playerSize: [320, 100], // Not set so that the player can be repsonsive
-                    context: "instream",
-                },
+                bids: [
+                    { bidder: "emx_digital", params: { tagid: "113618" } },
+                    { bidder: "innity", params: { zone: 97853 , pub : 539 } },
+                    { bidder: "oftmedia", params: { placementId: "18777730" } },
+                    { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                    { bidder: "adnuntius", params: { auId: "000000000010943f" } },
+                    { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                    { bidder: "grid", params: { uid: 73362, bidFloor: 0.2 }},
+                    { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
+                    { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-320x50_1' } },
+                    { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
+                    
+                ],
             },
-            bids: [
-                { bidder: "emx_digital", params: { tagid: "113618" } },
-                { bidder: "innity", params: { zone: 97853 , pub : 539 } },
-                { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-                { bidder: "adnuntius", params: { auId: "000000000010943f" } },
-                { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
-                { bidder: "grid", params: { uid: 73362, bidFloor: 0.2 }},
-                { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
-                { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-320x50_1' } }
-                
-            ],
-        },
-        {
-            code: "/36504930/m.bola.com/dfp-bottomfrm",
-            mediaTypes: {
-                banner: {
-                    sizes: [
-                        [320, 50],
-                        [320, 100],
-                    ],
+            {
+                code: "/36504930/m.bola.com/dfp-bottomfrm",
+                mediaTypes: {
+                    banner: {
+                        sizes: [
+                            [320, 50],
+                            [320, 100],
+                        ],
+                    },
+                    video: {
+                        playerSize: [320, 100], // Not set so that the player can be repsonsive
+                        context: "outstream",
+                    },
                 },
-                video: {
-                    playerSize: [320, 100], // Not set so that the player can be repsonsive
-                    context: "outstream",
-                },
-            },
-            bids: [
-                { bidder: "emx_digital", params: { tagid: "113618" } },
-                { bidder: "innity", params: { zone: 98049 , pub : 539} },
-                { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-                { bidder: "adnuntius", params: { auId: "000000000010943e" } },
-                { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
-                {
-                    bidder: 'pubmatic',
-                    params: {
-                        publisherId: '156536',
-                        videoAdUnit : '4045175',
-                        adSlot: 'kly_prebid_outstream_mobile_fimela',
-                        outstreamAU: 'kly_prebid_outstream_mobile_fimela',
-                        video: {
-                            skippable: false,
-                            playbackmethod: [2],
-                            context: "outstream",
-                            api: [2, 7],
-                            minduration: 5,
-                            maxduration: 30,
-                            mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
-                            placement: 3
+                bids: [
+                    { bidder: "emx_digital", params: { tagid: "113618" } },
+                    { bidder: "innity", params: { zone: 98049 , pub : 539} },
+                    { bidder: "oftmedia", params: { placementId: "18777730" } },
+                    { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                    { bidder: "adnuntius", params: { auId: "000000000010943e" } },
+                    { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                    {
+                        bidder: 'pubmatic',
+                        params: {
+                            publisherId: '156536',
+                            videoAdUnit : '4045175',
+                            adSlot: 'kly_prebid_outstream_mobile_fimela',
+                            outstreamAU: 'kly_prebid_outstream_mobile_fimela',
+                            video: {
+                                skippable: false,
+                                playbackmethod: [2],
+                                context: "outstream",
+                                api: [2, 7],
+                                minduration: 5,
+                                maxduration: 30,
+                                mimes: ["video/mp4", "video/x-ms-wmv", "application/javascript", "video/3gpp", "application/x-mpegURL", "video/quicktime", "video/x-msvideo", "video/x-flv", "video/webm"],
+                                placement: 3
+                            }
                         }
-                    }
-                },
-                { bidder: "grid", params: { uid: 55688, bidFloor: 0.25} },
-                { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
-            ],
-        },
-        {
-            code: "/36504930/m.fimela.com/dfp-exposer-slot1",
-            mediaTypes: {
-                banner: {
-                    sizes: [
-                        [300, 250],
-                        [300, 600],
-                        [320, 480],
-                        [160, 600],
-                        [250, 250],
-                    ],
-                },
-                video: {
-                    playerSize: [300, 600], // Not set so that the player can be repsonsive
-                    context: "outstream",
-                },
-                video: {
-                    playerSize: [300, 600], // Not set so that the player can be repsonsive
-                    context: "instream",
-                },
+                    },
+                    { bidder: "grid", params: { uid: 55688, bidFloor: 0.25} },
+                    { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
+                    { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
+                ],
             },
-            bids: [
-                { bidder: "emx_digital", params: { tagid: "113618" } },
-                { bidder: "innity", params: { zone: 98050 , pub : 539} },
-                { bidder: "oftmedia", params: { placementId: "18777730" } },
-                { bidder: "teads", params: { pageId: 111234 , placementId: 120939 } },
-                { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
-                { bidder: "adnuntius", params: { auId: "0000000000109444" } },
-                { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
-                { bidder: "grid", params: { uid: 55686, bidFloor: 0.2 } },
-                { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
-                { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-300x600' } }
-            ],
-        },
-    ];
+            {
+                code: "/36504930/m.fimela.com/dfp-exposer-slot1",
+                mediaTypes: {
+                    banner: {
+                        sizes: [
+                            [300, 250],
+                            [300, 600],
+                            [320, 480],
+                            [160, 600],
+                            [250, 250],
+                        ],
+                    },
+                    video: {
+                        playerSize: [300, 600], // Not set so that the player can be repsonsive
+                        context: "outstream",
+                    },
+                    video: {
+                        playerSize: [300, 600], // Not set so that the player can be repsonsive
+                        context: "instream",
+                    },
+                },
+                bids: [
+                    { bidder: "emx_digital", params: { tagid: "113618" } },
+                    { bidder: "innity", params: { zone: 98050 , pub : 539} },
+                    { bidder: "oftmedia", params: { placementId: "18777730" } },
+                    { bidder: "teads", params: { pageId: 111234 , placementId: 120939 } },
+                    { bidder: "rtbhouse", params: { publisherId: "bI2sp5Pt1ubwkv6C9Hs5", region: "prebid-asia" } },
+                    { bidder: "adnuntius", params: { auId: "0000000000109444" } },
+                    { bidder: "spotx", params: { channel_id: 285432, ad_unit: "outstream", outstream_function: spotxOutstreamFunc } },
+                    { bidder: "grid", params: { uid: 55686, bidFloor: 0.2 } },
+                    { bidder: "rubicon", params: { accountId: 12534, siteId: 377678, zoneId: 2083798 } },
+                    { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Fimela-Mobile-300x600' } },
+                    { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
+                ],
+            },
+        ];
             
             pbjs.que = pbjs.que || [];
             googletag.cmd = googletag.cmd || []; 
@@ -263,7 +267,7 @@
             /** LOAD PREBID - END */
 
             var gpt_gam_site = window.location.hostname.toUpperCase(),
-            gpt_gam_ver = 'V2.0-ADS';
+            gpt_gam_ver = 'V2.1-ADS';
             console.log('%c GPT '+gpt_gam_site+' '+gpt_gam_ver ,'color:#d3d3d3; font-size:25px; font-weight: bold; -webkit-text-stroke: 1px black;');
 
             /*SET INTERVAL TO AUTO REFRESH BOTTOM FRAME ADS - NEW*/
@@ -518,6 +522,7 @@
                     window.GAMLibrary.crmOrganic1 = googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-crm-1', 'div-gpt-ad-fimela-crm1-oop').addService(googletag.pubads());
                     window.GAMLibrary.crmOrganic2 = googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-crm-2', 'div-gpt-ad-fimela-crm2-oop').addService(googletag.pubads());
                     window.GAMLibrary.crmOrganic3 = googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-crm-3', 'div-gpt-ad-fimela-crm3-oop').addService(googletag.pubads());
+                    window.GAMLibrary.pictureFirst = googletag.defineOutOfPageSlot('/36504930/m.fimela.com/dfp-picturefirst', 'div-gpt-ad-fimela-picturefirst').addService(googletag.pubads());
                     
                     window.GAMLibrary.headline = googletag.defineSlot(GAMLibrary.dfpHeadline, [[320, 50],[320, 100]], 'div-gpt-ad-fimela-hl-1').addService(googletag.pubads());
                     window.GAMLibrary.showcase = googletag.defineSlot('/36504930/m.fimela.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-fimela-sc-1').addService(googletag.pubads());
@@ -592,7 +597,7 @@
                     googletag.enableServices();
 
                     /* REFRESH ON DEMAND */
-                    googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.exposer2, window.GAMLibrary.newstag1, window.GAMLibrary.newstag2, window.GAMLibrary.highlight1, window.GAMLibrary.highlight2, window.GAMLibrary.overlay , window.GAMLibrary.crmHeadline, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3]);
+                    googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.exposer2, window.GAMLibrary.newstag1, window.GAMLibrary.newstag2, window.GAMLibrary.highlight1, window.GAMLibrary.highlight2, window.GAMLibrary.overlay , window.GAMLibrary.crmHeadline, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.pictureFirst]);
 
 
                 });

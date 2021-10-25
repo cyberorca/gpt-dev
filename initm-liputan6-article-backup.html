@@ -156,7 +156,7 @@
             var pbjs = pbjs || {};
             var adUnits =  [
                                 {
-                                    code: "/36504930/m.liputan6.com/dfp-sc",
+                                    code: "div-gpt-ad-liputan6-sc",
                                     mediaTypes: {
                                         banner: {
                                             sizes: [
@@ -186,11 +186,12 @@
                                         { bidder: "grid", params: { uid: 73365, bidFloor: 0.2 } },
                                         { bidder: "smaato", params: { publisherId: "1100002661", adspaceId: "130510783" } },
                                         { bidder: 'ix', params: { siteId: '683437' } },
-                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-300x250' } }
+                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-300x250' } },
+                                        { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
                                     ],
                                 },
                                 {
-                                    code: "/36504930/m.liputan6.com/dfp-headline",
+                                    code: "div-gpt-ad-liputan6-hl",
                                     mediaTypes: {
                                         banner: {
                                             sizes: [
@@ -218,11 +219,12 @@
                                         { bidder: "grid", params: { uid: 73364, bidFloor: 0.2 } },
                                         { bidder: "smaato", params: { publisherId: "1100002661", adspaceId: "130525032" } },
                                         { bidder: 'ix', params: { siteId: '683435' } },
-                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-320x50_1' } }
+                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-320x50_1' } },
+                                        { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
                                     ],
                                 },
                                 {
-                                    code: "/36504930/m.liputan6.com/dfp-bottomfrm",
+                                    code: "div-gpt-ad-liputan6-bottomfrm",
                                     mediaTypes: {
                                         banner: {
                                             sizes: [
@@ -263,11 +265,12 @@
                                         },
                                         { bidder: 'grid', params: { uid: 55684, bidFloor: 0.25 } },
                                         { bidder: 'smaato', params: { publisherId: "1100002661", adspaceId: "130510782" } },
-                                        { bidder: 'ix', params: { siteId: '683434' } }
+                                        { bidder: 'ix', params: { siteId: '683434' } },
+                                        { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
                                     ],
                                 },
                                 {
-                                    code: "/36504930/m.liputan6.com/dfp-exposer",
+                                    code: "div-gpt-ad-liputan6-dfp-exposer-oop",
                                     mediaTypes: {
                                         banner: {
                                             sizes: [
@@ -299,7 +302,8 @@
                                         { bidder: "grid", params: { uid: 55687, bidFloor: 0.2 } },
                                         { bidder: "smaato", params: { publisherId: "1100002661", adspaceId: "130510784" } },
                                         { bidder: 'ix', params: { siteId: '683436' } },
-                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-300x600' } }
+                                        { bidder: 'pubmatic', params: { publisherId: '156536',  adSlot: 'Prebid-Liputan6-Mobile-300x600' } },
+                                        { bidder: 'smilewanted', params: { zoneId: 'emtek.digital_hb_display', bidfloor: 0, } }
                                     ],
                                 },
                             ];
@@ -643,7 +647,8 @@
                     window.GAMLibrary.crmOrganic2 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-2', 'div-gpt-ad-liputan6-crm2-oop').addService(googletag.pubads());
                     window.GAMLibrary.crmOrganic3 = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-crm-3', 'div-gpt-ad-liputan6-crm3-oop').addService(googletag.pubads());
                     window.GAMLibrary.feedboard = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-feedboard', 'div-gpt-ad-liputan6-feedboard').addService(googletag.pubads());
-
+                    window.GAMLibrary.pictureFirst = googletag.defineOutOfPageSlot('/36504930/m.liputan6.com/dfp-picturefirst', 'div-gpt-ad-liputan6-picturefirst').addService(googletag.pubads());
+                    
                     window.GAMLibrary.headline = googletag.defineSlot(GAMLibrary.dfpHeadline, [[320, 50],[320, 100]], 'div-gpt-ad-liputan6-hl').addService(googletag.pubads());
                     window.GAMLibrary.showcase = googletag.defineSlot('/36504930/m.liputan6.com/dfp-sc', [[300,250],[250,250],[200,200]], 'div-gpt-ad-liputan6-sc').addService(googletag.pubads());
                     window.GAMLibrary.exposer1 = googletag.defineSlot(GAMLibrary.dfpExposer, [[300,250], [300,600], [320,480], [160,600], [250,250]], 'div-gpt-ad-liputan6-dfp-exposer-oop').addService(googletag.pubads());
@@ -713,7 +718,7 @@
                     googletag.enableServices();
 
                     /* REFRESH ON DEMAND */
-                    googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.newstag1, window.GAMLibrary.insertion, window.GAMLibrary.overlay, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard]);
+                    googletag.pubads().refresh([/*window.GAMLibrary.topframe,*/ window.GAMLibrary.newstag1, window.GAMLibrary.insertion, window.GAMLibrary.overlay, window.GAMLibrary.crmOrganic1, window.GAMLibrary.crmOrganic2, window.GAMLibrary.crmOrganic3, window.GAMLibrary.feedboard, window.GAMLibrary.pictureFirst]);
 
             });
 
