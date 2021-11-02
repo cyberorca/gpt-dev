@@ -1,0 +1,297 @@
+<div class="mobile-puller">
+    <div class="section-collect">
+        <div id="mobile-puller-section">
+            <!-- IMAGE SOURCE UPLOAD TO D.KAPANLAGINETWORK.COM -->
+            <img id="mobile-puller-main-img" src="https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2021/10/11/manissedap/manissedap.jpeg" />
+        </div>
+    </div>
+<!-- IMPRESSION -->
+<div id="beacon_{random}" style="position: absolute; left: 0px; top: 0px; visibility: hidden;">
+    <img id="mobile-puller-impression" src="{logurl}" style="display:none;visibility:hidden" width="0" height="0">
+</div>
+</div>
+<script>
+    var _klyAd = window.kmklabs || window.kly;
+    var _siteName = (_klyAd.site.toLowerCase() == "bola.com") ? "bolacom" : _klyAd.site.toLowerCase();
+    var _parentClass = "revive-ad-"+_siteName+"-bottomfrm";
+    var _pullerParent = document.querySelector("."+_parentClass);
+    _pullerParent.classList.add("mobile-puller-wrapper");
+
+    var templateCss = `
+
+            #dfp-bframe-cont-transparent{
+                display :block !important;
+            }
+            img#mobile-puller-main-img {
+                max-height: 100%;
+            }
+
+            .revive-ad-bolacom-bottomfrm {
+                left: 0;
+            }
+
+            .revive-ad-otosia-bottomfrm {
+                left: 0;
+            }
+            .mobile-puller-section{
+                max-height: 100%;
+            }
+            .revive-ad-dream-bottomfrm {
+               left: 50%;
+               transform: translateX(-50%);
+            }
+
+            .revive-ad-merdeka-bottomfrm.mobile-puller-wrapper {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .revive-ad-bola-bottomfrm {
+                left: 0;
+            }
+            
+            .revive-ad-liputan6-bottomfrm.mobile-puller-wrapper {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .revive-ad-kapanlagi-bottomfrm {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .mobile-puller-wrapper{
+                bottom: -300px ; 
+                position: fixed; 
+                width : 320px; 
+                height: auto !important;
+                transition: all 1s ease;
+                z-index:999; 
+            }
+
+            div#btn-hide {
+                position: absolute;
+                display: none;
+                right: -15px;
+                width: 30px;
+                height: 30px;
+                background: #fff;
+                top: -15px;
+                border-radius: 100px;
+                border: solid 1px;
+                z-index: 9;
+            }
+
+            div#btn-hide img {
+                width : 100%;
+                position: relative;
+            }
+
+            div#btn-hide p {
+                display: block;
+                text-align: center;
+                line-height: 28px;
+                font-family: sans-serif;
+                font-weight: bold;
+                border-radius: 100px;
+                margin : 0px;
+                padding : 0px;
+            }
+
+            @media (max-width: 320px) {
+                div#btn-hide {
+                    right : 0px;
+                }
+            }
+
+            .revive-ad-fimela-bottomfrm, .revive-ad-otosia-bottomfrm, .revive-ad-bola-bottomfrm, .revive-ad-bolacom-bottomfrm {
+                margin-left: calc((100% - 320px) / 2);
+            }
+
+            .article-ad.article-ad_ad-hbf .revive-ad-fimela-bottomfrm {
+                margin-left: unset !important;
+            }
+
+            .back-to-top {
+                display: none;
+            }
+
+            #mdk-body .channel-section {
+                z-index: 0;
+            }
+
+            div#div-gpt-ad-fimela-bottomfrm,
+            div#dfp-bframe-cont-transparent,
+            div#dfp-bframe-cont {
+                background: transparent !important;
+            }
+        `
+    var htmlWrapper = document.createElement("div");
+    htmlWrapper.style.position = "unset";
+    htmlWrapper.innerHTML = `
+        <div id="btn-hide">
+        <p>5</p>
+        </div>
+        `
+    var myStyle = document.createElement("style");
+    myStyle.textContent = templateCss;
+    htmlWrapper.appendChild(myStyle);
+
+    _pullerParent.appendChild(htmlWrapper);
+
+    var mobilePullerWrapper = parent.document.querySelector(".mobile-puller-wrapper");
+    var mobilePullerBtnClose = parent.document.getElementById("btn-hide");
+    var mobilePullerMainImg = document.getElementById("mobile-puller-main-img");
+    var mobilePullerScrollStart = 300;
+    var mobilePullerScrollEnd = 1000;
+    var mobilePullerPosisitionStart = -250;
+    var mobilePullerCountdownStart = 5;
+    var mobilePullerCountdownShown = false;
+    var mobilePullerCloseStatus = false;
+    var mobilePullerIsLandscape = false;
+    var mobilePullercCanClose = false;
+    var mobilePullerShown = false;
+    var mobilePullercWidgetRamadhan = parent.document.querySelector(".spinner__container");
+
+    var puller_mobilePullerDMPCat = 'automotive,budget-cars,sales-and-promotions'.trim().split(/\s*,\s*/);
+    var dfp_macro = '{"lineitemId":"0", "advertiserId":"0", "orderId":"0", "creativeId":"138364233451", "adunitId":"35505050"}';
+    var dfp_MobilePullerLandingPage = "{clickurl}https://manisdansedap.com/";
+
+    mobilePullerOrieantation();
+    if (_klyAd.site == 'fimela') {
+        _pullerParent.style.bottom = "unset";
+        var tweakPullerFimela = setInterval(function() {
+            normalize_env();
+            clearInterval(tweakPullerFimela);
+        }, 500)
+    } else {
+        normalize_env();
+    }
+
+    window.addEventListener("scroll", scrollMobilePulller);
+    window.addEventListener("scroll", scrollMobilePulllerCekFakta);
+    window.addEventListener("orientationchange", mobilePullerOrieantation);
+    mobilePullerMainImg.addEventListener("click", mobilePullerLandingPage);
+    mobilePullerBtnClose.addEventListener("click", mobilePullerClose);
+
+    function normalize_env() {
+        _pullerParent.style = " width : 320px; height: 250px;";
+        mobilePullerWrapper.style = "bottom: -300px ;position: fixed;width : 320px;height: auto !important;transition: all 1s ease;";
+
+
+        if (typeof kmklabs != "undefined") {
+            kmklabs.OverlayVideo = false;
+            if (kmklabs.site == 'bola.com') {
+                var _pullerWrapper = document.getElementById("dfp-bframe-cont");
+                var _btt = document.querySelector(".back-to-top");
+                document.querySelector("#back-to-top").insertBefore(_pullerWrapper, _btt);
+            }
+        }
+
+        if (window.GAMLibrary == "object") {
+            window.GAMLibrary.setGamBFInterval(false);
+        }
+    }
+
+    function mobilePullerGenerateDMPLP() {
+        if (typeof window.createDMPTracker === 'function') {
+            window.createDMPTracker(puller_mobilePullerDMPCat, dfp_MobilePullerLandingPage, dfp_macro);
+        } else {
+            // window.open(dfp_MobilePullerLandingPage, '_blank');
+        }
+    }
+
+    function mobilePullerLandingPage() {
+        mobilePullerGenerateDMPLP();
+    }
+
+    function scrollMobilePulllerCekFakta() {
+        if (document.querySelector(".cek-fakta__popup")) {
+            document.querySelector(".cek-fakta__popup").style.top = "100vh";
+        }
+    }
+
+    function scrollMobilePulller() {
+        console.log('scroll')
+        var scrollNode = document.scrollingElement || document.documentElement;
+        var scrollTop = scrollNode.scrollTop;
+
+        if (scrollTop >= mobilePullerScrollEnd && !mobilePullerIsLandscape) {
+            window.removeEventListener("scroll", scrollMobilePulller);
+            mobilePullerCountdownShown = true;
+            mobilePullerShown = true;
+            console.log('shoooowwww', mobilePullerCountdownShown)
+            mobilePullerShowCountdown();
+        }
+    }
+
+    function mobilePullerShowCountdown() {
+        mobilePullerBtnClose.style.display = "block";
+        if (mobilePullerCountdownShown) {
+            var btm = (document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+            mobilePullerWrapper.style.bottom = btm;
+
+            var a = setInterval(function() {
+                if (mobilePullerCountdownStart > 0 && !mobilePullerCloseStatus && !mobilePullerIsLandscape) {
+                    hideOnesignal();
+                    if (mobilePullerCountdownStart == 1) {
+                        mobilePullercCanClose = true;
+                        var closeimg = '<img src="https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2019/08/20/close.png?9080">';
+                        mobilePullerBtnClose.innerHTML = closeimg;
+                        clearInterval(a);
+
+                    } else {
+                        mobilePullerCountdownStart--;
+                        mobilePullerBtnClose.querySelector("p").textContent = mobilePullerCountdownStart;
+                    }
+                }
+            }, 1000)
+        }
+    }
+
+    function mobilePullerClose() {
+        if (mobilePullercCanClose) {
+            mobilePullerWrapper.style.bottom = "-350px";
+            if (mobilePullercWidgetRamadhan) {
+                mobilePullercWidgetRamadhan.style.display = "block";
+            }
+
+            if (document.querySelector(".cek-fakta__popup")) {
+                document.querySelector(".cek-fakta__popup").style.top = "top: calc(-261px + 100vh);";
+                window.removeEventListener("scroll", scrollMobilePulllerCekFakta);
+            }
+        }
+    }
+
+    function mobilePullerOrieantation() {
+        var isIos = navigator.platform.match(/iPhone|iPod|iPad/);
+        var angel = (isIos) ? window.orientation : screen.orientation.angle;
+        if (angel == 0) {
+            mobilePullerWrapper.style.display = "block";
+            mobilePullerIsLandscape = false;
+            if (mobilePullerShown) {
+                var btm = (document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+                mobilePullerWrapper.style.bottom = btm;
+            }
+        } else {
+            // mobilePullerWrapper.style.display = "none";
+            mobilePullerIsLandscape = true;
+            if (mobilePullerShown) {
+                mobilePullerWrapper.style.bottom = "-350px";
+            }
+        }
+    }
+
+    function hideOnesignal() {
+        setTimeout(function() {
+            var onesignal = document.getElementById("onesignal-popover-container"),
+                onesignalMDK = document.querySelector("#onesignal-bell-container");
+            if (onesignal) {
+                onesignal.style.display = 'none';
+            }
+            if (onesignalMDK) {
+                onesignalMDK.style.setProperty('display', 'none', 'important');
+            }
+        }, 2000);
+    }
+</script>

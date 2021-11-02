@@ -1,0 +1,323 @@
+<div class="mobile-puller" >
+    <div class="section-collect">
+        <div id="mobile-puller-section">
+            
+            <img src="[%dfp_image%]" id="mobile-puller-main-img">
+        </div>
+    </div>
+</div>
+
+<style>
+    .mobile-puller *,
+    .mobile-puller *:after,
+    .mobile-puller *:before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    #mobile-puller-section img {
+        width: 100%;
+        max-width : unset;
+        max-height : unset;
+    }
+
+    div#mobile-puller-section {
+        position: relative;
+        display: block;
+        width: 320px;
+        height : 250px;
+        margin: 0 auto;
+    }
+
+    #mdk-body .channel-section {
+      z-index: -99;
+    }
+
+    @media only screen and (orientation: landscape) {
+        .mobile-puller.active {
+            height: 100vh;
+        }
+    }
+
+
+</style>
+
+
+<script>
+
+    var myparent = window.frameElement.parentElement.parentElement;
+    myparent.setAttribute("class", "mobile-puller-wrapper");
+
+    var templateCss = `
+      div#div-gpt-ad-dream-bottomfrm {
+         left: 50%;
+          transform: translateX(-50%);
+      }
+				div#div-gpt-ad-liputan6-bottomfrm.mobile-puller-wrapper {
+    				left: 50%;
+    				transform: translateX(-50%);
+				}
+
+                div#div-gpt-ad-kapanlagi-bottomfrm {
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+        .mobile-puller-wrapper{
+            bottom: -300px ; 
+            position: fixed; 
+            width : 320px; 
+            height: auto !important;
+            transition: all 1s ease;
+            z-index:999;
+            display :none;
+        }
+
+        div#btn-hide {
+            position: absolute;
+            display: none;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            top: -15px;
+            border-radius: 100px;
+            border: solid 1px;
+            z-index: 9;
+        }
+
+        div#btn-hide img {
+            width : 100%;
+            position: relative;
+        }
+
+        div#btn-hide p {
+            display: block;
+            text-align: center;
+            line-height: 28px;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-radius: 100px;
+            margin : 0px;
+            padding : 0px;
+        }
+
+        @media (max-width: 320px) {
+            div#btn-hide {
+                right : 0px;
+            }
+        }
+
+				div#div-gpt-ad-fimela-bottomfrm, div#div-gpt-ad-otosia-bottomfrm, div#div-gpt-ad-bola-bottomfrm, div#div-gpt-ad-bolacom-bottomfrm {
+            margin-left: calc((100% - 320px) / 2);
+        }
+
+				.article-ad.article-ad_ad-hbf #div-gpt-ad-fimela-bottomfrm {
+            margin-left: unset !important;
+        }
+
+        .back-to-top {
+          display: none;
+        }
+
+        #mdk-body .channel-section {
+            z-index: 0;
+        }
+      `
+    var htmlWrapper = document.createElement("div");
+  	htmlWrapper.style.position = "unset";
+    htmlWrapper.innerHTML = `
+        <div id="btn-hide">
+            <p>5</p>
+        </div>
+        `
+    var myStyle = document.createElement("style");
+    myStyle.textContent = templateCss;
+    htmlWrapper.appendChild(myStyle);
+   
+    myparent.appendChild(htmlWrapper);
+
+    var mobilePullerWrapper = parent.document.querySelector(".mobile-puller-wrapper");
+    var mobilePullerBtnClose = parent.document.getElementById("btn-hide");
+    var mobilePullerMainImg = document.getElementById("mobile-puller-main-img");
+    var mobilePullerScrollStart = 300;
+    var mobilePullerScrollEnd = 500;/*1000;*/
+    var mobilePullerPosisitionStart = -250;
+    var mobilePullerCountdownStart = 7;
+    var mobilePullerCountdownShown = false;
+    var mobilePullerCloseStatus = false;
+    var mobilePullerIsLandscape = false;
+    var mobilePullercCanClose = false;
+    var mobilePullerShown = false;
+    var mobilePullercWidgetRamadhan = parent.document.querySelector(".spinner__container");
+    
+    var puller_mobilePullerDMPCat  = '[%dfp_dmp%]'.trim().split(/\s*,\s*/);
+  	var dfp_macro = '{"lineitemId":"%eaid!", "advertiserId":"%eadv!", "orderId":"%ebuy!", "creativeId":"%ecid!", "adunitId":"%epid!"}';
+    var dfp_MobilePullerLandingPage = "%%CLICK_URL_UNESC%%[%dfp_landing_page%]" ;
+
+    mobilePullerOrieantation();
+    if (parent.kmklabs && parent.kmklabs.site == 'fimela') {
+        // myparent.style.bottom = "unset";
+        var tweakPullerFimela = setInterval(function () {
+            normalize_env();
+            clearInterval(tweakPullerFimela);
+        }, 500)
+    } else {
+        normalize_env();
+    }
+
+    parent.window.addEventListener("scroll", scrollMobilePulller);
+    parent.window.addEventListener("scroll", scrollMobilePulllerCekFakta);
+    parent.window.addEventListener("orientationchange", mobilePullerOrieantation);
+    mobilePullerMainImg.addEventListener("click", mobilePullerLandingPage);
+    mobilePullerBtnClose.addEventListener("click", mobilePullerClose);
+    
+    function normalize_env() {
+
+        window.frameElement.style = " width : 320px; height: 250px;";
+        window.frameElement.parentElement.style = " width : 320px; height: 250px; margin : 0 auto;";
+        // mobilePullerWrapper.style = "bottom: -300px ;position: fixed;width : 320px;height: auto !important;transition: all 1s ease;";
+
+        
+        if (parent.kmklabs) {
+            parent.kmklabs.OverlayVideo = false;
+        }
+
+        if (parent.kly) {
+            parent.kly.OverlayVideo = false;
+            if( parent.kly.site == 'Merdeka' ){
+              var tpCont = parent.window.document.querySelector('#dfp-bframe-cont-transparent');
+                  tpCont.style.setProperty('background-color','unset','important');              
+                  tpCont.firstChild.nextSibling.style.setProperty('width','100%','important');
+                  //tpCont.firstChild.nextSibling.firstChild.style.setProperty('width','100%','important');
+                  tpCont.firstChild.nextSibling.lastChild.querySelector('#btn-hide').style.setProperty('right','10px','important');
+            } 
+        }
+    	 
+    	 var _gamLibararyIndex_ = 0;
+        var _gamLibarary_ = setInterval(function () {
+        	if (typeof parent.window.GAMLibrary == "object") {
+            		parent.window.GAMLibrary.setGamBFInterval(false);
+        	}
+        	_gamLibararyIndex_++;
+        	if (_gamLibararyIndex_ == 15) {
+        		clearInterval(_gamLibarary_);
+        	}
+        }, 100)
+
+        /*if (parent.document.querySelector("#dfp-bframe-cont-transparent")) {
+            parent.document.querySelector("#dfp-bframe-cont-transparent").style = 'display : none !important';
+        }*/
+    }
+
+    function mobilePullerGenerateDMPLP(){
+    if(typeof parent.window.createDMPTracker === 'function'){
+            parent.window.createDMPTracker(puller_mobilePullerDMPCat,dfp_MobilePullerLandingPage,dfp_macro);
+        }else{
+            parent.window.open(dfp_MobilePullerLandingPage, '_blank');
+        }  
+    }
+
+    function mobilePullerLandingPage() {
+        mobilePullerGenerateDMPLP();
+    }
+
+    function scrollMobilePulllerCekFakta() {
+        if (parent.document.querySelector(".cek-fakta__popup")) {
+            parent.document.querySelector(".cek-fakta__popup").style.top = "100vh";
+        }
+    }
+
+    function scrollMobilePulller() {
+        var scrollNode = parent.document.scrollingElement || parent.document.documentElement;
+        var scrollTop = scrollNode.scrollTop;
+        console.log(scrollTop)
+
+        if (scrollTop >= mobilePullerScrollEnd) {
+            parent.window.removeEventListener("scroll", scrollMobilePulller);
+            mobilePullerCountdownShown = true;
+            mobilePullerShown = true;
+            mobilePullerShowCountdown();
+        }
+    }
+
+    function mobilePullerShowCountdown() {
+        mobilePullerBtnClose.style.display = "block";
+        mobilePullerWrapper.style.display = "block";
+        
+        if (mobilePullerCountdownShown) {
+        	
+        	var btm = (parent.document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+              setTimeout(function () {
+               	mobilePullerWrapper.style.bottom = btm;
+              }, 300)
+            
+            var a = setInterval(function () {
+                if (mobilePullerCountdownStart > 0 && !mobilePullerCloseStatus && !mobilePullerIsLandscape  ) {
+                    hideOnesignal();
+                    if (mobilePullerCountdownStart == 1 ) {
+                        mobilePullercCanClose = true;
+                        var closeimg = '<img src="https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2019/08/20/close.png?9080">';
+                        mobilePullerBtnClose.innerHTML = closeimg;
+                        clearInterval(a);
+                        
+                    }else{
+                        mobilePullerCountdownStart--;
+                        mobilePullerBtnClose.querySelector("p").textContent = mobilePullerCountdownStart;
+                    }
+                }
+            }, 1000)
+        }
+    }
+
+    function mobilePullerClose() {
+        if (mobilePullercCanClose) {
+            mobilePullerWrapper.style.bottom = "-350px";
+            if (mobilePullercWidgetRamadhan) {
+                mobilePullercWidgetRamadhan.style.display = "block";
+            }
+
+            if (parent.document.querySelector(".cek-fakta__popup")) {
+                parent.document.querySelector(".cek-fakta__popup").style.top = "top: calc(-261px + 100vh);";
+                parent.window.removeEventListener("scroll", scrollMobilePulllerCekFakta);
+            }
+        }
+    }
+
+    function mobilePullerOrieantation() {
+        var isIos = parent.navigator.platform.match(/iPhone|iPod|iPad/);
+
+        var angel = (isIos) ? parent.window.orientation : parent.screen.orientation.angle;
+        if (angel == 0) {
+            mobilePullerWrapper.style.display = "block";
+            mobilePullerIsLandscape = false;
+            if (mobilePullerShown) {
+                var btm = (parent.document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+                mobilePullerWrapper.style.bottom = btm;
+            }
+        }else{
+            // mobilePullerWrapper.style.display = "none";
+            mobilePullerIsLandscape = true;
+            if (mobilePullerShown) {
+                mobilePullerWrapper.style.bottom = "-350px";
+            }
+        }
+    }
+
+    function hideOnesignal() {
+        setTimeout(function () {
+            var onesignal = parent.document.getElementById("onesignal-popover-container"),
+                onesignalMDK = parent.document.querySelector("#onesignal-bell-container");
+            if (onesignal) {
+                onesignal.style.display = 'none';
+            }
+            if(onesignalMDK){
+                onesignalMDK.style.setProperty('display','none','important');
+            }
+        }, 2000);
+    }
+  
+</script>
+
+[%dfp_third_party_tracker%]

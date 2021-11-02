@@ -282,6 +282,12 @@
                     timedBottomFrm      :   null,
                     infiniteSCId        :   1,
                     topFrameFixedSize   :   1,
+                    articleType         :   {
+                        "TextTypeArticle":{'scroll':200},
+                        "VideoGallery":{'scroll':200},
+                        "PhotoGallery":{'scroll':0},
+                        "default":{'scroll':200},
+                    },
                     setGamBFInterval: function(active = true) {
                         if (!active) {
                             clearInterval(window.GAMLibrary.gamBFInterval);
@@ -411,7 +417,8 @@
                         this.scroll = function() {
                             var scrollNode = document.scrollingElement || document.documentElement;
                             var scrollTop = scrollNode.scrollTop;
-                            if (scrollTop >= "200") {
+                            var pageType = kmklabs.gtm.type == '' ? 'default' : kmklabs.gtm.type;
+                            if (scrollTop >= this.articleType[pageType].scroll) {
                                 if (!this.timedBottomFrm) {
                                     console.log("generated!");
                                     this.timedBottomFrm = googletag.defineSlot(this.dfpBottomFrame, [[320, 50],[320, 100]], 'div-gpt-ad-fimela-bottomfrm').addService(googletag.pubads());
