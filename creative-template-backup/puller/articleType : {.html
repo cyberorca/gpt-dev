@@ -1,0 +1,10 @@
+articleType         :   {
+    "TextTypeArticle":{'scroll':200},
+    "VideoGallery":{'scroll':200},
+    "PhotoGallery":{'scroll':0},
+    "default":{'scroll':200},
+},
+
+
+var pageType = kly.gtm.type == '' ? 'default' : kly.gtm.type;
+if (scrollTop >= this.articleType[pageType].scroll) {

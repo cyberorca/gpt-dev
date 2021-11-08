@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="state"></div>
+    <script>
+        var ios = navigator.platform.match(/(iPad\ Simulator|iPhone\ Simulator|iPod\ Simulator|iPad|iPhone|iPod)/ig) !== null;
+        if(ios){
+            window.addEventListener("resize", iosMobilePullerOrieantation);
+        }else{
+            window.addEventListener("orientationchange", mobilePullerOrieantation);
+        }   
+        function mobilePullerOrieantation(){
+            var ios = ["iPad Simulator","iPhone Simulator","iPod Simulator","iPad","iPhone","iPod"].includes(navigator.platform)||navigator.userAgent.includes("Mac")&&"ontouchend"in document;
+            var orientationScreenAPI = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
+            var logContainer = document.querySelector(".state");
+            logContainer.innerHTML = "";
+
+            var isPortrait = 0;
+            var isPortraitListener = 0;
+
+            if (typeof orientationScreenAPI !== "undefined") {
+                console.log("orientationScreenAPI",orientationScreenAPI);
+            } else {
+                var orientation = document.documentElement.clientWidth < document.documentElement.clientHeight ? 1 : 0;
+                orientation = ios ? ((navigator.userAgent.match(/(criOS)/ig) !== null) ? orientation : !orientation) : ((navigator.userAgent.match(/(CPH1937)/ig) !== null) ? orientation : !orientation);
+                console.log("crIOS",orientation);
+            }
+
+
+
+            // Find matches
+            var mql = window.matchMedia("(orientation: portrait)");
+
+            // If there are matches, we're in portrait
+            if(mql.matches) {  
+                // Portrait orientation
+                isPortrait = 1;
+            } else {  
+                // Landscape orientation
+                isPortrait = 0;
+            }
+
+            // Add a media query change listener
+            mql.addListener(function(m) {
+                if(m.matches) {
+                    // Changed to portrait
+                    isPortraitListener = 1;
+                }
+                else {
+                    // Changed to landscape
+                    isPortraitListener = 0;
+                }
+            });
+
+            var pOrientationScreenAPI = document.createElement("p");
+            var pOrientation = document.createElement("p");
+            var pcCriOS = document.createElement("p");
+            var pCPH1937 = document.createElement("p");
+            var pDevice = document.createElement("p");
+            var pClientHeight = document.createElement("p");
+            var pIsPortrait = document.createElement("p");
+            var pIsPortraitListener = document.createElement("p");
+
+            pDevice.innerText = " DEVICE IS IOS ? : " +ios;
+            pOrientationScreenAPI.innerText = " ORIENTATION SCREEN API : " + orientationScreenAPI;
+
+            pcCriOS.innerText = " ORIENTATION CLIENT HEIGHT CriOS : " + navigator.userAgent.match(/(criOS)/ig);
+            pCPH1937.innerText = " ORIENTATION CLIENT HEIGHT CPH1937 : " + navigator.userAgent.match(/(CPH1937)/ig);
+            pClientHeight.innerText = " CLIENT HEIGHT ( document.documentElement.clientWidth < document.documentElement.clientHeight ): " + (document.documentElement.clientWidth < document.documentElement.clientHeight ? 1 : 0 );
+            pIsPortrait.innerText = "IS PROTRAIT MEDIA QUERY : " + isPortrait;
+            pIsPortraitListener.innerText = "IS PROTRAIT MEDIA QUERY LISTENER : " + isPortraitListener;
+
+            logContainer.appendChild(pDevice);
+            logContainer.appendChild(pOrientationScreenAPI);
+            logContainer.appendChild(pcCriOS);
+            logContainer.appendChild(pCPH1937);
+            logContainer.appendChild(pClientHeight);
+            logContainer.appendChild(pIsPortrait);
+            logContainer.appendChild(pIsPortraitListener);
+        }
+
+        function iosMobilePullerOrieantation(){
+            var pOrientation = document.createElement("p");
+            var logContainer = document.querySelector(".state");
+            var pcCriOS = document.createElement("p");
+            var pCPH1937 = document.createElement("p");
+            var pClientHeight = document.createElement("p");
+
+            logContainer.innerHTML = "";
+            pOrientation.innerText = " ORIENTATION INNER WIDTH x INNER HEIGHT : " + window.innerWidth + "x" + window.innerHeight ;
+            pcCriOS.innerText = " ORIENTATION CLIENT HEIGHT CriOS : " + navigator.userAgent.match(/(criOS)/ig);
+            pCPH1937.innerText = " ORIENTATION CLIENT HEIGHT CPH1937 : " + navigator.userAgent.match(/(CPH1937)/ig);
+            pClientHeight.innerText = " CLIENT HEIGHT ( document.documentElement.clientWidth < document.documentElement.clientHeight ): " + (document.documentElement.clientWidth < document.documentElement.clientHeight ? 1 : 0 );
+            
+            logContainer.appendChild(pOrientation);
+            logContainer.appendChild(pcCriOS);
+            logContainer.appendChild(pCPH1937);
+            logContainer.appendChild(pClientHeight);
+        }
+
+    </script>
+
+</body>
+</html>

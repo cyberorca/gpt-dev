@@ -1,0 +1,405 @@
+<div class="mobile-puller" >
+    <div class="section-collect">
+        <div id="mobile-puller-section">
+            <a target="_blank" class="mobile-puller-linkwrap">
+    		    <div class="mobile-puller-blocker"></div>
+                <iframe src="https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2021/11/01/puller-iframe/banner-bintang/index.html" width="320" height="250" frameborder="0"></iframe>
+          </a>        
+        </div>
+    </div>
+</div>
+
+<style>
+        .mobile-puller *,
+        .mobile-puller *:after,
+        .mobile-puller *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .mobile-puller-linkwrap { 
+            position:relative; 
+            display:inline-block; 
+        }
+
+        .mobile-puller-blocker { 
+            position:absolute; 
+            height:100%; 
+            width:100%; 
+            z-index:1;  
+        }
+
+        .mobile-puller-linkwrap iframe { 
+            max-width : unset;
+            max-height : unset;
+            z-index: 2;
+        }
+       
+       div#mobile-puller-section {
+            position: relative;
+            display: block;
+            width: 320px;
+            height : 250px;
+            margin: 0 auto;
+        }
+
+        #mdk-body .channel-section {
+            z-index: -99;
+        }
+
+        @media only screen and (orientation: landscape) {
+            .mobile-puller.active {
+                height: 100vh;
+            }
+        }
+
+
+    </style>
+
+
+<script>
+    var siteConfig = parent.kmklabs ? parent.kmklabs : parent.kly; 
+    var articleType =  {
+                        "TextTypeArticle":{'scroll':500},
+                        "VideoGallery":{'scroll':500},
+                        "PhotoGallery":{'scroll':0},
+                        "default":{'scroll':500},
+                    };   
+    var myparent = window.frameElement.parentElement.parentElement;
+    myparent.removeAttribute('style');
+
+    if(siteConfig.site === "Merdeka"){
+        parent.document.querySelector("#dfp-bframe-cont-transparent").removeAttribute("style");
+        myparent = parent.document.querySelector('#div-gpt-ad-merdeka-bottomfrm');
+    }
+
+    if(siteConfig.site === "fimela"){
+        myparent.style.setProperty('display','none'); /* TWEAK DISPLAY */
+        myparent.setAttribute('class','mobile-puller-wrapper');
+        setTimeout(()=>{myparent.style.setProperty('display','block');},100); /* TWEAK DISPLAY */
+    }else{
+        myparent.classList.add('mobile-puller-wrapper');
+    }
+    
+    
+
+    var templateCss = `
+        @media (max-width: 320px) {
+            div#btn-hide {
+                right: 0px;
+            }
+        }
+
+        div#div-gpt-ad-fimela-bottomfrm,
+        div#div-gpt-ad-otosia-bottomfrm,
+        div#div-gpt-ad-bola-bottomfrm,
+        div#div-gpt-ad-bolacom-bottomfrm,
+        div#div-gpt-ad-dream-bottomfrm,
+        div#div-gpt-ad-liputan6-bottomfrm, 
+        div#div-gpt-ad-kapanlagi-bottomfrm,
+        div#div-gpt-ad-merdeka-bottomfrm
+        {
+            position: fixed!important;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column-reverse;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .mobile-puller-wrapper {
+            bottom: -300px;
+            transition: bottom 1s ease-in-out;
+            z-index: 999;
+        }
+        
+        div#btn-hide {
+            position: absolute;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            top: -15px;
+            border-radius: 100px;
+            border: solid 1px;
+            z-index: 9;
+        }
+        
+        div#btn-hide img {
+            width: 100%;
+            position: relative;
+        }
+        
+        div#btn-hide p {
+            display: block;
+            text-align: center;
+            line-height: 28px;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-radius: 100px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .back-to-top {
+            display: none;
+        }
+        
+        #mdk-body .channel-section {
+            z-index: 0;
+        }
+    `;
+
+    var htmlWrapper = document.createElement("div");
+    var buttonHide = document.createElement("div");
+    var myStyle = document.createElement("style");
+    htmlWrapper.style.position = "unset";
+    buttonHide.id = "btn-hide";
+    buttonHide.innerHTML = `<p>7</p>`;
+    myStyle.textContent = templateCss;
+    htmlWrapper.appendChild(buttonHide);
+    htmlWrapper.appendChild(myStyle);
+   
+    myparent.appendChild(htmlWrapper);
+ 
+    var pageType = siteConfig.gtm.type == '' ? 'default' : siteConfig.gtm.type;
+    var mobilePullerWrapper = parent.document.querySelector(".mobile-puller-wrapper");
+    var mobilePullerBtnClose = parent.document.getElementById("btn-hide");
+    var mobilePullerClickLP = document.querySelector(".mobile-puller-linkwrap");
+    var mobilePullerScrollStart = 300;
+    var mobilePullerScrollEnd = articleType[pageType].scroll;
+    var mobilePullerPosisitionStart = -250;
+    var mobilePullerCountdownStart = 7;
+    var mobilePullerCountdownShown = false;
+    var mobilePullerCloseStatus = false;
+    var mobilePullercCanClose = false;
+    var mobilePullerShown = false;
+    var mobilePullercWidgetRamadhan = parent.document.querySelector(".spinner__container");
+    
+    var puller_mobilePullerDMPCat  = 'online-events'.trim().split(/\s*,\s*/);
+    var dfp_macro = '{"lineitemId":"0", "advertiserId":"0", "orderId":"0", "creativeId":"138370001001", "adunitId":"35505050"}';
+    var dfp_MobilePullerLandingPage = "https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjst7kFlsWP8NLTu9Ejf831e080zEXvxQ8w-0zCr1CAYs1J1vKkiIbrUlF_ycQd4fLbHUTSZWaMIRMhLOuRr0YsgXrLbpwVI5EB-FHcGOAz8H2VsGw3iXFTiNw6FivfDfr1XNwd4HnHKdLEqhh_oH8BIpaTxQO9rkTpBL_NNUts9SYNGD0-qAMvH5DaiA&sig=Cg0ArKJSzO9sO9OZE4_2EAE&fbs_aeid=[gw_fbsaeid]&urlfix=1&adurl=https://www.bintang.com/?utm_source=banner&utm_medium=MobilePuller&utm_campaign=InternalTesting" ;
+    var _ios = parent.navigator.platform.match(/(iPad\ Simulator|iPhone\ Simulator|iPod\ Simulator|iPad|iPhone|iPod)/ig) !== null;
+         
+    _boot();
+    
+    if(_ios){
+        parent.window.addEventListener("resize", mobilePullerOrieantation);
+    }else{
+        parent.window.addEventListener("orientationchange", mobilePullerOrieantation);
+    }
+
+    mobilePullerClickLP.addEventListener("click", mobilePullerLandingPage);
+
+    function _boot(){
+
+        /* NORMALIZE UI ON ALL KLY SITE */
+        normalize_env();
+
+        /* FLAGING STARTING STATE */
+        mobilePullerShown = true;
+
+        /* ONLY SHOW IN PORTRAIT MODE */
+        if(isPortrait()){
+            if(!mobilePullerScrollEnd){
+                console.log('mobilePullerScrollEnd : ', mobilePullerScrollEnd);
+                showPuller();
+            }else{
+                parent.window.addEventListener("scroll", scrollMobilePulller);
+                parent.window.addEventListener("scroll", scrollMobilePulllerCekFakta);
+            }
+        }
+    }
+    
+    function normalize_env() {
+
+        window.frameElement.style = " width : 320px; height: 250px;";
+        window.frameElement.parentElement.style = " width : 320px; height: 250px; margin : 0 auto;";
+        
+        if (parent.kmklabs) {
+            parent.kmklabs.OverlayVideo = false;
+            if(siteConfig.site == "bola.com"){
+                parent.document.querySelector(".layout__nav-content").style.setProperty('position','unset','important');
+                parent.document.querySelector(".layout__content").style.setProperty('padding-top','unset','important');
+                parent.document.querySelector(".nav-main").style.setProperty('z-index','unset','important');
+                parent.document.querySelector(".nav-main__middle").style.setProperty('z-index','2','important');
+                parent.document.querySelector(".menu-panel__close").addEventListener('click',()=>{ parent.document.querySelector(".layout__nav-content").style.setProperty('position','unset','important');})
+            }
+            if(siteConfig.site == "fimela"){
+                if(mobilePullerWrapper.style.bottom > -1){
+                    parent.document.querySelector(".menu-panel__close-icon.menu-panel__close-icon__fimela.i-menu-close-fimela").addEventListener('click',(e)=>{
+                        showPuller();
+                    });
+                    parent.document.querySelector(".nav-main__left.nav-main__left__fimela.js-nav-left.i-nav-menu-fimela").addEventListener('click',(e)=>{
+                        mobilePullerClose();
+                    });
+                }                
+            }
+        }
+
+        if (parent.kly) {
+            parent.kly.OverlayVideo = false;
+        }
+    	 
+    	var _gamLibararyIndex_ = 0;
+        var _gamLibarary_ = setInterval(function () {
+        	if (typeof parent.window.GAMLibrary == "object") {
+            		parent.window.GAMLibrary.setGamBFInterval(false);
+        	}
+        	_gamLibararyIndex_++;
+        	if (_gamLibararyIndex_ == 15) {
+        		clearInterval(_gamLibarary_);
+        	}
+        }, 100)
+    }
+
+    function mobilePullerGenerateDMPLP(){
+        if(typeof parent.window.createDMPTracker === 'function'){
+            parent.window.createDMPTracker(puller_mobilePullerDMPCat,dfp_MobilePullerLandingPage,dfp_macro);
+        }else{
+            parent.window.open(dfp_MobilePullerLandingPage, '_blank');
+        }  
+    }
+
+    function mobilePullerLandingPage() {
+        mobilePullerGenerateDMPLP();
+    }
+
+    function scrollMobilePulllerCekFakta() {
+        if (parent.document.querySelector(".cek-fakta__popup")) {
+            parent.document.querySelector(".cek-fakta__popup").style.top = "100vh";
+        }
+    }
+
+    function scrollMobilePulller() {
+        var scrollNode = parent.document.scrollingElement || parent.document.documentElement;
+        var scrollTop = scrollNode.scrollTop;
+
+        if ( scrollTop >= mobilePullerScrollEnd ) {
+            parent.window.removeEventListener("scroll", scrollMobilePulller);
+            showPuller();
+        }
+    }
+
+    function showPuller(){
+        mobilePullerCountdownShown = true;
+        mobilePullerShown = true;
+        mobilePullerShowCountdown();
+    }
+
+    function mobilePullerShowCountdown() {
+        mobilePullerBtnClose.style.display = "block";
+        
+        if (mobilePullerCountdownShown) {
+        	var btm = (parent.document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+            setTimeout(function () {
+                mobilePullerWrapper.style.bottom = btm;
+            }, 300);
+
+            /*AFTER EASEIN 1s*/
+            setTimeout(function () {
+                countDownInterval()
+            }, 1000);
+        }
+    }
+
+    function isPortrait() {
+        var _orientationScreenAPI = (parent.screen.orientation || {}).type || parent.screen.mozOrientation || parent.screen.msOrientation;
+        var state = 0;
+        if (typeof _orientationScreenAPI !== "undefined") {
+            if (_orientationScreenAPI.match(/portrait/ig)) {
+                state = 1;
+            } else if (_orientationScreenAPI.match(/landscape/ig)) {
+                state = 0;
+            }
+            
+        } else {
+            if( parent.navigator.userAgent.match(/(criOS)/ig) !== null ){
+                state = parent.document.documentElement.clientWidth < parent.document.documentElement.clientHeight ? 1 : 0;
+            }else{
+                state = parent.window.innerWidth < parent.window.innerHeight ? 1 : 0;
+            }
+        }
+
+        return state;
+    }
+
+    function countDownInterval(){
+        var countdownPuller = setInterval(function () {
+            if (mobilePullerCountdownStart > 0 && !mobilePullerCloseStatus && isPortrait()  ) {
+                hideOnesignal();
+                if (mobilePullerCountdownStart == 1 ) {
+                    mobilePullercCanClose = true;
+                    var closeimg = '<img src="https://cdns.klimg.com/d.kapanlaginetwork.com/banner/preview/2019/08/20/close.png?9080">';
+                    mobilePullerBtnClose.innerHTML = closeimg;
+                    clearInterval(countdownPuller);
+                    mobilePullerBtnClose.addEventListener("click", mobilePullerDissmised);
+                }else{
+                    mobilePullerCountdownStart--;
+                    mobilePullerBtnClose.querySelector("p").textContent = mobilePullerCountdownStart;
+                }
+            }
+        }, 1000);
+    }
+
+    function mobilePullerClose() {
+        if (mobilePullercCanClose) {
+            mobilePullerWrapper.style.bottom = "-350px";
+            if (mobilePullercWidgetRamadhan) {
+                mobilePullercWidgetRamadhan.style.display = "block";
+            }
+
+            if (parent.document.querySelector(".cek-fakta__popup")) {
+                parent.document.querySelector(".cek-fakta__popup").style.top = "top: calc(-261px + 100vh);";
+                parent.window.removeEventListener("scroll", scrollMobilePulllerCekFakta);
+            }
+        }
+    }
+    /*REMOVE ALL JUNK EVENT AND COMPLETELY HIDE COMPONENT */
+    function mobilePullerDissmised(){
+        /* bottom 1s ease-in-out */
+        mobilePullerClose();
+        setTimeout(()=>{
+            mobilePullerWrapper.style.setProperty('display','none','important');
+            parent.window.removeEventListener("orientationchange", mobilePullerOrieantation);
+            parent.window.removeEventListener("scroll", scrollMobilePulller);
+            parent.window.removeEventListener("scroll", scrollMobilePulllerCekFakta);
+            mobilePullerClickLP.removeEventListener("click", mobilePullerLandingPage);
+            mobilePullerBtnClose.removeEventListener("click", mobilePullerDissmised);
+        },1000);
+    }
+
+    function mobilePullerOrieantation() {
+        if (isPortrait()) {
+            if (mobilePullerShown) {
+                var btm = (parent.document.querySelector(".layout__fixed-submenu")) ? "56px" : "0px";
+                mobilePullerWrapper.style.bottom = btm;
+                countDownInterval();
+            }
+        }else{
+            if (mobilePullerShown) {
+                mobilePullerWrapper.style.bottom = "-350px";
+            }
+        }
+    }
+
+    function hideOnesignal() {
+        setTimeout(function () {
+            var onesignal = parent.document.getElementById("onesignal-popover-container"),
+                onesignalMDK = parent.document.querySelector("#onesignal-bell-container");
+            if (onesignal) {
+                onesignal.style.display = 'none';
+            }
+            if(onesignalMDK){
+                onesignalMDK.style.setProperty('display','none','important');
+            }
+        }, 2000);
+    }
+/*%%CLICK_URL_UNESC%%*/
+</script>
