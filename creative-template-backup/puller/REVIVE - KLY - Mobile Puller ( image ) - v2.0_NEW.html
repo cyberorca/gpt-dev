@@ -138,14 +138,21 @@
     htmlWrapper.appendChild(myStyle);
 
     _pullerParent.appendChild(htmlWrapper);
-
+    var siteConfig = parent.kmklabs ? parent.kmklabs : parent.kly; 
+    var articleType =  {
+                        "TextTypeArticle":{'scroll':500},
+                        "VideoGallery":{'scroll':500},
+                        "PhotoGallery":{'scroll':0},
+                        "default":{'scroll':500},
+                    };    
+    var pageType = siteConfig.gtm.type == '' ? 'default' : siteConfig.gtm.type;
     var mobilePullerWrapper = parent.document.querySelector(".mobile-puller-wrapper");
     var mobilePullerBtnClose = parent.document.getElementById("btn-hide");
     var mobilePullerMainImg = document.getElementById("mobile-puller-main-img");
     var mobilePullerScrollStart = 300;
-    var mobilePullerScrollEnd = 1000;
+    var mobilePullerScrollEnd = articleType[pageType].scroll;
     var mobilePullerPosisitionStart = -250;
-    var mobilePullerCountdownStart = 5;
+    var mobilePullerCountdownStart = 7;
     var mobilePullerCountdownShown = false;
     var mobilePullerCloseStatus = false;
     var mobilePullerIsLandscape = false;
@@ -159,7 +166,7 @@
 
     mobilePullerOrieantation();
     if (_klyAd.site == 'fimela') {
-        _pullerParent.style.bottom = "unset";
+        //_pullerParent.style.bottom = "unset";
         var tweakPullerFimela = setInterval(function() {
             normalize_env();
             clearInterval(tweakPullerFimela);
@@ -168,9 +175,14 @@
         normalize_env();
     }
 
-    window.addEventListener("scroll", scrollMobilePulller);
-    window.addEventListener("scroll", scrollMobilePulllerCekFakta);
-    window.addEventListener("orientationchange", mobilePullerOrieantation);
+    if(!mobilePullerScrollEnd){
+        showPuller()
+    }else{
+        parent.window.addEventListener("scroll", scrollMobilePulller);
+        parent.window.addEventListener("scroll", scrollMobilePulllerCekFakta);
+    }
+    
+    parent.window.addEventListener("orientationchange", mobilePullerOrieantation);
     mobilePullerMainImg.addEventListener("click", mobilePullerLandingPage);
     mobilePullerBtnClose.addEventListener("click", mobilePullerClose);
 

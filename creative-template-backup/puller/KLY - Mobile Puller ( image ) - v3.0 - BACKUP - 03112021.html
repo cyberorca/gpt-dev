@@ -49,69 +49,81 @@
     myparent.classList.add('mobile-puller-wrapper');
 
     var templateCss = `
-    
-    .mobile-puller-wrapper {
-        bottom: -300px;
-        position: fixed;
-        width: 320px;
-        height: auto !important;
-        transition: all 1s ease;
-        z-index: 999;
-    }
-    
-    div#btn-hide {
-        position: absolute;
-        right: 0px;
-        width: 30px;
-        height: 30px;
-        background: #fff;
-        top: -15px;
-        border-radius: 100px;
-        border: solid 1px;
-        z-index: 9;
-    }
-    
-    div#btn-hide img {
-        width: 100%;
-        position: relative;
-    }
-    
-    div#btn-hide p {
-        display: block;
-        text-align: center;
-        line-height: 28px;
-        font-family: sans-serif;
-        font-weight: bold;
-        border-radius: 100px;
-        margin: 0px;
-        padding: 0px;
-    }
-    
-    @media (max-width: 320px) {
-        div#btn-hide {
-            right: 0px;
+      div#div-gpt-ad-dream-bottomfrm {
+         left: 50%;
+          transform: translateX(-50%);
+      }
+				div#div-gpt-ad-liputan6-bottomfrm.mobile-puller-wrapper {
+    				left: 50%;
+    				transform: translateX(-50%);
+				}
+
+                div#div-gpt-ad-kapanlagi-bottomfrm {
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+        .mobile-puller-wrapper{
+            bottom: -300px ; 
+            position: fixed; 
+            width : 320px; 
+            height: auto !important;
+            transition: all 1s ease;
+            z-index:999;
+            display :none;
         }
-    }
-    
-    div#div-gpt-ad-fimela-bottomfrm,
-    div#div-gpt-ad-otosia-bottomfrm,
-    div#div-gpt-ad-bola-bottomfrm,
-    div#div-gpt-ad-bolacom-bottomfrm,
-    div#div-gpt-ad-dream-bottomfrm,
-    div#div-gpt-ad-liputan6-bottomfrm, 
-    div#div-gpt-ad-kapanlagi-bottomfrm
-    {
-        margin-left: calc((100% - 320px) / 2) !important;
-    }
-    
-    .back-to-top {
-        display: none;
-    }
-    
-    #mdk-body .channel-section {
-        z-index: 0;
-    }
-    `
+
+        div#btn-hide {
+            position: absolute;
+            display: none;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            top: -15px;
+            border-radius: 100px;
+            border: solid 1px;
+            z-index: 9;
+        }
+
+        div#btn-hide img {
+            width : 100%;
+            position: relative;
+        }
+
+        div#btn-hide p {
+            display: block;
+            text-align: center;
+            line-height: 28px;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-radius: 100px;
+            margin : 0px;
+            padding : 0px;
+        }
+
+        @media (max-width: 320px) {
+            div#btn-hide {
+                right : 0px;
+            }
+        }
+
+				div#div-gpt-ad-fimela-bottomfrm, div#div-gpt-ad-otosia-bottomfrm, div#div-gpt-ad-bola-bottomfrm, div#div-gpt-ad-bolacom-bottomfrm {
+            margin-left: calc((100% - 320px) / 2) !important;
+        }
+
+				.article-ad.article-ad_ad-hbf #div-gpt-ad-fimela-bottomfrm {
+            margin-left: unset !important;
+        }
+
+        .back-to-top {
+          display: none;
+        }
+
+        #mdk-body .channel-section {
+            z-index: 0;
+        }
+      `
     var htmlWrapper = document.createElement("div");
   	htmlWrapper.style.position = "unset";
     htmlWrapper.innerHTML = `
