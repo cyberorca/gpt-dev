@@ -772,8 +772,11 @@ window.GAMLibrary = {
         }
 
         this.prebidNewAdunit = newPrebidAdunit;
-        console.log("PARAMS : ", gamParams);
-        console.log("FILTERED PREBID ADUNIT ( DISPLAY & VIDEO ): ", this.prebidNewAdunit);
+
+        this.consoleLog({
+            'text': "PARAMS & FILTERED PREBID ADUNIT ( DISPLAY & VIDEO ): ",
+            'variable': [gamParams, this.prebidNewAdunit]
+        });
 
     },
     get prebidAdUnit() {
@@ -789,7 +792,6 @@ window.GAMLibrary = {
                 pbjs.setTargetingForGPTAsync(displayAdUnitCodes);
                 googletag.pubads().refresh(this.prebidAdUnit.display.definedSlot);
             }.bind(this));
-
         }.bind(this));
     },
     prebidInstantiate: function(params) {
@@ -815,8 +817,6 @@ window.GAMLibrary = {
          *  }
          */
         this.prebidAdunit = params;
-
-        console.log("PREBID ADUNIT : ", params, this.prebidAdUnit);
 
         pbjs.bidderSettings = {
             taboola: {
@@ -955,45 +955,53 @@ window.GAMLibrary = {
         return this.scDefinedAdunit;
     },
     scInPaging: function() {
-        const PLACEHOLDER_ELEMENT = document.querySelectorAll("#div-gpt-ad-sc-paging-placeholder");
-        const OPTIONS = {
-            rootMargin: "0px 0px 500px 0px"
-        }
-        if (PLACEHOLDER_ELEMENT) {
-            PLACEHOLDER_ELEMENT.forEach((placeholder, index) => {
-                let containerID = "div-gpt-ad-bola-sc-" + (index + 1);
-                let containerSCArticle = document.createElement('div');
-                containerSCArticle.setAttribute("id", containerID);
-                containerSCArticle.setAttribute('class', 'article-ad');
-                placeholder.insertAdjacentElement("beforeEnd", containerSCArticle);
-            })
-        }
+        var countFinder = 0;
+        var findPlaceholder = setInterval(function() {
+            var placeholderElement = document.querySelectorAll("#div-gpt-ad-sc-paging-placeholder");
 
-        const OBSERVER = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                const intersecting = entry.isIntersecting;
-                if (entry.isIntersecting) {
-                    if (this.definedSc = googletag.defineSlot('/36504930/KLY/MOBILE/BOLA.NET/SHOWCASE', [
-                            [300, 250],
-                            [250, 250],
-                            [200, 200]
-                        ], entry.target.id)) {
-                        this.definedSc.addService(googletag.pubads());
-                        /** Init prebid  */
-                        this.prebidInstantiate({
-                            containerName: [entry.target.id],
-                            definedSlot: [this.definedSc],
-                        });
-                    }
+            if (placeholderElement) {
+                const OPTIONS = {
+                    rootMargin: '50px 0px 55%'
+                };
+                placeholderElement.forEach((placeholder, index) => {
+                    let containerID = "div-gpt-ad-bola-sc-" + (index + 1);
+                    let containerSCArticle = document.createElement('div');
+                    containerSCArticle.setAttribute("id", containerID);
+                    containerSCArticle.setAttribute('class', 'article-ad');
+                    placeholder.insertAdjacentElement("beforeEnd", containerSCArticle);
+                })
+                const OBSERVER = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        const intersecting = entry.isIntersecting;
+                        if (entry.isIntersecting) {
+                            if (this.definedSc = googletag.defineSlot('/36504930/KLY/MOBILE/BOLA.NET/SHOWCASE', [
+                                    [300, 250],
+                                    [250, 250],
+                                    [200, 200]
+                                ], entry.target.id)) {
+                                this.definedSc.addService(googletag.pubads());
+                                /** Init prebid  */
+                                this.prebidInstantiate({
+                                    containerName: [entry.target.id],
+                                    definedSlot: [this.definedSc],
+                                });
+                            }
 
-                    OBSERVER.unobserve(entry.target)
-                }
-            })
-        }, OPTIONS)
-        document.querySelectorAll("div[id^='div-gpt-ad-bola-sc-']").forEach(function(el, idx) {
-            OBSERVER.observe(el);
-        })
+                            OBSERVER.unobserve(entry.target)
+                        }
+                    })
+                }, OPTIONS)
+                document.querySelectorAll("div[id^='div-gpt-ad-bola-sc-']").forEach(function(el, idx) {
+                    OBSERVER.observe(el);
+                });
 
+                clearInterval(findPlaceholder);
+            }
+            if (countFinder > 10) {
+                clearInterval(findPlaceholder);
+            }
+            countFinder++;
+        }.bind(this), 300);
     },
     /** ============ SHOWCASE ============ */
 
@@ -1322,202 +1330,202 @@ window.GAMLibrary = {
         this.tfParentWrapper.appendChild(parElement)
         var bodyClientHeight = document.querySelector("body").clientHeight;
         this.tfStickyCustomStyleElement.textContent = `
-   body {
-       height: ${(bodyClientHeight * 20)}px;
-       scroll-behavior: smooth;
-       width: 100vw
-   }
-   
-   .topframe_is_sticky::before {
-       content: "";
-       position: relative;
-       height: 110.41666666666667vw !important;
-       display: block;
-   }
-   
-   .topframe_is_sticky {
-       position: fixed;
-       top: 0px;
-       left: 0px;
-       transition: all 1s ease;
-       width: 100vw;
-   }
-   
-   .layout__ads {
-       transition: all 1s ease;
-   }
-   
-   .topframe-sticky-counter {
-       display: none;
-   }
-   
-   .layout__ads.sticky {
-       position: fixed;
-       z-index: 99;
-       height: calc(100vw *(267 / 414) + 25px);
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::after,
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
-       position: absolute;
-       height: 25px;
-       width: 100vw;
-       left: 0;
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::after {
-       content: "";
-       top: calc(100vw *(267 / 414));
-       background: #0072FF;
-       z-index: 100;
-       animation: progress-bar 7s forwards linear;
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
-       content: "";
-       top: calc(100vw *(267 / 414));
-       background: #212121;
-       z-index: 99;
-   }
-   
-   .sticky .topframe-sticky-counter {
-       display: block;
-       top: calc((100vw *(267 / 414)) + 8px);
-       color: #fff;
-       line-height: 14px;
-       z-index: 101;
-       -webkit-animation: webkit-progress-count 7s forwards linear;
-       animation: progress-count 7s forwards linear;
-       width: 100%;
-       margin: 0px;
-       position: absolute;
-       text-align: center;
-       font-family: sans-serif;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper,
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
-       transition: all .3s ease;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky {
-       height: calc(100vw *(267 / 414)) !important;
-       position: fixed !important;
-       top: 0px;
-       z-index: 9;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
-       transform: scale(.55);
-       top: calc((-110.41666666666667vw * .42) / 2) !important;
-   }
-   
-   @keyframes progress-bar {
-       from {
-           width: 0px;
-       }
-       to {
-           width: 100vw;
-       }
-   }body {
-       height: ' + (bodyClientHeight * 20) + 'px;
-       scroll-behavior: smooth;
-       width: 100vw
-   }
-   
-   .topframe_is_sticky::before {
-       content: "";
-       position: relative;
-       height: 110.41666666666667vw !important;
-       display: block;
-   }
-   
-   .topframe_is_sticky {
-       position: fixed;
-       top: 0px;
-       left: 0px;
-       transition: all 1s ease;
-       width: 100vw;
-   }
-   
-   .layout__ads {
-       transition: all 1s ease;
-   }
-   
-   .topframe-sticky-counter {
-       display: none;
-   }
-   
-   .layout__ads.sticky {
-       position: fixed;
-       z-index: 99;
-       height: calc(100vw *(267 / 414) + 25px);
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::after,
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
-       position: absolute;
-       height: 25px;
-       width: 100vw;
-       left: 0;
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::after {
-       content: "";
-       top: calc(100vw *(267 / 414));
-       background: #0072FF;
-       z-index: 100;
-       animation: progress-bar 7s forwards linear;
-   }
-   
-   #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
-       content: "";
-       top: calc(100vw *(267 / 414));
-       background: #212121;
-       z-index: 99;
-   }
-   
-   .sticky .topframe-sticky-counter {
-       display: block;
-       top: calc((100vw *(267 / 414)) + 8px);
-       color: #fff;
-       line-height: 14px;
-       z-index: 101;
-       -webkit-animation: webkit-progress-count 7s forwards linear;
-       animation: progress-count 7s forwards linear;
-       width: 100%;
-       margin: 0px;
-       position: absolute;
-       text-align: center;
-       font-family: sans-serif;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper,
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
-       transition: all .3s ease;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky {
-       height: calc(100vw *(267 / 414)) !important;
-       position: fixed !important;
-       top: 0px;
-       z-index: 9;
-   }
-   
-   div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
-       transform: scale(.55);
-       top: calc((-110.41666666666667vw * .42) / 2) !important;
-   }
-   
-   @keyframes progress-bar {
-       from {
-           width: 0px;
-       }
-       to {
-           width: 100vw;
-       }
-   }
-   `;
+ body {
+ height: ${(bodyClientHeight * 20)}px;
+ scroll-behavior: smooth;
+ width: 100vw
+ }
+ 
+ .topframe_is_sticky::before {
+ content: "";
+ position: relative;
+ height: 110.41666666666667vw !important;
+ display: block;
+ }
+ 
+ .topframe_is_sticky {
+ position: fixed;
+ top: 0px;
+ left: 0px;
+ transition: all 1s ease;
+ width: 100vw;
+ }
+ 
+ .layout__ads {
+ transition: all 1s ease;
+ }
+ 
+ .topframe-sticky-counter {
+ display: none;
+ }
+ 
+ .layout__ads.sticky {
+ position: fixed;
+ z-index: 99;
+ height: calc(100vw *(267 / 414) + 25px);
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::after,
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
+ position: absolute;
+ height: 25px;
+ width: 100vw;
+ left: 0;
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::after {
+ content: "";
+ top: calc(100vw *(267 / 414));
+ background: #0072FF;
+ z-index: 100;
+ animation: progress-bar 7s forwards linear;
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
+ content: "";
+ top: calc(100vw *(267 / 414));
+ background: #212121;
+ z-index: 99;
+ }
+ 
+ .sticky .topframe-sticky-counter {
+ display: block;
+ top: calc((100vw *(267 / 414)) + 8px);
+ color: #fff;
+ line-height: 14px;
+ z-index: 101;
+ -webkit-animation: webkit-progress-count 7s forwards linear;
+ animation: progress-count 7s forwards linear;
+ width: 100%;
+ margin: 0px;
+ position: absolute;
+ text-align: center;
+ font-family: sans-serif;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper,
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
+ transition: all .3s ease;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky {
+ height: calc(100vw *(267 / 414)) !important;
+ position: fixed !important;
+ top: 0px;
+ z-index: 9;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
+ transform: scale(.55);
+ top: calc((-110.41666666666667vw * .42) / 2) !important;
+ }
+ 
+ @keyframes progress-bar {
+ from {
+   width: 0px;
+ }
+ to {
+   width: 100vw;
+ }
+ }body {
+ height: ' + (bodyClientHeight * 20) + 'px;
+ scroll-behavior: smooth;
+ width: 100vw
+ }
+ 
+ .topframe_is_sticky::before {
+ content: "";
+ position: relative;
+ height: 110.41666666666667vw !important;
+ display: block;
+ }
+ 
+ .topframe_is_sticky {
+ position: fixed;
+ top: 0px;
+ left: 0px;
+ transition: all 1s ease;
+ width: 100vw;
+ }
+ 
+ .layout__ads {
+ transition: all 1s ease;
+ }
+ 
+ .topframe-sticky-counter {
+ display: none;
+ }
+ 
+ .layout__ads.sticky {
+ position: fixed;
+ z-index: 99;
+ height: calc(100vw *(267 / 414) + 25px);
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::after,
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
+ position: absolute;
+ height: 25px;
+ width: 100vw;
+ left: 0;
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::after {
+ content: "";
+ top: calc(100vw *(267 / 414));
+ background: #0072FF;
+ z-index: 100;
+ animation: progress-bar 7s forwards linear;
+ }
+ 
+ #div-gpt-ad-topfrm-parallax-wrapper.sticky::before {
+ content: "";
+ top: calc(100vw *(267 / 414));
+ background: #212121;
+ z-index: 99;
+ }
+ 
+ .sticky .topframe-sticky-counter {
+ display: block;
+ top: calc((100vw *(267 / 414)) + 8px);
+ color: #fff;
+ line-height: 14px;
+ z-index: 101;
+ -webkit-animation: webkit-progress-count 7s forwards linear;
+ animation: progress-count 7s forwards linear;
+ width: 100%;
+ margin: 0px;
+ position: absolute;
+ text-align: center;
+ font-family: sans-serif;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper,
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
+ transition: all .3s ease;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky {
+ height: calc(100vw *(267 / 414)) !important;
+ position: fixed !important;
+ top: 0px;
+ z-index: 9;
+ }
+ 
+ div#div-gpt-ad-topfrm-parallax-wrapper.sticky #div-gpt-ad-bola-topfrm-oop iframe {
+ transform: scale(.55);
+ top: calc((-110.41666666666667vw * .42) / 2) !important;
+ }
+ 
+ @keyframes progress-bar {
+ from {
+   width: 0px;
+ }
+ to {
+   width: 100vw;
+ }
+ }
+ `;
         this.tfParentBodyTarget.appendChild(this.tfStickyCustomStyleElement);
     },
     tfStickyTweak: function() {
@@ -1687,6 +1695,35 @@ window.GAMLibrary = {
         setTimeout(timeoutFunction, 10);
     },
     /** ============ GPT EVENT LISTENER ============ */
+    /** ============ TOOLS ============ */
+    /** 
+     * `showConsole` Logger for debuging
+     * cookie key : gamlibLogger
+     * cookie value : `true` ( display all gamlib console log ), `false` ( turn off all gamlib console log )
+     * */
+    pageLogger: {},
+    set consoleToggle(stat) {
+        document.cookie = `gamlibLogger=${stat}`;
+    },
+    /* Set console format msg : { text: Text, variable: Array } */
+    set showConsole(msg) {
+        this.pageLogger = msg;
+    },
+    /* Get console */
+    get showConsole() {
+        var getLog = document.cookie.split("gamlibLogger")[1] ? document.cookie.split("gamlibLogger")[1] : ';';
+        var loggerCookies = getLog.split(';')[0].match(/(true)/ig) !== null ? true : false;
+        if (loggerCookies) {
+            console.log(this.pageLogger.text, this.pageLogger.variable);
+        }
+    },
+    consoleLog: function(msg) {
+        /* CONSOLE BLOCK */
+        this.showConsole = msg;
+        this.showConsole;
+        /* CONSOLE BLOCK */
+    },
+    /** ============ TOOLS ============ */
     setGamBFInterval: function() {
         return;
     },
