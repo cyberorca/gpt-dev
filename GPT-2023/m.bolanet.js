@@ -975,6 +975,7 @@ window.GAMLibrary = {
                         const intersecting = entry.isIntersecting;
                         if (entry.isIntersecting) {
                             if (this.definedSc = googletag.defineSlot('/36504930/KLY/MOBILE/BOLA.NET/SHOWCASE', [
+                                    [300, 600],
                                     [300, 250],
                                     [250, 250],
                                     [200, 200]
@@ -1003,6 +1004,21 @@ window.GAMLibrary = {
             countFinder++;
         }.bind(this), 300);
     },
+    scFlyingCarpetEffect: function(event) {
+        var _domId_ = event.slot.getSlotId().getDomId();
+
+        var _domTarget_ = document.getElementById(_domId_)
+        var _is300x600_ = JSON.stringify(event.size) == '[300,600]'
+        if (_is300x600_ && _domId_.includes("sc")) {
+            _domTarget_.classList.add("flying-carpet")
+            _domTarget_.querySelector("div").classList.add("ad-content")
+        }
+    },
+    scFlyingCarpetStyle: function() {
+        var _style_ = document.createElement("style");
+        _style_.textContent = `.advertisement-placeholder div[id*="bola-sc"].flying-carpet{ position: relative; clear: both; overflow: hidden; clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%) !important; min-height: 270px; width: 100%; display: flex; justify-content: center; } .advertisement-placeholder div[id*="bola-sc"].flying-carpet .ad-content { top: 50%; transform: translateY(-50%); position: fixed; z-index: 2; } div#div-gpt-ad-sc-placeholder { min-width: 320px; }`;
+        document.querySelector("body").appendChild(_style_)
+    },
     /** ============ SHOWCASE ============ */
 
     /** ============ EXPOSER ============ */
@@ -1026,130 +1042,146 @@ window.GAMLibrary = {
     },
     /** ============ EXPOSER ============ */
 
-    /** ============ HEADLINE ============ */
-    hlDefinedAdunit: null,
-    hlIsSticky: false,
-    hlStickyIsPaused: false,
-    hlStickyCounterStatus: false,
-    hlStickyInterval: 7,
-    hlInitiate: function() {
-        let isTFShrinking = null;
-        let catchHLContainer = 0;
-        let hlStickyStyle = document.createElement("style");
+             /** ============ HEADLINE ============ */
+            hlDefinedAdunit: null,
+            hlIsSticky: false,
+            hlStickyIsPaused: false,
+            hlStickyCounterStatus: false,
+            hlStickyInterval: 7,
+            get hlDecreamentStickyInterval() {
+                this.hlStickyInterval--;
+            },
+            set hlSetStickyInterval(intr) {
+                this.hlStickyInterval = intr;
+            },
+            get hlGetStickyInterval() {
+                return this.hlStickyInterval;
+            },
+            hlInitiate: function() {
+                let isTFShrinking = null;
+                let catchHLContainer = 0;
+                let hlStickyStyle = document.createElement("style");
 
-        /** Set Sticky Headline Style */
-        hlStickyStyle.textContent = "\n\t\t.hl-active-sticky {\n\t\t\tposition: fixed;\n\t\t\ttop: -100%;\n\t\t\tz-index: 9999;\n\t\t\tleft: 50%;\n\t\t\ttransform: translateX(-50%);\n\t\t\tmargin: 0;\n\t\t\ttransition : margin-top .5s ease;\n\t\t\tanimation: hlSlideDown .5s forwards;\n\t\t}\n\n\t\t.hl-navbar-hanging{\n\t\t\tmargin-top : 5px !important;\n\t\t}\n\n\t\t@keyframes hlSlideDown{\n\t\t\t0%{top : -100px;}\n\t\t\t100%{top : 0px;}\n\t\t}\n\t\t.headline_ad__box {display: flex;justify-content: center;align-items: center;}\n\t\t#div-gpt-ad-bola-hl iframe {max-width: 100vw;}";
-        document.head.appendChild(hlStickyStyle)
+                /** Set Sticky Headline Style */
+                hlStickyStyle.textContent = "\n\t\t.hl-active-sticky {\n\t\t\tposition: fixed;\n\t\t\ttop: -100%;\n\t\t\tz-index: 9999;\n\t\t\tleft: 50%;\n\t\t\ttransform: translateX(-50%);\n\t\t\tmargin: 0;\n\t\t\ttransition : margin-top .5s ease;\n\t\t\tanimation: hlSlideDown .5s forwards;\n\t\t}\n\n\t\t.hl-navbar-hanging{\n\t\t\tmargin-top : 5px !important;\n\t\t}\n\n\t\t@keyframes hlSlideDown{\n\t\t\t0%{top : -100px;}\n\t\t\t100%{top : 0px;}\n\t\t}\n\t\t.headline_ad__box {display: flex;justify-content: center;align-items: center;}\n\t\t#div-gpt-ad-bola-hl iframe {max-width: 100vw;}";
+                document.head.appendChild(hlStickyStyle)
 
-        /** Check If Headline container already exists */
-        let hlContainerCheck = setInterval(function() {
-            catchHLContainer += 1;
-            if (document.getElementById("div-gpt-ad-bola-hl") !== null) {
-                isTFShrinking = setInterval(function() {
-                    /** inject headline after receive after sticky end  */
-                    if (this.tfStickyIsEnd) {
-                        this.hlInjectElement();
-                        clearInterval(isTFShrinking);
+                /** Check If Headline container already exists */
+                let hlContainerCheck = setInterval(function() {
+                    catchHLContainer += 1;
+                    if (document.getElementById("div-gpt-ad-bola-hl") !== null) {
+                        isTFShrinking = setInterval(function() {
+                            /** inject headline after receive after sticky end  */
+                            if (this.tfStickyIsEnd) {
+                                this.hlInjectElement();
+                                clearInterval(isTFShrinking);
+                            }
+                        }.bind(this), 300);
+                        clearInterval(hlContainerCheck);
+                    } else {
+                        if (catchHLContainer === 30) { // stop searching if it's reach 30
+                            clearInterval(hlContainerCheck);
+                        }
                     }
-                }.bind(this), 300);
-                clearInterval(hlContainerCheck);
-            } else {
-                if (catchHLContainer === 30) { // stop searching if it's reach 30
-                    clearInterval(hlContainerCheck);
+                }.bind(this), 500);
+            },
+            hlInjectElement: function() {
+                let headlineSlotContainer = document.querySelector("#div-gpt-ad-bola-hl");
+                this.hlBindScrollEvent = this.hlStickyScrollEvent.bind(this);
+
+                /** Set headline element sticky on event scroll */
+                window.addEventListener("scroll", this.hlBindScrollEvent)
+
+                /** Set sticky and render headline when top position <= screen height  on first page load */
+                if ((headlineSlotContainer.getClientRects() && ~~headlineSlotContainer.getClientRects()[0].top) <= (window.screen.height - 50)) {
+                    this.hlRender;
+                    /** Wait until adunit object defined and iframe container exists */
+                    let waitForHlContainer = setInterval(function() {
+                        if (document.getElementById("div-gpt-ad-bola-hl").firstElementChild !== null) {
+                            this.hlBindScrollEvent();
+                            clearInterval(waitForHlContainer);
+                        }
+                    }.bind(this), 100)
+
                 }
-            }
-        }.bind(this), 500);
-    },
-    hlInjectElement: function() {
-        let headlineSlotContainer = document.querySelector("#div-gpt-ad-bola-hl");
-        this.hlBindScrollEvent = this.hlStickyScrollEvent.bind(this);
 
-        /** Set headline element sticky on event scroll */
-        window.addEventListener("scroll", this.hlBindScrollEvent)
-
-        /** Set sticky and render headline when top position <= screen height  on first page load */
-        if ((headlineSlotContainer.getClientRects() && ~~headlineSlotContainer.getClientRects()[0].top) <= (window.screen.height - 50)) {
-            this.hlRender;
-            /** Wait until adunit object defined and iframe container exists */
-            let waitForHlContainer = setInterval(function() {
-                if (document.getElementById("div-gpt-ad-bola-hl").firstElementChild !== null) {
-                    this.hlBindScrollEvent();
-                    clearInterval(waitForHlContainer);
+            },
+            get hlRender() {
+                if (!this.hlDefinedAdunit) {
+                    this.hlDefinedAdunit = googletag.defineSlot(GAMLibrary.gamHeadline, [
+                        [320, 50],
+                        [320, 100]
+                    ], 'div-gpt-ad-bola-hl').addService(googletag.pubads());
+                    /** Init prebid  */
+                    this.prebidInstantiate({
+                        containerName: ['div-gpt-ad-bola-hl'],
+                        definedSlot: [this.hlDefinedAdunit],
+                    });
                 }
-            }.bind(this), 100)
+                return this.hlDefinedAdunit;
+            },
+            hlStickyScrollEvent: function() {
+                var hlFirstChild = document.getElementById("div-gpt-ad-bola-hl").firstElementChild,
+                    hlContainerTop = document.getElementById("div-gpt-ad-bola-hl").getBoundingClientRect().top;
 
-        }
+                this.hlRender
 
-    },
-    get hlRender() {
-        if (!this.hlDefinedAdunit) {
-            this.hlDefinedAdunit = googletag.defineSlot(GAMLibrary.gamHeadline, [
-                [320, 50],
-                [320, 100]
-            ], 'div-gpt-ad-bola-hl').addService(googletag.pubads());
-            /** Init prebid  */
-            this.prebidInstantiate({
-                containerName: ['div-gpt-ad-bola-hl'],
-                definedSlot: [this.hlDefinedAdunit],
-            });
-        }
-        return this.hlDefinedAdunit;
-    },
-    hlStickyScrollEvent: function() {
-        var hlFirstChild = document.getElementById("div-gpt-ad-bola-hl").firstElementChild,
-            hlContainerTop = document.getElementById("div-gpt-ad-bola-hl").getBoundingClientRect().top;
-
-        this.hlRender
-
-        if (this.hlIsSticky) {
-            if (0 >= hlContainerTop) {
-                hlFirstChild.classList.add("hl-navbar-hanging")
-                this.hlStickyIsPaused = false
-            } else {
-                hlFirstChild.classList.remove("hl-active-sticky")
-                hlFirstChild.classList.remove("hl-navbar-hanging")
-                this.hlStickyIsPaused = true
-                this.hlIsSticky = false
-            }
-        } else {
-            if (0 >= hlContainerTop) {
-                if (hlFirstChild !== null) {
-                    hlFirstChild.classList.add("hl-active-sticky");
-                    if (!this.hlStickyCounterStatus) {
-                        this.hlStickyCounterStatus = true;
-                        this.hlUnsetSticky(hlFirstChild, false);
+                if (this.hlIsSticky) {
+                    if (0 >= hlContainerTop) {
+                        hlFirstChild.classList.add("hl-navbar-hanging")
+                        this.hlStickyIsPaused = false
+                    } else {
+                        hlFirstChild.classList.remove("hl-active-sticky")
+                        hlFirstChild.classList.remove("hl-navbar-hanging")
+                        this.hlStickyIsPaused = true
+                        this.hlIsSticky = false
                     }
-                    this.hlIsSticky = true
+                } else {
+                    if (0 >= hlContainerTop) {
+                        if (hlFirstChild !== null) {
+                            hlFirstChild.classList.add("hl-active-sticky");
+                            if (!this.hlStickyCounterStatus) {
+                                this.hlStickyCounterStatus = true;
+                                this.hlUnsetSticky(hlFirstChild, false);
+                            }
+                            this.hlIsSticky = true
+                        }
+                    }
                 }
-            }
-        }
 
-    },
-    hlUnsetSticky: function(hlChild, hlForceClose) {
-        let interval = null;
-        let urlParams = new URLSearchParams(window.location.search);
-        this.hlStickyInterval = (interval = JSON.parse(urlParams.get('interval'))) == null ? 7 : interval;
-        var stickyInterval = setInterval(function() {
-            if (0 >= this.hlStickyInterval || this.hlStickyIsPaused) {
-                hlChild.classList.remove("hl-active-sticky");
-                hlChild.classList.remove("hl-navbar-hanging");
-                hlChild.style.margin = "10px 0";
-                window.removeEventListener("scroll", this.hlBindScrollEvent)
-                clearInterval(stickyInterval);
+                this.consoleLog({
+                    'text': 'this.hlIsSticky | hlStickyCounterStatus | this.hlGetStickyInterval | hlContainerTop | hlFirstChild',
+                    'variable': [this.hlIsSticky, this.hlStickyCounterStatus, this.hlGetStickyInterval, hlContainerTop, hlFirstChild],
+                });
 
-            } else {
-                this.hlStickyInterval--
-            }
-        }.bind(this), 1e3);
+            },
+            hlUnsetSticky: function(hlChild, hlForceClose) {
+                let interval = 7;
+                let urlParams = new URLSearchParams(window.location.search);
+                this.hlSetStickyInterval = (interval = JSON.parse(urlParams.get('interval'))) == null ? 7 : interval;
+                var stickyInterval = setInterval(function() {
+                    if (!this.hlStickyIsPaused) {
+                        if (0 >= this.hlGetStickyInterval) {
+                            hlChild.classList.remove("hl-active-sticky");
+                            hlChild.classList.remove("hl-navbar-hanging");
+                            hlChild.style.margin = "10px 0";
+                            window.removeEventListener("scroll", this.hlBindScrollEvent)
+                            clearInterval(stickyInterval);
 
-        if (!this.hlStickyIsPaused && hlForceClose) {
-            clearInterval(stickyInterval);
-            hlChild.classList.remove("hl-active-sticky");
-            hlChild.classList.remove("hl-navbar-hanging");
-        }
-    },
-    /** ============ HEADLINE ============ */
+                        } else {
+                            this.hlDecreamentStickyInterval;
+                        }
+                    }
+                }.bind(this), 1e3);
 
+                if (!this.hlStickyIsPaused && hlForceClose) {
+                    clearInterval(stickyInterval);
+                    hlChild.classList.remove("hl-active-sticky");
+                    hlChild.classList.remove("hl-navbar-hanging");
+                }
+            },
+            /** ============ HEADLINE ============ */
+    
     /** ============= MASTHEAD ============= */
     tfIsFixedSized: 1, // Topframe Flags between OOP and Fixed size 
     tfAdsVisible: {
@@ -1655,6 +1687,7 @@ window.GAMLibrary = {
     },
     gamSlotRenderEnded: function(event) {
         this.expInterscroller(event);
+        this.scFlyingCarpetEffect(event);
 
         var containerId = event.slot.getSlotElementId();
         var containerEl = document.getElementById(containerId);
@@ -1754,6 +1787,7 @@ googletag.cmd.push(function() {
     window.GAMLibrary.pictureFirst = googletag.defineOutOfPageSlot('/36504930/KLY/MOBILE/BOLA.NET/CONTENT_CAROUSEL', 'div-gpt-ad-bola-picturefirst').addService(googletag.pubads());
 
     window.GAMLibrary.definedSc = googletag.defineSlot(GAMLibrary.gamShowcase, [
+        [300, 600],
         [300, 250],
         [250, 250],
         [200, 200]
@@ -1836,4 +1870,5 @@ GAMLibrary.onMessageReceivedGPTUpdateCreativeStyle();
 /** GET MESSAGE FROM SAFEFRAME CONTAINER */
 
 document.addEventListener("DOMContentLoaded", GAMLibrary.tfInitSticky.bind(GAMLibrary));
+document.addEventListener("DOMContentLoaded", GAMLibrary.scFlyingCarpetStyle);
 window.addEventListener("orientationchange", GAMLibrary.tfOrientationChange.bind(GAMLibrary));
