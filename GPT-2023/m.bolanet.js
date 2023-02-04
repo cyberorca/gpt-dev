@@ -63,6 +63,15 @@ window.GAMLibrary = {
             return t.trim().toLowerCase()
         }).filter(x => x != "");
     },
+    gfnOnDomContentLoaded: function() {
+        this.tfInitSticky();
+        this.insertPictureFirst();
+        this.expInterscrollerStyle();
+        visualViewport.addEventListener('resize', () => {
+            this.tfSetDeviceOrientation = visualViewport.height > visualViewport.width ? true : false;
+        });
+        this.scFlyingCarpetStyle();
+    },
     generatedScrollAdunit: 0, // Flags for balancing between headline, bottomframe and floating pin 
     pageBrandSafetyChecker: function() {
         var articlePages = pageKlyObj && pageKlyObj.article,
@@ -183,7 +192,12 @@ window.GAMLibrary = {
         var pictureFirstTargetElement = (kly.pageType.toLowerCase() != 'readpage') ? document.getElementById("main_mid_lastest") : document.querySelector(".box-tag");
         if (pictureFirstTargetElement) {
             pictureFirstTargetElement.parentElement.insertBefore(pictureFirstElement, pictureFirstTargetElement.nextElementSibling)
-        }
+        };
+
+        this.consoleLog({
+            'text': 'insertPictureFirst IN this.gfnOnDomContentLoaded',
+            'variable': []
+        });
     },
     createDMPTracker: function(adsCatList, dfpTracker, macro) {
         var cName = 'ahoy_visitor=',
@@ -1015,9 +1029,14 @@ window.GAMLibrary = {
         }
     },
     scFlyingCarpetStyle: function() {
-        var _style_ = document.createElement("style");
-        _style_.textContent = `.advertisement-placeholder div[id*="bola-sc"].flying-carpet{ position: relative; clear: both; overflow: hidden; clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%) !important; min-height: 270px; width: 100%; display: flex; justify-content: center; } .advertisement-placeholder div[id*="bola-sc"].flying-carpet .ad-content { top: 50%; transform: translateY(-50%); position: fixed; z-index: 2; } div#div-gpt-ad-sc-placeholder { min-width: 320px; }`;
-        document.querySelector("body").appendChild(_style_)
+        var flyingCarpetStyle = document.createElement("style");
+        flyingCarpetStyle.textContent = `.advertisement-placeholder div[id*="bola-sc"].flying-carpet{ position: relative; clear: both; overflow: hidden; clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%) !important; min-height: 270px; width: 100%; display: flex; justify-content: center; } .advertisement-placeholder div[id*="bola-sc"].flying-carpet .ad-content { top: 50%; transform: translateY(-50%); position: fixed; z-index: 2; } div#div-gpt-ad-sc-placeholder { min-width: 320px; }`;
+        document.querySelector("body").appendChild(flyingCarpetStyle);
+
+        this.consoleLog({
+            'text': 'scFlyingCarpetStyle IN this.gfnOnDomContentLoaded',
+            'variable': []
+        });
     },
     /** ============ SHOWCASE ============ */
 
@@ -1039,6 +1058,10 @@ window.GAMLibrary = {
         interscrollerStyle.textContent = "body{overflow: unset;} .interscroller-wrapper{display: block !important;} .interscroller{position: sticky !important; top: 160px;}";
         document.head.appendChild(interscrollerStyle);
         document.querySelector("body").appendChild(interscrollerStyle);
+        this.consoleLog({
+            'text': 'expInterscrollerStyle IN this.gfnOnDomContentLoaded',
+            'variable': []
+        });
     },
     /** ============ EXPOSER ============ */
 
@@ -1240,11 +1263,11 @@ window.GAMLibrary = {
         document.addEventListener("scroll", this.tfBindStickyScroll);
         window.addEventListener("orientationchange", this.tfOrientationChange.bind(this));
         this.tfStickyIsReady = true;
-        this.insertPictureFirst();
-        this.expInterscrollerStyle();
-        visualViewport.addEventListener('resize', () => {
-            this.tfSetDeviceOrientation = visualViewport.height > visualViewport.width ? true : false;
+        this.consoleLog({
+            'text': 'tfInitSticky IN this.gfnOnDomContentLoaded',
+            'variable': []
         });
+
     },
     tfOrientationChange: function() {
         if (!this.tfGetDeviceOrientation) {
@@ -1674,9 +1697,21 @@ window.GAMLibrary = {
             };
 
             let ahoyInterval = setInterval(function(e) {
-                if (window.AhoyEvent) {
-                    window.AhoyEvent.sendPersonalizationUserEvent(cdpData);
-                    clearInterval(ahoyInterval);
+                if (window.AhoyEvent && typeof window.AhoyEvent.sendPersonalizationUserEvent === 'function') {
+                    try {
+                        this.consoleLog({
+                            'text': 'AHOY SAVED',
+                            'variable': [cdpData]
+                        });
+                        window.AhoyEvent.sendPersonalizationUserEvent(cdpData);
+                        clearInterval(ahoyInterval);
+                    } catch (error) {
+                        this.consoleLog({
+                            'text': 'AHOY FAILED! : ' + error,
+                            'variable': []
+                        });
+                        clearInterval(ahoyInterval);
+                    }
                 }
                 if (this.counterAhoy > 30) {
                     clearInterval(ahoyInterval)
@@ -1869,6 +1904,5 @@ googletag.cmd.push(function() {
 GAMLibrary.onMessageReceivedGPTUpdateCreativeStyle();
 /** GET MESSAGE FROM SAFEFRAME CONTAINER */
 
-document.addEventListener("DOMContentLoaded", GAMLibrary.tfInitSticky.bind(GAMLibrary));
-document.addEventListener("DOMContentLoaded", GAMLibrary.scFlyingCarpetStyle);
+document.addEventListener("DOMContentLoaded", GAMLibrary.gfnOnDomContentLoaded.bind(GAMLibrary));
 window.addEventListener("orientationchange", GAMLibrary.tfOrientationChange.bind(GAMLibrary));
